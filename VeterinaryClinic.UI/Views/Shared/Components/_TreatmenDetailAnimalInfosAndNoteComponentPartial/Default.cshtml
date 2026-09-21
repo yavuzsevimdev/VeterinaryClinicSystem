@@ -1,0 +1,100 @@
+﻿@model AnimalDto
+
+<section class="card">
+
+    <div class="head">
+
+        <div class="head-left">
+
+            <div class="icon">
+                <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+
+            <h2>Hayvan Bilgileri</h2>
+
+        </div>
+
+        <span class="badge bp">
+            Evcil Dostumuz
+        </span>
+
+    </div>
+
+
+    <div class="animal">
+
+        <img src="@Model.ImageUrl"
+             alt="@Model.Name" />
+
+        <div>
+
+            <h3>@Model.Name</h3>
+
+            <p class="meta">
+                @Model.Breed
+                &nbsp;•&nbsp;
+                4 yaş
+                &nbsp;
+            </p>
+
+
+            <div class="stats">
+
+
+                <div class="stat">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <div>
+                        <strong>@Model.Weight kg</strong>
+                        <span>Kilo</span>
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <i class="bi bi-rulers"></i>
+
+                    <div>
+                        <strong>@Model.Height cm</strong>
+                        <span>Boy</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Note -->
+<section class="card">
+
+    <div class="head">
+
+        <div class="head-left">
+
+            <div class="icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+
+            <h2>Açıklama / Not</h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="note">
+
+        @ViewBag.Note
+
+    </div>
+
+</section>

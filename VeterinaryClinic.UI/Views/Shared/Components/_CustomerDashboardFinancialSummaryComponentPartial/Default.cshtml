@@ -1,0 +1,90 @@
+﻿<div class="card-ui">
+
+
+    <div class="card-header-row">
+
+        <div>
+
+            <h3 class="text-card-title">
+                Tedaviler &amp; Ödeme Özeti
+            </h3>
+
+            <span class="text-tiny text-muted">
+                Anlık finansal inceleme
+            </span>
+
+        </div>
+
+
+        <div class="card-icon-tile is-success">
+
+            <i class="bi bi-wallet2"></i>
+
+        </div>
+
+    </div>
+
+
+    <div style="margin-top:var(--space-4);">
+
+
+        <div class="financial-row">
+
+            <span class="text-small text-muted">
+                Toplam Tedavi Masrafı
+            </span>
+
+            <span class="text-small fw-semibold">
+                @ViewBag.TotalCost.ToString("N0") ₺
+            </span>
+
+        </div>
+
+
+        <div class="financial-row">
+
+            <span class="text-small text-muted">
+                Toplam Ödeme
+            </span>
+
+            <span class="text-small fw-semibold">
+                @ViewBag.TotalPaid.ToString("N0") ₺
+            </span>
+
+        </div>
+
+
+        <div class="financial-row">
+
+            <span class="text-small text-muted">
+                Ödenecek Tutar
+            </span>
+
+            <span class="text-small fw-semibold"
+                  style="color:var(--color-danger);">
+
+                @ViewBag.Outstanding.ToString("N0") ₺
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+
+    <div style="margin-top:var(--space-4);">
+
+        <a href ="/payment/index"
+                class="btn btn-ui btn-ui--outline btn-ui--sm">
+
+            Ödemeleri Görüntüle
+
+            <i class="bi bi-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+</div>

@@ -1,0 +1,98 @@
+﻿@model DashboardStatisticsDto
+
+<section class="stack"
+         style="margin-top:var(--space-6);">
+
+
+    <div class="grid-4">
+        <div class="card-ui stat-card">
+            <div class="row-between">
+                <span class="stat-card-label">
+                    Hayvanlarım
+                </span>
+                <div class="card-icon-tile is-primary">
+                   <i class="bi bi-clipboard2-pulse"></i>
+                </div>
+            </div>
+
+            <span class="stat-card-value">
+                @Model.AnimalsCount
+            </span>
+
+            <span class="stat-trend is-flat">
+                <i class="bi bi-heart-pulse"></i>
+                Kayıtlı evcil hayvan
+            </span>
+        </div>
+
+        <!-- Appointments -->
+
+        <div class="card-ui stat-card">
+            <div class="row-between">
+                <span class="stat-card-label">
+                    Yaklaşan Randevular
+                </span>
+                <div class="card-icon-tile is-secondary">
+                    <i class="bi bi-calendar2-week"></i>
+               </div>
+            </div>
+            <span class="stat-card-value">
+                @Model.UpcomingAppointmentsCount
+            </span>
+
+            <span class="stat-trend is-flat">
+                <i class="bi bi-calendar-check"></i>
+                Planlanan ziyaret
+            </span>
+        </div>
+
+
+        <!-- Treatments -->
+
+        <div class="card-ui stat-card">
+
+            <div class="row-between">
+
+                <span class="stat-card-label">
+                    Tedaviler
+                </span>
+                <div class="card-icon-tile is-accent">
+                    <i class="bi bi-capsule"></i>
+                </div>
+            </div>
+            <span class="stat-card-value">
+                @Model.TreatmentsCount
+            </span>
+            <span class="stat-trend is-flat">
+                <i class="bi bi-file-earmark-medical"></i>
+                Tedavi Kayıtları
+            </span>
+        </div>
+
+
+        <!-- Balance -->
+
+        <div class="card-ui stat-card">
+
+            <div class="row-between">
+
+                <span class="stat-card-label">
+                    Kalan Borç
+                </span>
+                <div class="card-icon-tile is-warning">
+                    <i class="bi bi-credit-card-2-back"></i>
+                </div>
+            </div>
+            <span class="stat-card-value">
+                @Model.OutstandingBalance.ToString("N0") ₺
+            </span>
+            <span class="stat-trend is-flat">
+                <i class="bi bi-wallet2"></i>
+                Güncel Borç
+            </span>
+
+        </div>
+
+    </div>
+
+</section>

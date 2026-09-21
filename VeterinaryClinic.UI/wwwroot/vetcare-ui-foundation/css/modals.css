@@ -1,0 +1,135 @@
+/* ==========================================================================
+   VetCare OS — Modals
+   Maps to future _ConfirmModal partial / modal ViewComponents
+   ========================================================================== */
+
+.modal-ui-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(48, 48, 68, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: var(--z-modal);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.modal-ui-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-ui {
+  width: 100%;
+  max-width: 460px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6);
+  transform: translateY(16px) scale(0.97);
+  opacity: 0;
+  transition: transform var(--transition-slow), opacity var(--transition-slow);
+  max-height: calc(100vh - 2 * var(--space-6));
+  overflow-y: auto;
+}
+
+.modal-ui-overlay.is-open .modal-ui {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.modal-ui--wide {
+  max-width: 640px;
+}
+
+.modal-ui-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.modal-ui-icon {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.modal-ui-icon.is-danger { background-color: var(--color-danger-light); color: var(--color-danger); }
+.modal-ui-icon.is-success { background-color: var(--color-success-light); color: var(--color-success); }
+.modal-ui-icon.is-warning { background-color: var(--color-warning-light); color: var(--color-warning); }
+
+.modal-ui-title-block {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.modal-ui-title {
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-semibold);
+}
+
+.modal-ui-subtitle {
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  margin-top: 2px;
+}
+
+.modal-ui-close {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  font-size: 1rem;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.modal-ui-close:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+.modal-ui-body {
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  margin-bottom: var(--space-5);
+}
+
+.modal-ui-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.modal-ui-footer.is-stretch .btn-ui {
+  flex: 1 1 0;
+}
+
+@media (max-width: 575.98px) {
+  .modal-ui {
+    padding: var(--space-5);
+  }
+
+  .modal-ui-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-ui-footer .btn-ui {
+    width: 100%;
+  }
+}

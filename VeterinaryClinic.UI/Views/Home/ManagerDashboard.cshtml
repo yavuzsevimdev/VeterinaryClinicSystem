@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@await Component.InvokeAsync("_ManagerDashboardHeaderComponentPartial")
+@await Component.InvokeAsync("_ManagerDashboardStatisticsComponentPartial")
+
+<div class="grid-pair">
+    @await Component.InvokeAsync("_ManagerDashboardTodayAppointmentComponentPartial")
+    @await Component.InvokeAsync("_ManagerDashboardWeatherComponentPartial")
+</div>
+
+@await Component.InvokeAsync("_ManagerDashboardAnimalOverviewComponentPartial")
+
+<div class="grid-pair">
+    @await Component.InvokeAsync("_ManagerDashboardRecentTreatmentsComponentPartial")
+    @await Component.InvokeAsync("_ManagerDashboardFinancialOverviewComponentPartial")
+</div>
+
+@await Component.InvokeAsync("_ManagerDashboardReportsComponentPartial")
+@await Component.InvokeAsync("_ManagerDashboardQuickActionsComponentPartial")

@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@await Component.InvokeAsync("_AnimalIndexStyleComponentPartial")
+<div class="animal-page">
+    @await Component.InvokeAsync("_AnimalIndexHeaderComponentPartial")
+    @await Component.InvokeAsync("_AnimalIndexStatisticsComponentPartial")
+    @await Component.InvokeAsync("_AnimalIndexSearchAndFilterComponentPartial")
+    @await Component.InvokeAsync("_AnimalIndexAnimalListComponentPartial")
+    @await Component.InvokeAsync("_AnimalIndexUpcomingAppointmentsComponentPartial")
+    @await Component.InvokeAsync("_AnimalIndexReminderComponentPartial")
+</div>
+@await Component.InvokeAsync("_AnimalIndexScriptsComponentPartial")

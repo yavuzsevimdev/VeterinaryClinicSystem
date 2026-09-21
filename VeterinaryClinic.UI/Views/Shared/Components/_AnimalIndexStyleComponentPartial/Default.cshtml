@@ -1,0 +1,374 @@
+﻿<style>
+
+  /* ==========================================================================
+     ANIMAL / INDEX (Customer) — page-specific styles only.
+     Assumes the global VetCare OS foundation already provides: Poppins,
+     Bootstrap 5.3.3, Bootstrap Icons, CSS variables, .btn-ui, .badge-ui,
+     .card-ui, .card-icon-tile, .stat-card-*, .form-control-ui,
+     .input-icon-wrap, .link-action, .section-header, .state-panel*,
+     text/typography utilities, and the global toast system (window.VetCareToast).
+     ========================================================================== */
+
+  .animal-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  /* ---- Section 1: Page header ---- */
+
+  .animal-header-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.6rem;
+  }
+
+  /* ---- Section 2: Compact summary statistics ---- */
+
+  .animal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .animal-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+  }
+
+  .animal-stat-card .card-icon-tile {
+    width: 40px;
+    height: 40px;
+    font-size: 1.05rem;
+  }
+
+  .animal-stat-card .stat-card-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .animal-stat-card .stat-card-label {
+    font-size: 0.78125rem;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  /* ---- Section 3: Search / filter toolbar ---- */
+
+  .animal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.65rem 0.85rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .animal-toolbar-search {
+    flex: 1 1 240px;
+    min-width: 200px;
+  }
+
+  .animal-toolbar-search .form-control-ui {
+    height: 42px;
+  }
+
+  .animal-toolbar-selects {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex: 0 0 auto;
+  }
+
+  .animal-toolbar-selects .form-control-ui {
+    height: 42px;
+    width: auto;
+    min-width: 150px;
+  }
+
+  .animal-no-results {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  /* ---- Section 4: Animal card grid ---- */
+
+  .animal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  @@media (max-width: 1200px) {
+    .animal-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @@media (max-width: 768px) {
+    .animal-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @@media (max-width: 576px) {
+    .animal-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Suzzy-AI-inspired pet profile card — used ONLY here on the Index grid */
+  .animal-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .animal-card-media {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .animal-card-media-fallback {
+    font-size: 2.25rem;
+    color: var(--color-primary);
+    opacity: 0.5;
+  }
+
+  .animal-card-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .animal-card:hover .animal-card-media img {
+    transform: scale(1.06);
+  }
+
+  .animal-card-media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(48, 48, 68, 0) 40%, rgba(48, 48, 68, 0.62) 100%);
+  }
+
+  .animal-card-species-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.92);
+    color: var(--color-text);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .animal-card-overlay-text {
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 0.75rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .animal-card-name {
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .animal-card-breed {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.78125rem;
+    font-weight: 500;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .animal-card-body {
+    padding: 1.1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    flex: 1 1 auto;
+  }
+
+  .animal-card-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+
+  .animal-card-metric {
+    text-align: center;
+    padding: 0.5rem 0.25rem;
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .animal-card-metric-value {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .animal-card-metric-label {
+    font-size: 0.625rem;
+    color: var(--color-muted-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .animal-card-history-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 3px;
+  }
+
+  .animal-card-history p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .animal-card-footer {
+    margin-top: auto;
+    padding-top: 0.2rem;
+  }
+
+  /* ---- Section 5: Upcoming appointments (kept intentionally lighter than the animal grid) ---- */
+
+  .animal-appointment-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .animal-appointment-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .animal-appointment-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .animal-appointment-item:first-child {
+    padding-top: 0;
+  }
+
+  .animal-appointment-icon {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-info-light);
+    color: var(--color-info);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  .animal-appointment-body {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .animal-appointment-animal {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .animal-appointment-type {
+    font-size: 0.78125rem;
+    color: var(--color-muted);
+  }
+
+  .animal-appointment-meta {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+  }
+
+  .animal-appointment-time {
+    font-size: 0.75rem;
+    color: var(--color-muted-light);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* ---- Section 6: Small health information card ---- */
+
+  .animal-health-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-surface) 60%);
+  }
+
+  .animal-health-info .card-icon-tile {
+    flex: 0 0 auto;
+  }
+
+  /* ---- Empty state (Razor else-branch — hidden unless Model has no animals) ---- */
+
+  .animal-empty-state {
+    display: none;
+  }
+
+  .animal-empty-state.is-visible {
+    display: flex;
+  }
+
+  @@media (max-width: 767.98px) {
+    .animal-stats { grid-template-columns: 1fr; }
+    .animal-toolbar-selects { width: 100%; }
+    .animal-toolbar-selects .form-control-ui { flex: 1 1 0; min-width: 0; }
+    .animal-appointment-meta { align-items: flex-end; }
+  }
+
+  @@media (max-width: 419.98px) {
+    .animal-appointment-item { flex-wrap: wrap; }
+    .animal-appointment-meta { align-items: flex-start; margin-left: calc(38px + 0.9rem); }
+  }
+
+</style>

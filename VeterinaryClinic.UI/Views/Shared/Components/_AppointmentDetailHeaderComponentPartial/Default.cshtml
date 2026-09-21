@@ -1,0 +1,75 @@
+﻿@model AppointmentDetailDto
+
+<section class="card-ui appointment-detail-header" aria-label="Randevu özeti">
+
+    <div class="appointment-detail-identity">
+        <div class="appointment-detail-photo">
+            <div class="appointment-detail-photo-inner">
+                <i class="bi bi-image appointment-detail-photo-fallback" aria-hidden="true"></i>
+                <img id="animalPhoto" src="@Model.Animal.ImageUrl" alt="@Model.Animal.Name" style="position:absolute;width:0;height:0;opacity:0;">
+            </div>
+        </div>
+        <div class="appointment-detail-identity-body">
+            <div class="appointment-detail-name-row">
+                <h1 class="appointment-detail-name">@Model.Animal.Name</h1>
+                <span class="appointment-detail-species-pill"><i class="bi bi-tag"></i> Kedi</span>
+            </div>
+            <p class="appointment-detail-meta">Tekir &bull; @Model.Animal.Age yaş &bull; @Model.Animal.Weight kg</p>
+            <div class="appointment-detail-chip">
+                <span>Mikroçip No: <strong>@Model.Animal.Id</strong></span>
+                <button type="button" class="appointment-detail-chip-copy" id="copyChipBtn" aria-label="Mikroçip numarasını kopyala"><i class="bi bi-copy"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="appointment-detail-datetime">
+        <div class="appointment-detail-datetime-card">
+            <div class="card-icon-tile is-info"><i class="bi bi-calendar-event"></i></div>
+            <div>
+                <div class="appointment-detail-datetime-value">@Model.Date.ToString("dd MMM yyyy")</div>
+                <div class="appointment-detail-datetime-sub">@Model.Date.ToString("dddd")</div>
+            </div>
+        </div>
+        <div class="appointment-detail-datetime-card">
+            <div class="card-icon-tile is-info"><i class="bi bi-clock"></i></div>
+            <div>
+                <div class="appointment-detail-datetime-value">@Model.Time.ToString("hh\\:mm")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="appointment-detail-status">
+        @if (Model.Status == "Scheduled")
+        {
+            <div class="appointment-detail-status-card is-scheduled">
+                <i class="bi bi-calendar2-check"></i>
+                <span>Planlandı</span>
+            </div>
+        }
+        else if (Model.Status == "Completed")
+        {
+            <div class="appointment-detail-status-card is-completed">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Tamamlandı</span>
+            </div>
+        }
+        else if (Model.Status == "Cancelled")
+        {
+            <div class="appointment-detail-status-card is-cancelled">
+                <i class="bi bi-x-circle-fill"></i>
+                <span>İptal Edildi</span>
+            </div>
+        }
+        else
+        {
+            <div class="appointment-detail-status-card">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>@Model.Status</span>
+            </div>
+        }
+        <div>
+            <div class="appointment-detail-status-id">Randevu #@Model.Id</div>
+            <div class="appointment-detail-status-created">Oluşturulma: @Model.Date.ToString("dd MMM yyyy"), @Model.Time.ToString("hh\\:mm")</div>
+        </div>
+    </div>
+</section>

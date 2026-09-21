@@ -1,0 +1,193 @@
+﻿<script>
+
+    (function () {
+        'use strict';
+
+        var form = document.getElementById('animalCreateForm');
+        if (!form) return;
+
+        var nameInput = document.getElementById('animalName');
+        var speciesSelect = document.getElementById('animalSpecies');
+        var otherSpeciesGroup = document.getElementById('otherSpeciesGroup');
+        var otherSpeciesInput = document.getElementById('otherSpecies');
+        var breedInput = document.getElementById('animalBreed');
+        var ageInput = document.getElementById('animalAge');
+        var weightInput = document.getElementById('animalWeight');
+        var heightInput = document.getElementById('animalHeight');
+        var imageUrlInput = document.getElementById('animalImageUrl');
+        var historyInput = document.getElementById('animalMedicalHistory');
+
+        var previewImage = document.getElementById('previewImage');
+        var previewFallbackIcon = document.querySelector('.animal-preview-card .animal-card-media-fallback');
+        var previewSpeciesBadge = document.getElementById('previewSpeciesBadge');
+        var previewName = document.getElementById('previewName');
+        var previewBreed = document.getElementById('previewBreed');
+        var previewAge = document.getElementById('previewAge');
+        var previewWeight = document.getElementById('previewWeight');
+        var previewHeight = document.getElementById('previewHeight');
+        var previewHistory = document.getElementById('previewHistory');
+
+
+        /* ---- Live preview bindings ---- */
+
+        function updateName() {
+            previewName.textContent = nameInput.value.trim() || 'Hayvan Adı';
+        }
+
+        function updateBreed() {
+            previewBreed.textContent = breedInput.value.trim() || 'Irk belirtilmedi';
+        }
+
+        function updateSpecies() {
+
+            if (speciesSelect.value === 'Diğer') {
+
+                var otherSpecies = otherSpeciesInput.value.trim();
+
+                previewSpeciesBadge.textContent =
+                    otherSpecies ? otherSpecies : 'Diğer';
+
+                return;
+            }
+
+            var selectedSpecies = speciesSelect.value;
+
+            if (!selectedSpecies) {
+                previewSpeciesBadge.textContent = 'Tür seçilmedi';
+                return;
+            }
+
+            previewSpeciesBadge.textContent = selectedSpecies;
+        }
+
+        otherSpeciesInput.addEventListener('input', updateSpecies);
+
+        function updateMetric(input, targetEl, unit) {
+            var value = input.value.trim();
+            targetEl.textContent = value ? value + ' ' + unit : '—';
+        }
+
+        function updateHistory() {
+            previewHistory.textContent = historyInput.value.trim() || 'Tıbbi geçmiş bilgisi girilmedi.';
+        }
+
+        function updateImage() {
+            var url = imageUrlInput.value.trim();
+
+            if (!url) {
+                previewImage.style.display = 'none';
+                previewImage.removeAttribute('src');
+                return;
+            }
+
+            var testImage = new Image();
+            testImage.onload = function () {
+                previewImage.src = url;
+                previewImage.style.display = 'block';
+            };
+            testImage.onerror = function () {
+                previewImage.style.display = 'none';
+                previewImage.removeAttribute('src');
+            };
+            testImage.src = url;
+        }
+
+        nameInput.addEventListener('input', updateName);
+        breedInput.addEventListener('input', updateBreed);
+        speciesSelect.addEventListener('change', function () {
+            if (speciesSelect.value === 'Diğer') {
+                otherSpeciesGroup.style.display = 'block';
+                otherSpeciesInput.focus();
+            } else {
+                otherSpeciesGroup.style.display = 'none';
+                otherSpeciesInput.value = '';
+            }
+            updateSpecies();
+        });
+        ageInput.addEventListener('input', function () { updateMetric(ageInput, previewAge, 'yıl'); });
+        weightInput.addEventListener('input', function () { updateMetric(weightInput, previewWeight, 'kg'); });
+        heightInput.addEventListener('input', function () { updateMetric(heightInput, previewHeight, 'cm'); });
+        historyInput.addEventListener('input', updateHistory);
+        imageUrlInput.addEventListener('input', updateImage);
+
+        /* ---- Simple client-side validation (Hayvan Adı, Tür, Yaş, Kilo, Boy) ---- */
+
+        var requiredFields = [
+            { input: nameInput, group: document.getElementById('nameGroup') },
+            { input: speciesSelect, group: document.getElementById('speciesGroup') },
+            { input: ageInput, group: document.getElementById('ageGroup') },
+            { input: weightInput, group: document.getElementById('weightGroup') },
+            { input: heightInput, group: document.getElementById('heightGroup') }
+        ];
+
+        function validateField(field) {
+            var isValid = field.input.value.trim() !== '';
+            field.group.classList.toggle('is-invalid', !isValid);
+            return isValid;
+        }
+
+        requiredFields.forEach(function (field) {
+            var eventName = field.input.tagName === 'SELECT' ? 'change' : 'input';
+            field.input.addEventListener(eventName, function () {
+                if (field.group.classList.contains('is-invalid')) validateField(field);
+            });
+        });
+
+        form.addEventListener('submit', function (e) {
+
+            var allValid = true;
+            var firstInvalidInput = null;
+
+            requiredFields.forEach(function (field) {
+
+                var isValid = validateField(field);
+
+                if (!isValid && !firstInvalidInput) {
+                    firstInvalidInput = field.input;
+                }
+
+                allValid = allValid && isValid;
+            });
+
+            if (!allValid) {
+                e.preventDefault();
+                firstInvalidInput.focus();
+                return;
+            }
+
+            if (speciesSelect.value === 'Diğer') {
+
+                var otherSpecies = otherSpeciesInput.value.trim();
+
+                if (!otherSpecies) {
+                    e.preventDefault();
+
+                    otherSpeciesInput.focus();
+
+                    return;
+                }
+
+                speciesSelect.value = otherSpecies;
+            }
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', function () {
+            form.reset();
+            otherSpeciesGroup.style.display = 'none';
+            otherSpeciesInput.value = '';
+            updateName();
+            updateBreed();
+            updateSpecies();
+            previewAge.textContent = '—';
+            previewWeight.textContent = '—';
+            previewHeight.textContent = '—';
+            updateHistory();
+            updateImage();
+            requiredFields.forEach(function (field) { field.group.classList.remove('is-invalid'); });
+        });
+
+        document.getElementById('backToAnimalsLink').addEventListener('click', function (e) {
+            e.preventDefault();
+        });
+    })();
+</script>

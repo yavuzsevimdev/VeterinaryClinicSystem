@@ -1,0 +1,67 @@
+﻿@model List<TreatmentDto>
+@{
+    int count = 0;
+    decimal totalCost = ViewBag.TotalCost ?? 0;
+}
+
+<div class="appointment-detail-subgrid">
+
+    <section class="card-ui" aria-label="Uygulanan tedaviler">
+        <div class="card-header-row">
+            <div class="card-header-title">
+                <div class="card-icon-tile is-info"><i class="bi bi-receipt"></i></div>
+                <h2 class="text-section-title">Uygulanan Tedaviler</h2>
+                <span class="appointment-detail-count">2</span>
+            </div>
+        </div>
+
+        <div class="appointment-detail-rows-head appointment-treatment-cols">
+            <span>#</span><span>Tedavi / İşlem</span><span>Açıklama</span><span>Tutar</span>
+        </div>
+        @foreach(var item in Model)
+        {
+            count++;
+            <div class="appointment-detail-row appointment-treatment-cols">
+                <span class="c-num">@count</span>
+                <span class="c-title appointment-detail-row-title">@item.TreatmentType</span>
+                <span class="c-desc appointment-detail-row-sub">@item.Notes</span>
+                <span class="c-amount appointment-detail-row-amount">@item.Cost.ToString("N2") ₺</span>
+            </div>
+        }
+
+        <div class="appointment-detail-total">
+            <span>Toplam Tutar</span>
+            <span class="appointment-detail-total-value">@totalCost.ToString("N2") ₺</span>
+        </div>
+    </section>
+
+    <section class="card-ui" aria-label="İlaç ve öneriler">
+        <div class="card-header-row">
+            <div class="card-header-title">
+                <div class="card-icon-tile is-secondary"><i class="bi bi-capsule-pill"></i></div>
+                <h2 class="text-section-title">İlaç ve Öneriler</h2>
+                <span class="appointment-detail-count">1</span>
+            </div>
+        </div>
+
+        <div class="appointment-detail-rows-head appointment-medication-cols">
+            <span>İlaç / Ürün</span><span>Kullanım</span><span>Süre</span>
+        </div>
+
+        <div class="appointment-detail-row appointment-medication-cols">
+            <span class="c-name appointment-detail-row-title">Multivitamin <span class="appointment-detail-row-sub" style="display:block;font-weight:400;">(VetPlus)</span></span>
+            <span class="c-use appointment-detail-row-sub" style="color: var(--color-text);">Günde 1 kez<br>1 tablet</span>
+            <span class="c-span appointment-detail-row-sub" style="color: var(--color-text);">30 gün</span>
+        </div>
+
+        <div class="appointment-detail-reco">
+            <div class="appointment-detail-reco-title"><i class="bi bi-lightbulb"></i> Öneriler</div>
+            <ul>
+                <li>Düzenli su tüketimini sağlayın.</li>
+                <li>Beslenme düzenine dikkat edin.</li>
+                <li>6 ay sonra kontrol randevusu önerilir.</li>
+            </ul>
+        </div>
+    </section>
+
+</div>

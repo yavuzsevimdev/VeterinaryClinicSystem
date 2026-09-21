@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @if (User.IsInRole("Customer"))
+    {
+        @await Component.InvokeAsync("_LayoutCustomerHeadComponentPartial");
+    }
+    @if (User.IsInRole("Manager"))
+    {
+        @await Component.InvokeAsync("_LayoutManagerHeadComponentPartial");
+    }
+</head>
+<body>
+    <div class="app-overlay" data-app-overlay></div>
+
+    <div class="app-shell" data-app-shell>
+
+        @if (User.IsInRole("Customer"))
+        {
+            @await Component.InvokeAsync("_LayoutCustomerSidebarComponentPartial")
+        }
+        @if (User.IsInRole("Manager"))
+        {
+            @await Component.InvokeAsync("_LayoutManagerSidebarComponentPartial")
+        }
+
+        <div class="app-main-column">
+
+            @await Component.InvokeAsync("_LayoutTopbarComponentPartial")
+
+            <main class="app-content">
+
+                <div class="app-content-inner">
+                    @RenderBody()
+                </div>
+
+                @await Component.InvokeAsync("_LayoutFooterComponentPartial")
+
+            </main>
+
+        </div>
+    </div>
+    @if (User.IsInRole("Customer"))
+    {
+        @await Component.InvokeAsync("_LayoutCustomerScriptsComponentPartial")
+    }
+    @if (User.IsInRole("Manager"))
+    {
+        @await Component.InvokeAsync("_LayoutManagerScriptsComponentPartial")
+    }
+</body>
+</html>

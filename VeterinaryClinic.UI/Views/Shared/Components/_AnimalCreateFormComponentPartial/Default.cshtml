@@ -1,0 +1,101 @@
+﻿@model AnimalDto
+
+<div class="card-ui">
+    <div class="card-header-row">
+        <div>
+            <h2 class="text-card-title">Hayvan Bilgileri</h2>
+            <p class="text-small text-muted">Evcil hayvanınızın temel bilgilerini ve sağlık bilgilerini girin.</p>
+        </div>
+    </div>
+
+    <form id="animalCreateForm" method="post" novalidate>
+        <div class="form-grid-2">
+
+            <div class="form-group-ui" id="nameGroup">
+                <label class="form-label-ui" for="animalName">Hayvan Adı <span class="is-required">*</span></label>
+                <input asp-for="Name" type="text" id="animalName" class="form-control-ui" placeholder="Örn. Leo" required>
+                <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Hayvan adı gereklidir.</span>
+            </div>
+
+            <div class="form-group-ui" id="speciesGroup">
+                <label class="form-label-ui" for="animalSpecies">Tür <span class="is-required">*</span></label>
+                <select asp-for="Species" id="animalSpecies" class="form-control-ui" required>
+                    <option value="">Seçiniz</option>
+
+                    @foreach (var item in ViewBag.Species)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                    <option value="Diğer">Diğer</option>
+                </select>
+                <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir tür seçin.</span>
+            </div>
+
+            <div class="form-group-ui"
+                 id="otherSpeciesGroup"
+                 style="display: none; margin-top: var(--space-3);">
+
+                <label class="form-label-ui" for="otherSpecies">
+                    Hayvan Türü <span class="is-required">*</span>
+                </label>
+
+                <input type="text"
+                       id="otherSpecies"
+                       class="form-control-ui"
+                       placeholder="Örn. Hamster" />
+
+                <span class="text-tiny text-muted-light">
+                    Listede bulunmayan hayvan türünü yazabilirsiniz.
+                </span>
+            </div>
+
+            <div class="form-group-ui">
+                <label class="form-label-ui" for="animalBreed">Irk</label>
+                <input asp-for="Breed" type="text" id="animalBreed" class="form-control-ui" placeholder="Örn. Golden Retriever">
+            </div>
+
+            <div class="form-group-ui">
+                <label class="form-label-ui" for="animalCity">Şehir</label>
+                <input asp-for="City" type="text" id="animalCity" class="form-control-ui" placeholder="Örn. İstanbul">
+            </div>
+
+            <div class="form-group-ui" id="ageGroup">
+                <label class="form-label-ui" for="animalAge">Yaş <span class="animal-form-unit">(yıl)</span> <span class="is-required">*</span></label>
+                <input asp-for="Age" type="number" id="animalAge" class="form-control-ui" placeholder="0" min="0" step="1" required>
+                <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Yaş bilgisi gereklidir.</span>
+            </div>
+
+            <div class="form-group-ui" id="weightGroup">
+                <label class="form-label-ui" for="animalWeight">Kilo <span class="animal-form-unit">(kg)</span> <span class="is-required">*</span></label>
+                <input asp-for="Weight" type="number" id="animalWeight" class="form-control-ui" placeholder="0" min="0" step="0.1" required>
+                <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Kilo bilgisi gereklidir.</span>
+            </div>
+
+            <div class="form-group-ui" id="heightGroup">
+                <label class="form-label-ui" for="animalHeight">Boy <span class="animal-form-unit">(cm)</span> <span class="is-required">*</span></label>
+                <input asp-for="Height" type="number" id="animalHeight" class="form-control-ui" placeholder="0" min="0" step="1" required>
+                <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Boy bilgisi gereklidir.</span>
+            </div>
+
+            <div class="form-group-ui" style="grid-column: 1 / -1;">
+                <label class="form-label-ui" for="animalImageUrl">Hayvan Fotoğrafı</label>
+                <div class="input-icon-wrap">
+                    <i class="bi bi-link-45deg input-icon-wrap-icon" aria-hidden="true"></i>
+                    <input asp-for="ImageUrl" type="url" id="animalImageUrl" class="form-control-ui" placeholder="https://...">
+                </div>
+                <span class="text-tiny text-muted-light">Fotoğrafınızın bağlantısını (URL) yapıştırın.</span>
+            </div>
+
+            <div class="form-group-ui" style="grid-column: 1 / -1;">
+                <label class="form-label-ui" for="animalMedicalHistory">Tıbbi Geçmiş</label>
+                <textarea id="animalMedicalHistory" asp-for="MedicalHistory" class="form-control-ui" placeholder="Hayvanınızın bilinen sağlık geçmişi, alerjileri veya önemli bilgileri..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-ui btn-ui--ghost" href="/animal/index"><i class="bi bi-x-lg"></i> Vazgeç</a>
+            <button type="submit" class="btn-ui btn-ui--primary"><i class="bi bi-check-lg"></i> Hayvanı Kaydet</button>
+        </div>
+    </form>
+</div>

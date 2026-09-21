@@ -1,0 +1,40 @@
+﻿<section class="animal-stats" aria-label="Özet bilgiler">
+    <div class="card-ui animal-stat-card">
+        <div class="card-icon-tile is-primary"><i class="bi bi-clipboard2-pulse"></i></div>
+        <div>
+            <div class="stat-card-value">@ViewBag.TotalAnimal</div>
+            <div class="stat-card-label">Toplam Hayvan</div>
+        </div>
+    </div>
+    <div class="card-ui animal-stat-card">
+        <div class="card-icon-tile is-info"><i class="bi bi-calendar2-week"></i></div>
+        <div style="flex: 1;">
+            <div class="stat-card-value">@ViewBag.UpcomingAppointmenCount</div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div class="stat-card-label">Yaklaşan Randevu</div>
+
+                <a href="/Appointment/Index" class="btn btn-ui btn-ui--primary">
+                    <i class="bi bi-calendar2-week"></i>
+                    Randevular
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-ui animal-stat-card">
+        <div class="card-icon-tile is-success"><i class="bi bi-clock-history"></i></div>
+        <div style="flex: 1;">
+            <div class="stat-card-value">@ViewBag.TreatmentHistory</div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div class="stat-card-label">Tedavi Geçmişi</div>
+
+                <a href="/Treatment/Index" class="btn btn-ui btn-ui--primary">
+                    <i class="bi bi-lg"></i>
+                    <i class="bi bi-clipboard2-pulse"></i> Tedaviler <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

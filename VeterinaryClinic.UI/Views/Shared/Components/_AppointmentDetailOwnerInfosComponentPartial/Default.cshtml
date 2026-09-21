@@ -1,0 +1,13 @@
+﻿@model UserDto
+
+<section class="card-ui" aria-label="Sahip bilgileri">
+    <div class="card-header-row" style="margin-bottom: 0.6rem;">
+        <div class="card-header-title">
+            <div class="card-icon-tile is-primary"><i class="bi bi-person"></i></div>
+            <h2 class="text-section-title">Sahip Bilgileri</h2>
+        </div>
+    </div>
+    <div class="appointment-detail-owner-row"><i class="bi bi-person-circle"></i><span class="appointment-detail-owner-name">@Model.FullName</span></div>
+    <div class="appointment-detail-owner-row"><i class="bi bi-telephone"></i><span>@Model.PhoneNumber</span></div>
+    <div class="appointment-detail-owner-row"><i class="bi bi-envelope"></i><span>@Model.Email</span></div>
+</section>

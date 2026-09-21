@@ -1,0 +1,57 @@
+﻿@model List<AppointmentDto>
+
+<div class="animal-detail-columns">
+
+    <div class="card-ui" aria-label="Son randevular">
+        <div class="card-header-row">
+            <h2 class="text-card-title">Son Randevular</h2>
+            <a href="/appointments/index" class="link-action">Tümünü Gör <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div>
+            @foreach(var item in Model)
+            {
+                <div class="animal-appointment-item">
+                    <div class="animal-appointment-date">
+                        <span class="animal-appointment-date-day">@item.Date.ToString("dd")</span>
+                        <span class="animal-appointment-date-month">@item.Date.ToString("MMM")</span>
+                    </div>
+                    <span class="animal-appointment-sep"></span>
+                    <div class="animal-appointment-body">
+                        <div class="animal-appointment-title">@item.Notes</div>
+                        <div class="animal-appointment-time">@item.Time.ToString(@"hh\:mm")</div>
+                    </div>
+                    @if (item.Status == "Scheduled")
+                    {
+                        <span class="badge-ui badge-ui--info">Planlandı</span>
+                    }
+                    else if (item.Status == "Completed")
+                    {
+                        <span class="badge-ui badge-ui--success">Tamamlandı</span>
+                    }
+                    else if (item.Status == "Cancelled")
+                    {
+                        <span class="badge-ui badge-ui--danger">İptal Edildi</span>
+                    }
+                    else
+                    {
+                        <span class="badge-ui badge-ui--info">@item.Status</span>
+                    }
+                </div>
+
+            }
+        </div>
+    </div>
+
+    <div class="card-ui" aria-label="Notlar">
+        <div class="card-header-row">
+            <h2 class="text-card-title">Notlar</h2>
+            <button type="button" class="animal-notes-edit-btn" id="editNoteBtn" aria-label="Notu düzenle">
+                <i class="bi bi-pencil"></i>
+            </button>
+        </div>
+        <div class="animal-notes-box">
+            Kalabalık ortamlarda biraz çekingen davranıyor; muayene sırasında sakin bir ortam tercih ediliyor.
+        </div>
+    </div>
+
+</div>

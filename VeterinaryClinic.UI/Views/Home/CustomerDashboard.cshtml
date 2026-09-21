@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@await Component.InvokeAsync("_CustomerDashboardHeaderComponentPartial")
+@await Component.InvokeAsync("_CustomerDashboardStatisticsComponentPartial")
+@await Component.InvokeAsync("_CustomerDashboardMyAnimalsComponentPartial")
+
+<section style="margin-top:var(--space-6);">
+    <div class="grid-2">
+        <!-- Upcoming Appointment -->
+        @await Component.InvokeAsync("_CustomerDashboardUpcomingAppointmentComponentPartial")
+        <!-- Weather -->
+        @await Component.InvokeAsync("_CustomerDashboardWeatherComponentPartial")
+    </div>
+</section>
+
+<section style="margin-top:var(--space-6);">
+    <div class="grid-2">
+        <!-- Financial Summary -->
+        @await Component.InvokeAsync("_CustomerDashboardFinancialSummaryComponentPartial")
+        <!-- Quick Actions -->
+        @await Component.InvokeAsync("_CustomerDashboardQuickActionsComponentPartial")
+    </div>
+</section>

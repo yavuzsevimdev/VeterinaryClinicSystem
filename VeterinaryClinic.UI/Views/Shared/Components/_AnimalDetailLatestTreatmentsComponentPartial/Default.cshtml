@@ -1,0 +1,131 @@
+﻿@model List<LatestTreatmentDto>
+
+
+<!-- ==========================================================
+         TEDAVİ LİSTESİ
+         Şimdilik örnek veri.
+         Daha sonra API'den gelen Model ile dinamik hale getireceğiz.
+         ========================================================== -->
+
+<div class="animal-treatment-list">
+
+    @foreach (var item in Model)
+    {
+        <div class="animal-treatment-item">
+
+            <div class="animal-treatment-date">
+                <span class="animal-treatment-date-day">@item.Date.ToString("dd")</span>
+                <span class="animal-treatment-date-month">@item.Date.ToString("MMM")</span>
+                <span class="animal-treatment-date-year">@item.Date.ToString("yyyy")</span>
+            </div>
+
+
+            <div class="animal-treatment-icon">
+                <i class="bi bi-heart-pulse"></i>
+            </div>
+
+
+            <div class="animal-treatment-body">
+
+                <div class="animal-treatment-title">
+                    @item.TreatmentType
+                </div>
+
+                <div class="animal-treatment-description">
+                    @item.Notes
+                </div>
+
+                <div class="animal-treatment-meta">
+
+                    <span>
+                        <i class="bi bi-person"></i>
+                        Veteriner Hekim
+                    </span>
+
+                    <span>
+                        <i class="bi bi-calendar3"></i>
+                        @item.Time.ToString(@"hh\:mm")
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="animal-treatment-cost">
+
+                <span class="animal-treatment-cost-label">
+                    Ücret
+                </span>
+
+                <strong>
+                    @item.Cost ₺
+                </strong>
+
+            </div>
+
+
+            <span class="badge-ui badge-ui--success">
+                @item.Status
+            </span>
+
+        </div>
+
+    }
+
+</div>
+
+
+<!-- ==========================================================
+         TIBBİ NOT
+         ============================================================== -->
+
+<div class="animal-medical-history-box"
+     style="margin-top: 1.5rem;">
+
+    <div class="card-icon-tile is-primary">
+        <i class="bi bi-info-circle"></i>
+    </div>
+
+    <div style="flex: 1; min-width: 0;">
+
+        <div style="display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;">
+
+            <h3 class="text-card-title">
+                Tıbbi Not
+            </h3>
+
+            <button type="button"
+                    class="animal-notes-edit-btn"
+                    id="editMedicalHistoryBtn"
+                    aria-label="Tıbbi notu düzenle">
+
+                <i class="bi bi-pencil"></i>
+
+            </button>
+
+        </div>
+
+        <p class="animal-medical-history-text"
+           style="margin-top: 4px;">
+
+            @if (!string.IsNullOrWhiteSpace(Model[0].Notes))
+            {
+                @Model[0].Notes;
+            }
+            else
+            {
+                <span class="is-empty">
+                    Henüz tıbbi geçmiş bilgisi eklenmemiş.
+                </span>
+            }
+
+        </p>
+
+    </div>
+
+</div>
+

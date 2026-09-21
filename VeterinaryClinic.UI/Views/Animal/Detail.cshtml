@@ -1,0 +1,1438 @@
+﻿@model AnimalDto
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pamuk — Hayvan Detayı — VetCare</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
+    <style>
+
+            /* ==========================================================================
+                             GLOBAL / VARIABLES — reused verbatim from the VetCare Global UI Foundation
+                             ========================================================================== */
+
+            :root {
+                --color-primary: #6C63A8;
+                --color-primary-dark: #554C91;
+                --color-primary-light: #EDEBF7;
+                --color-secondary: #8FC9B5;
+                --color-secondary-light: #E7F4EF;
+                --color-accent: #F3B7A5;
+                --color-accent-light: #FDEEE9;
+                --color-background: #F8F7FC;
+                --color-surface: #FFFFFF;
+                --color-surface-alt: #FBFAFD;
+                --color-border: #E7E4F2;
+                --color-border-strong: #D8D3EC;
+                --color-text: #303044;
+                --color-muted: #7B7B90;
+                --color-muted-light: #A6A4B8;
+                --color-success: #71B58A;
+                --color-success-light: #E7F5EC;
+                --color-warning: #E8B86A;
+                --color-warning-light: #FBF0DE;
+                --color-danger: #DF7C89;
+                --color-danger-light: #FBE9EB;
+                --color-info: #7FAFD0;
+                --color-info-light: #E9F2F8;
+                --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+                --font-family-base: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                --radius-sm: 8px;
+                --radius-md: 12px;
+                --radius-lg: 16px;
+                --radius-xl: 22px;
+                --radius-pill: 999px;
+                --shadow-xs: 0 1px 2px rgba(48, 48, 68, 0.05);
+                --shadow-sm: 0 2px 8px rgba(48, 48, 68, 0.06);
+                --shadow-md: 0 8px 24px rgba(48, 48, 68, 0.08);
+                --shadow-lg: 0 16px 40px rgba(48, 48, 68, 0.14);
+                --shadow-primary-glow: 0 8px 20px rgba(108, 99, 168, 0.28);
+                --transition-fast: 150ms ease;
+                --transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+                --transition-slow: 360ms cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: var(--font-family-base);
+                background-color: var(--color-background);
+                color: var(--color-text);
+                font-size: 0.9375rem;
+                line-height: 1.55;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            img, svg {
+                display: block;
+                max-width: 100%;
+            }
+
+            button {
+                font: inherit;
+                color: inherit;
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            :focus-visible {
+                outline: 2px solid var(--color-primary);
+                outline-offset: 2px;
+                border-radius: var(--radius-sm);
+            }
+
+            h1, h2, h3 {
+                margin: 0;
+                font-weight: 600;
+                line-height: 1.25;
+            }
+
+            .text-page-title {
+                font-size: 1.85rem;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+
+            .text-section-title {
+                font-size: 1.15rem;
+                font-weight: 600;
+            }
+
+            .text-card-title {
+                font-size: 1.05rem;
+                font-weight: 600;
+            }
+
+            .text-small {
+                font-size: 0.8125rem;
+            }
+
+            .text-tiny {
+                font-size: 0.75rem;
+            }
+
+            .text-muted {
+                color: var(--color-muted) !important;
+            }
+
+            .text-muted-light {
+                color: var(--color-muted-light) !important;
+            }
+
+            /* ---- Minimal layout shim standing in for the real app shell's content area ---- */
+            .app-content {
+                max-width: 1320px;
+                margin: 0 auto;
+                padding: 2rem 2.5rem 4rem;
+            }
+
+            .app-content-inner {
+                display: flex;
+                flex-direction: column;
+                gap: 1.75rem;
+            }
+
+            .grid-2 {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            /* ---- Reused global components ---- */
+
+            .card-ui {
+                background-color: var(--color-surface);
+                border: 1px solid var(--color-border);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                box-shadow: var(--shadow-xs);
+                transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+            }
+
+            .card-ui--interactive {
+                cursor: pointer;
+            }
+
+                .card-ui--interactive:hover {
+                    box-shadow: var(--shadow-md);
+                    transform: translateY(-3px);
+                    border-color: var(--color-border-strong);
+                }
+
+            .btn-ui {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                border-radius: var(--radius-md);
+                font-weight: 600;
+                font-size: 0.85rem;
+                line-height: 1;
+                white-space: nowrap;
+                border: 1px solid transparent;
+                padding: 0.65rem 1.1rem;
+                transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+            }
+
+                .btn-ui:active {
+                    transform: scale(0.98);
+                }
+
+            .btn-ui--sm {
+                padding: 0.45rem 0.85rem;
+                font-size: 0.78rem;
+                border-radius: var(--radius-sm);
+            }
+
+            .btn-ui--primary {
+                background: var(--gradient-primary);
+                color: #fff;
+                box-shadow: var(--shadow-primary-glow);
+            }
+
+                .btn-ui--primary:hover {
+                    filter: brightness(1.06);
+                }
+
+            .btn-ui--ghost {
+                background-color: transparent;
+                border-color: var(--color-border-strong);
+                color: var(--color-text);
+            }
+
+                .btn-ui--ghost:hover {
+                    border-color: var(--color-primary);
+                    color: var(--color-primary-dark);
+                    background-color: var(--color-primary-light);
+                }
+
+            .badge-ui {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 0.3rem 0.65rem;
+                border-radius: var(--radius-pill);
+                font-size: 0.7rem;
+                font-weight: 600;
+                line-height: 1;
+                white-space: nowrap;
+            }
+
+                .badge-ui::before {
+                    content: "";
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background-color: currentColor;
+                }
+
+            .badge-ui--success {
+                background-color: var(--color-success-light);
+                color: #3f7d5c;
+            }
+
+            .badge-ui--danger {
+                background-color: var(--color-danger-light);
+                color: #b8495a;
+            }
+
+            .badge-ui--info {
+                background-color: var(--color-info-light);
+                color: #3d76a0;
+            }
+
+            .card-icon-tile {
+                flex: 0 0 auto;
+                width: 40px;
+                height: 40px;
+                border-radius: var(--radius-md);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.05rem;
+            }
+
+                .card-icon-tile.is-primary {
+                    background-color: var(--color-primary-light);
+                    color: var(--color-primary);
+                }
+
+                .card-icon-tile.is-secondary {
+                    background-color: var(--color-secondary-light);
+                    color: #3f7d64;
+                }
+
+                .card-icon-tile.is-accent {
+                    background-color: var(--color-accent-light);
+                    color: #c96b4f;
+                }
+
+                .card-icon-tile.is-info {
+                    background-color: var(--color-info-light);
+                    color: var(--color-info);
+                }
+
+            .card-header-row {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 0.75rem;
+                margin-bottom: 1.1rem;
+            }
+
+            .link-action {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                font-size: 0.8125rem;
+                font-weight: 600;
+                color: var(--color-primary);
+            }
+
+                .link-action:hover {
+                    color: var(--color-primary-dark);
+                }
+
+            .breadcrumb-ui {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px;
+                font-size: 0.8125rem;
+            }
+
+            .breadcrumb-ui-item {
+                color: var(--color-muted);
+                font-weight: 500;
+            }
+
+                .breadcrumb-ui-item.is-current {
+                    color: var(--color-text);
+                    font-weight: 600;
+                }
+
+            .breadcrumb-ui-sep {
+                color: var(--color-muted-light);
+                font-size: 0.7rem;
+            }
+
+            /*
+                        */
+
+            /* ==========================================================================
+                           RECENT TREATMENTS
+                           ========================================================================== */
+
+            .animal-treatments-card {
+                width: 100%;
+            }
+
+            .animal-treatment-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .animal-treatment-item {
+                display: grid;
+                grid-template-columns: 80px 48px minmax(0, 1fr) 110px 125px;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem;
+                background-color: var(--color-surface-alt);
+                border: 1px solid var(--color-border);
+                border-radius: var(--radius-md);
+                transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+            }
+
+                .animal-treatment-item:hover {
+                    border-color: var(--color-border-strong);
+                    box-shadow: var(--shadow-sm);
+                    transform: translateY(-1px);
+                }
+
+
+            /* ---- Date ---- */
+
+            .animal-treatment-date {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 72px;
+                padding: 0.5rem;
+                border-radius: var(--radius-md);
+                background-color: var(--color-primary-light);
+                color: var(--color-primary-dark);
+                text-align: center;
+            }
+
+            .animal-treatment-date-day {
+                font-size: 1.35rem;
+                font-weight: 700;
+                line-height: 1;
+            }
+
+            .animal-treatment-date-month {
+                margin-top: 4px;
+                font-size: 0.65rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+            }
+
+            .animal-treatment-date-year {
+                margin-top: 2px;
+                font-size: 0.65rem;
+                color: var(--color-muted);
+            }
+
+
+            /* ---- Treatment icon ---- */
+
+            .animal-treatment-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: var(--radius-md);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 auto;
+                background-color: var(--color-primary-light);
+                color: var(--color-primary);
+                font-size: 1.15rem;
+            }
+
+                .animal-treatment-icon.is-secondary {
+                    background-color: var(--color-secondary-light);
+                    color: #3f7d64;
+                }
+
+                .animal-treatment-icon.is-accent {
+                    background-color: var(--color-accent-light);
+                    color: #c96b4f;
+                }
+
+
+            /* ---- Treatment body ---- */
+
+            .animal-treatment-body {
+                min-width: 0;
+            }
+
+            .animal-treatment-title {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: var(--color-text);
+            }
+
+            .animal-treatment-description {
+                margin-top: 3px;
+                font-size: 0.78rem;
+                color: var(--color-muted);
+            }
+
+            .animal-treatment-meta {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-top: 7px;
+                color: var(--color-muted-light);
+                font-size: 0.7rem;
+            }
+
+                .animal-treatment-meta span {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+
+                .animal-treatment-meta i {
+                    color: var(--color-primary);
+                }
+
+
+            /* ---- Cost ---- */
+
+            .animal-treatment-cost {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center;
+                padding-left: 1rem;
+                border-left: 1px solid var(--color-border);
+            }
+
+            .animal-treatment-cost-label {
+                font-size: 0.7rem;
+                color: var(--color-muted-light);
+            }
+
+            .animal-treatment-cost strong {
+                margin-top: 2px;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: var(--color-text);
+                white-space: nowrap;
+            }
+
+
+            /* ---- Responsive ---- */
+
+            @@media (max-width: 991.98px) {
+
+                .animal-treatment-item {
+                    grid-template-columns: 70px 44px minmax(0, 1fr);
+                }
+
+                .animal-treatment-cost {
+                    grid-column: 3;
+                    border-left: none;
+                    border-top: 1px solid var(--color-border);
+                    padding-left: 0;
+                    padding-top: 0.65rem;
+                }
+
+                .animal-treatment-item > .badge-ui {
+                    grid-column: 3;
+                    justify-self: start;
+                }
+            }
+
+
+            @@media (max-width: 575.98px) {
+
+                .animal-treatment-item {
+                    grid-template-columns: 60px 1fr;
+                    gap: 0.75rem;
+                }
+
+                .animal-treatment-date {
+                    grid-row: span 2;
+                    min-height: 65px;
+                }
+
+                .animal-treatment-icon {
+                    width: 40px;
+                    height: 40px;
+                    grid-column: 2;
+                    grid-row: 1;
+                }
+
+                .animal-treatment-body {
+                    grid-column: 2;
+                    grid-row: 2;
+                }
+
+                .animal-treatment-cost {
+                    grid-column: 2;
+                    grid-row: 3;
+                    border-top: 1px solid var(--color-border);
+                    padding-top: 0.65rem;
+                }
+
+                .animal-treatment-item > .badge-ui {
+                    grid-column: 2;
+                    grid-row: 4;
+                }
+            }
+
+            /* ==========================================================================
+                             PAGE HEADER / BREADCRUMB ROW
+                             ========================================================================== */
+
+            .animal-detail-topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            /* ==========================================================================
+                             MAIN PROFILE — image (≈45%) + information (≈55%)
+                             ========================================================================== */
+
+            .animal-profile-grid {
+                display: grid;
+                grid-template-columns: 45fr 55fr;
+                gap: 1.75rem;
+                align-items: stretch;
+            }
+
+            /* ---- Image card ---- */
+
+            .animal-profile-image-card {
+                padding: 0;
+                overflow: hidden;
+                position: relative;
+                display: flex;
+            }
+
+            .animal-profile-media {
+                position: relative;
+                width: 100%;
+                min-height: 380px;
+                overflow: hidden;
+                background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .animal-profile-media-fallback {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+                color: var(--color-primary);
+                opacity: 0.6;
+            }
+
+                .animal-profile-media-fallback i {
+                    font-size: 3rem;
+                }
+
+                .animal-profile-media-fallback span {
+                    font-size: 0.8125rem;
+                    font-weight: 600;
+                    opacity: 0.85;
+                }
+
+            .animal-profile-media img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .animal-profile-media-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(48, 48, 68, 0) 55%, rgba(48, 48, 68, 0.5) 100%);
+                pointer-events: none;
+            }
+
+            .animal-profile-species-badge {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1;
+                background-color: rgba(255, 255, 255, 0.94);
+                color: var(--color-text);
+                font-size: 0.75rem;
+                font-weight: 600;
+                padding: 5px 12px;
+                border-radius: var(--radius-pill);
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .animal-profile-favorite-btn {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                z-index: 1;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.94);
+                color: var(--color-muted);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                box-shadow: var(--shadow-sm);
+                transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+            }
+
+                .animal-profile-favorite-btn:hover {
+                    transform: scale(1.06);
+                }
+
+                .animal-profile-favorite-btn.is-active {
+                    color: var(--color-danger);
+                }
+
+                .animal-profile-favorite-btn .bi-heart-fill {
+                    display: none;
+                }
+
+                .animal-profile-favorite-btn.is-active .bi-heart {
+                    display: none;
+                }
+
+                .animal-profile-favorite-btn.is-active .bi-heart-fill {
+                    display: inline;
+                }
+
+            .animal-profile-caption {
+                position: absolute;
+                left: 1.1rem;
+                right: 1.1rem;
+                bottom: 1rem;
+                z-index: 1;
+                color: #fff;
+                font-size: 0.8125rem;
+                font-weight: 500;
+                text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            /* ---- Information card ---- */
+
+            .animal-profile-info-card {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .animal-profile-name {
+                font-size: 1.75rem;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+
+            .animal-profile-desc {
+                margin-top: 0.35rem;
+                color: var(--color-muted);
+                font-size: 0.9rem;
+            }
+
+            .animal-info-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.9rem;
+            }
+
+            .animal-info-item {
+                display: flex;
+                align-items: center;
+                gap: 0.65rem;
+                padding: 0.75rem 0.8rem;
+                background-color: var(--color-surface-alt);
+                border: 1px solid var(--color-border);
+                border-radius: var(--radius-md);
+            }
+
+            .animal-info-icon {
+                flex: 0 0 auto;
+                width: 34px;
+                height: 34px;
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+            }
+
+                .animal-info-icon.is-secondary {
+                    background-color: var(--color-secondary-light);
+                    color: #3f7d64;
+                }
+
+                .animal-info-icon.is-accent {
+                    background-color: var(--color-accent-light);
+                    color: #c96b4f;
+                }
+
+                .animal-info-icon.is-primary {
+                    background-color: var(--color-primary-light);
+                    color: var(--color-primary);
+                }
+
+                .animal-info-icon.is-info {
+                    background-color: var(--color-info-light);
+                    color: var(--color-info);
+                }
+
+            .animal-info-text {
+                min-width: 0;
+            }
+
+            .animal-info-label {
+                display: block;
+                font-size: 0.6875rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                color: var(--color-muted-light);
+            }
+
+            .animal-info-value {
+                display: block;
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: var(--color-text);
+                margin-top: 1px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .animal-medical-history-box {
+                display: flex;
+                gap: 0.85rem;
+                padding: 1rem 1.1rem;
+                border-radius: var(--radius-md);
+                background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
+                border: 1px solid var(--color-border);
+            }
+
+                .animal-medical-history-box .card-icon-tile {
+                    background-color: rgba(255, 255, 255, 0.7);
+                    color: var(--color-primary-dark);
+                }
+
+            .animal-medical-history-text {
+                font-size: 0.85rem;
+                color: var(--color-text);
+                line-height: 1.6;
+            }
+
+                .animal-medical-history-text.is-empty {
+                    color: var(--color-muted);
+                    font-style: italic;
+                }
+
+            .animal-profile-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1.25rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--color-border);
+            }
+
+            .animal-profile-meta-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.75rem;
+                color: var(--color-muted-light);
+                font-weight: 500;
+            }
+
+            /* ==========================================================================
+                             PHOTO URL INFORMATION CARD
+                             ========================================================================== */
+
+            .animal-photo-url-card {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                min-width: 0;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .animal-photo-url-text {
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 0.8125rem;
+                color: var(--color-muted);
+            }
+
+            /* ==========================================================================
+                             ACTION CARDS
+                             ========================================================================== */
+
+            .animal-action-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.25rem;
+            }
+
+            .animal-action-card {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                text-align: left;
+                width: 100%;
+            }
+
+            .animal-action-body {
+                flex: 1 1 auto;
+                min-width: 0;
+                text-align: left;
+            }
+
+            .animal-action-title {
+                font-size: 0.9375rem;
+                font-weight: 600;
+            }
+
+            .animal-action-subtitle {
+                font-size: 0.78125rem;
+                color: var(--color-muted);
+                margin-top: 2px;
+            }
+
+            .animal-action-arrow {
+                flex: 0 0 auto;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+                background-color: var(--color-surface-alt);
+                color: var(--color-muted);
+                transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+            }
+
+            .animal-action-card:hover .animal-action-arrow {
+                transform: translateX(3px);
+            }
+
+            .animal-action-card.is-appointment:hover .animal-action-arrow {
+                background-color: var(--color-info-light);
+                color: var(--color-info);
+            }
+
+            .animal-action-card.is-treatment:hover .animal-action-arrow {
+                background-color: var(--color-secondary-light);
+                color: #3f7d64;
+            }
+
+            .animal-action-card.is-payment:hover .animal-action-arrow {
+                background-color: var(--color-primary-light);
+                color: var(--color-primary);
+            }
+
+            /* ==========================================================================
+                             APPOINTMENTS + NOTES
+                             ========================================================================== */
+
+            .animal-detail-columns {
+                display: grid;
+                grid-template-columns: 3fr 2fr;
+                gap: 1.5rem;
+                align-items: start;
+            }
+
+            .animal-appointment-item {
+                display: flex;
+                align-items: center;
+                gap: 0.9rem;
+                padding: 0.85rem 0;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+                .animal-appointment-item:last-child {
+                    border-bottom: none;
+                    padding-bottom: 0;
+                }
+
+                .animal-appointment-item:first-child {
+                    padding-top: 0;
+                }
+
+            .animal-appointment-date {
+                flex: 0 0 auto;
+                width: 56px;
+                text-align: center;
+            }
+
+            .animal-appointment-date-day {
+                display: block;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--color-text);
+                line-height: 1;
+            }
+
+            .animal-appointment-date-month {
+                display: block;
+                font-size: 0.65rem;
+                font-weight: 600;
+                color: var(--color-muted-light);
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                margin-top: 2px;
+            }
+
+            .animal-appointment-sep {
+                flex: 0 0 auto;
+                width: 1px;
+                height: 34px;
+                background-color: var(--color-border);
+            }
+
+            .animal-appointment-body {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+
+            .animal-appointment-title {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: var(--color-text);
+            }
+
+            .animal-appointment-time {
+                font-size: 0.75rem;
+                color: var(--color-muted-light);
+                margin-top: 2px;
+            }
+
+            .animal-notes-box {
+                padding: 1rem 1.1rem;
+                border-radius: var(--radius-md);
+                background-color: var(--color-surface-alt);
+                border: 1px solid var(--color-border);
+                font-size: 0.85rem;
+                color: var(--color-text);
+                line-height: 1.6;
+            }
+
+            .animal-notes-edit-btn {
+                flex: 0 0 auto;
+                width: 32px;
+                height: 32px;
+                border-radius: var(--radius-sm);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--color-muted);
+                font-size: 0.9rem;
+                transition: background-color var(--transition-fast), color var(--transition-fast);
+            }
+
+                .animal-notes-edit-btn:hover {
+                    background-color: var(--color-primary-light);
+                    color: var(--color-primary-dark);
+                }
+
+            /* ---- Toast (self-contained demo feedback) ---- */
+
+            .animal-toast-stack {
+                position: fixed;
+                top: 1.5rem;
+                right: 1.5rem;
+                z-index: 999;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                width: min(340px, calc(100vw - 3rem));
+            }
+
+            .animal-toast {
+                background-color: var(--color-surface);
+                border-radius: var(--radius-md);
+                box-shadow: var(--shadow-lg);
+                border: 1px solid var(--color-border);
+                padding: 0.9rem 1rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.65rem;
+                position: relative;
+                overflow: hidden;
+                animation: animal-toast-in var(--transition-slow);
+            }
+
+                .animal-toast.is-leaving {
+                    animation: animal-toast-out var(--transition-base) forwards;
+                }
+
+                .animal-toast::before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 4px;
+                    background-color: var(--color-primary);
+                }
+
+            .animal-toast-icon {
+                color: var(--color-primary);
+                font-size: 1.05rem;
+            }
+
+            .animal-toast-message {
+                font-size: 0.8125rem;
+                color: var(--color-text);
+            }
+
+            @@keyframes animal-toast-in {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @@keyframes animal-toast-out {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                to {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+            }
+
+            /* ==========================================================================
+                             RESPONSIVE
+                             ========================================================================== */
+
+            @@media (max-width: 1199.98px) {
+                .app-content {
+                    padding: 1.75rem;
+                }
+            }
+
+            @@media (max-width: 991.98px) {
+                .animal-profile-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .animal-profile-media {
+                    min-height: 300px;
+                }
+
+                .animal-detail-columns {
+                    grid-template-columns: 1fr;
+                }
+
+                .animal-action-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
+            @@media (max-width: 767.98px) {
+                .app-content {
+                    padding: 1.25rem;
+                }
+
+                .animal-info-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .animal-action-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .grid-2 {
+                    grid-template-columns: 1fr;
+                }
+
+                .animal-detail-topbar {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+            }
+
+            @@media (max-width: 419.98px) {
+                .animal-info-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .animal-photo-url-card {
+                    flex-wrap: wrap;
+                }
+            }
+
+    </style>
+</head>
+<body>
+
+    <main class="app-content">
+        <div class="app-content-inner">
+
+            <!-- ==================================================================
+           A) BREADCRUMB / PAGE NAVIGATION
+           ================================================================== -->
+            <div class="animal-detail-topbar">
+                <nav class="breadcrumb-ui" aria-label="Breadcrumb">
+                    <span class="breadcrumb-ui-item"><a href="/home/dashboard">Home</a></span>
+                    <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
+                    <span class="breadcrumb-ui-item"><a href="/animal/index">Hayvanlarım</a></span>
+                    <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
+                    <span class="breadcrumb-ui-item is-current">Pamuk</span>
+                </nav>
+                <a href="/animal/index" class="btn-ui btn-ui--ghost btn-ui--sm" id="backToListBtn">
+                    <i class="bi bi-arrow-left"></i> Listeye Dön
+                </a>
+            </div>
+
+            <!-- ==================================================================
+           B) MAIN ANIMAL PROFILE
+           ================================================================== -->
+            <div class="animal-profile-grid">
+
+                <!-- ---- Image card ---- -->
+                <div class="card-ui animal-profile-image-card">
+                    <div class="animal-profile-media" id="profileMedia">
+                        <div class="animal-profile-media-fallback" id="profileMediaFallback">
+                            <i class="bi bi-heart-pulse"></i>
+                            <span>Fotoğraf mevcut değil</span>
+                        </div>
+                        <img id="profileImage" alt="@Model.Name" src="@Model.ImageUrl">
+                        <div class="animal-profile-media-overlay"></div>
+                        <span class="animal-profile-species-badge">@Model.Species</span>
+                        <button type="button" class="animal-profile-favorite-btn" id="favoriteBtn" aria-pressed="false" aria-label="Favorilere ekle">
+                            <i class="bi bi-heart"></i>
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                        <span class="animal-profile-caption"><i class="bi bi-geo-alt-fill"></i> @Model.City </span>
+                    </div>
+                </div>
+
+                <!-- ---- Information card ---- -->
+                <div class="card-ui animal-profile-info-card">
+                    <div>
+                        <h1 class="animal-profile-name">@Model.Name </h1>
+                        <p class="animal-profile-desc">Evimizin neşesi.</p>
+                    </div>
+
+                    <div class="animal-info-grid">
+                        <div class="animal-info-item">
+                            <div class="animal-info-icon is-secondary"><i class="bi bi-clipboard2-pulse"></i></div>
+                            <div class="animal-info-text">
+                                <span class="animal-info-label">Tür</span>
+                                <span class="animal-info-value">@Model.Species</span>
+                            </div>
+                        </div>
+                        <div class="animal-info-item">
+                            <div class="animal-info-icon is-accent"><i class="bi bi-award"></i></div>
+                            <div class="animal-info-text">
+                                <span class="animal-info-label">Irk</span>
+                                <span class="animal-info-value">@Model.Breed</span>
+                            </div>
+                        </div>
+                        <div class="animal-info-item">
+                            <div class="animal-info-icon is-primary"><i class="bi bi-calendar3"></i></div>
+                            <div class="animal-info-text">
+                                <span class="animal-info-label">Yaş</span>
+                                <span class="animal-info-value">@Model.Age yıl</span>
+                            </div>
+                        </div>
+                        <div class="animal-info-item">
+                            <div class="animal-info-icon is-secondary"><i class="bi bi-speedometer2"></i></div>
+                            <div class="animal-info-text">
+                                <span class="animal-info-label">Kilo</span>
+                                <span class="animal-info-value">@Model.Weight kg</span>
+                            </div>
+                        </div>
+                        <div class="animal-info-item">
+                            <div class="animal-info-icon is-primary"><i class="bi bi-rulers"></i></div>
+                            <div class="animal-info-text">
+                                <span class="animal-info-label">Boy</span>
+                                <span class="animal-info-value">@Model.Height cm</span>
+                            </div>
+                        </div>
+                        <div class="animal-info-item">
+                            <div class="animal-info-icon is-info"><i class="bi bi-geo-alt"></i></div>
+                            <div class="animal-info-text">
+                                <span class="animal-info-label">Şehir</span>
+                                <span class="animal-info-value">@Model.City</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card-ui animal-photo-url-card" id="photoUrlCard">
+                        <div class="card-icon-tile is-primary"><i class="bi bi-link-45deg"></i></div>
+                        <div style="flex: 1 1 auto; min-width: 0;">
+                            <span class="text-small" style="font-weight: 600;">Fotoğraf Bağlantısı</span>
+                            <div class="animal-photo-url-text" id="photoUrlText">@Model.ImageUrl.Substring(0, 50) ...</div>
+                        </div>
+                        <a href="@Model.ImageUrl" target="_blank" rel="noopener" class="btn-ui btn-ui--ghost btn-ui--sm">
+                            <i class="bi bi-box-arrow-up-right"></i> Aç
+                        </a>
+                    </div>
+
+
+                    <!-- ---- I) Optional quick metadata ---- -->
+                    <div class="animal-profile-meta">
+                        <span class="animal-profile-meta-item"><i class="bi bi-calendar-plus"></i> Kayıt Tarihi: 12 Mart 2025</span>
+                        <span class="animal-profile-meta-item"><i class="bi bi-clock-history"></i> Son Güncelleme: 3 gün önce</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ---- D) Medical history ---- -->
+            <div class="card-ui animal-treatments-card">
+
+                <div class="card-header-row">
+
+                    <div style="display: flex; align-items: center; gap: 0.85rem;">
+
+                        <div class="card-icon-tile is-primary">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="text-card-title">Son Tedaviler</h2>
+
+                            <p class="text-small text-muted" style="margin-top: 2px;">
+                                @Model.Name adlı hayvanın son tedavi kayıtları.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <a href="/treatment/index?animalId=@Model.Id"
+                       class="link-action">
+                        Tümünü Gör
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+                @await Component.InvokeAsync("_AnimalDetailLatestTreatmentsComponentPartial", new { id = Model.Id })
+
+            </div>
+
+            <!-- ==================================================================
+           F) ACTION CARDS
+           ================================================================== -->
+            <div class="animal-action-grid">
+                <button type="button" class="card-ui card-ui--interactive animal-action-card is-appointment" data-toast="Randevu oluşturma bu prototipte pasif durumdadır.">
+                    <div class="card-icon-tile is-info"><i class="bi bi-calendar-plus"></i></div>
+                    <div class="animal-action-body">
+                        <div class="animal-action-title">Randevu Oluştur</div>
+                        <div class="animal-action-subtitle">@Model.Name için yeni randevu alın</div>
+                    </div>
+                    <a href="/appointment/create"><span class="animal-action-arrow"><i class="bi bi-arrow-right"></i></span></a>
+                </button>
+
+                <button type="button" class="card-ui card-ui--interactive animal-action-card is-treatment" data-toast="Tedavi geçmişi bu prototipte pasif durumdadır.">
+                    <div class="card-icon-tile is-secondary"><i class="bi bi-capsule"></i></div>
+                    <div class="animal-action-body">
+                        <div class="animal-action-title">Tedavi Geçmişi</div>
+                        <div class="animal-action-subtitle">Tüm tedavi kayıtlarını görüntüleyin</div>
+                    </div>
+                    <a href="/appointment/create"><span class="animal-action-arrow"><i class="bi bi-arrow-right"></i></span></a>
+                </button>
+
+                <button type="button" class="card-ui card-ui--interactive animal-action-card is-payment" data-toast="Ödeme geçmişi bu prototipte pasif durumdadır.">
+                    <div class="card-icon-tile is-primary"><i class="bi bi-credit-card-2-back"></i></div>
+                    <div class="animal-action-body">
+                        <div class="animal-action-title">Ödeme Geçmişi</div>
+                        <div class="animal-action-subtitle">Yapılan ödemeleri görüntüleyin</div>
+                    </div>
+                    <a href="/appointment/create"><span class="animal-action-arrow"><i class="bi bi-arrow-right"></i></span></a>
+                </button>
+            </div>
+
+            <!-- ==================================================================
+           G) RECENT APPOINTMENTS  +  H) NOTES
+           ================================================================== -->
+            @await Component.InvokeAsync("_AnimalDetailRecentAppointmentsComponentPartial", new { animalId = Model.Id })
+
+        </div>
+    </main>
+
+    <div class="animal-toast-stack" id="toastStack" aria-live="polite"></div>
+
+    <script>
+            /* ==========================================================================
+               JAVASCRIPT — page-specific prototype interactions only.
+               No API calls, no backend logic.
+               ========================================================================== */
+
+            (function () {
+                'use strict';
+
+                /* ---- Graceful image fallback ---- */
+                var profileImage = document.getElementById('profileImage');
+                var profileMediaFallback = document.getElementById('profileMediaFallback');
+
+                function showFallback() {
+                    profileImage.style.display = 'none';
+                    profileMediaFallback.style.display = 'flex';
+                }
+
+                profileMediaFallback.style.display = 'none';
+                profileImage.addEventListener('error', showFallback, { once: true });
+                if (!profileImage.getAttribute('src')) showFallback();
+
+                /* ---- Favorite toggle ---- */
+                var favoriteBtn = document.getElementById('favoriteBtn');
+                favoriteBtn.addEventListener('click', function () {
+                    var isActive = favoriteBtn.classList.toggle('is-active');
+                    favoriteBtn.setAttribute('aria-pressed', String(isActive));
+                });
+
+                /* ---- Lightweight self-contained toast ---- */
+                var toastStack = document.getElementById('toastStack');
+
+                function showToast(message) {
+                    var toast = document.createElement('div');
+                    toast.className = 'animal-toast';
+                    toast.setAttribute('role', 'status');
+                    toast.innerHTML =
+                        '<i class="bi bi-info-circle-fill animal-toast-icon"></i>' +
+                        '<span class="animal-toast-message"></span>';
+                    toast.querySelector('.animal-toast-message').textContent = message;
+                    toastStack.appendChild(toast);
+
+                    var timer = setTimeout(function () { dismissToast(toast); }, 3200);
+                    toast.dataset.timer = timer;
+                }
+
+                function dismissToast(toast) {
+                    if (!toast || toast.classList.contains('is-leaving')) return;
+                    clearTimeout(toast.dataset.timer);
+                    toast.classList.add('is-leaving');
+                    toast.addEventListener('animationend', function () { toast.remove(); }, { once: true });
+                }
+
+                /* ---- Action cards ---- */
+                document.querySelectorAll('[data-toast]').forEach(function (el) {
+                    el.addEventListener('click', function () {
+                        showToast(el.getAttribute('data-toast'));
+                    });
+                });
+
+                document.getElementById('editNoteBtn').addEventListener('click', function () {
+                    showToast('Not düzenleme bu prototipte pasif durumdadır.');
+                });
+
+
+            })();
+    </script>
+</body>
+</html>

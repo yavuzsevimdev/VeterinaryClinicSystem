@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VetCare OS — Global UI Foundation</title>
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5 (layout/grid utilities only — visual language is custom) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
+  <!-- VetCare OS design system -->
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <div class="app-overlay" data-app-overlay></div>
+
+  <div class="app-shell" data-app-shell>
+
+    <!-- ==================================================================
+         SIDEBAR  (future: _SidebarPartial.cshtml)
+         ================================================================== -->
+    <aside class="sidebar" aria-label="Primary navigation">
+
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-mark" aria-hidden="true">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">VetCare OS</span>
+          <span class="sidebar-brand-tag">Clinic Management</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div>
+          <div class="sidebar-group-label">Main</div>
+          <ul class="sidebar-list">
+            <li>
+              <a href="#" class="sidebar-link is-active" data-sidebar-link data-page-title="Dashboard" data-label="Dashboard">
+                <span class="sidebar-link-icon"><i class="bi bi-grid-1x2-fill"></i></span>
+                <span class="sidebar-link-text">Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Animals" data-label="Animals">
+                <span class="sidebar-link-icon"><i class="bi bi-clipboard2-pulse"></i></span>
+                <span class="sidebar-link-text">Animals</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Appointments" data-label="Appointments">
+                <span class="sidebar-link-icon"><i class="bi bi-calendar2-week"></i></span>
+                <span class="sidebar-link-text">Appointments</span>
+                <span class="sidebar-link-badge">4</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Treatments" data-label="Treatments">
+                <span class="sidebar-link-icon"><i class="bi bi-capsule"></i></span>
+                <span class="sidebar-link-text">Treatments</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Payments" data-label="Payments">
+                <span class="sidebar-link-icon"><i class="bi bi-credit-card-2-back"></i></span>
+                <span class="sidebar-link-text">Payments</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Reports" data-label="Reports">
+                <span class="sidebar-link-icon"><i class="bi bi-bar-chart-line"></i></span>
+                <span class="sidebar-link-text">Reports</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Weather" data-label="Weather">
+                <span class="sidebar-link-icon"><i class="bi bi-cloud-sun"></i></span>
+                <span class="sidebar-link-text">Weather</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="sidebar-group-label">Account</div>
+          <ul class="sidebar-list">
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Profile" data-label="Profile">
+                <span class="sidebar-link-icon"><i class="bi bi-person-circle"></i></span>
+                <span class="sidebar-link-text">Profile</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link" data-sidebar-link data-page-title="Settings" data-label="Settings">
+                <span class="sidebar-link-icon"><i class="bi bi-gear"></i></span>
+                <span class="sidebar-link-text">Settings</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <ul class="sidebar-list" style="margin-bottom: 8px;">
+          <li>
+            <a href="#" class="sidebar-link" data-label="Logout">
+              <span class="sidebar-link-icon"><i class="bi bi-box-arrow-left"></i></span>
+              <span class="sidebar-link-text">Logout</span>
+            </a>
+          </li>
+        </ul>
+        <button type="button" class="sidebar-toggle-inline" data-sidebar-collapse-toggle aria-label="Collapse sidebar">
+          <i class="bi bi-layout-sidebar-inset"></i>
+          <span>Collapse</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ==================================================================
+         MAIN COLUMN: TOPBAR + CONTENT
+         ================================================================== -->
+    <div class="app-main-column">
+
+      <!-- ================================================================
+           TOPBAR  (future: _TopbarPartial.cshtml)
+           ================================================================ -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" class="topbar-icon-btn mobile-menu-btn" data-mobile-nav-toggle aria-label="Open navigation menu">
+            <i class="bi bi-list"></i>
+          </button>
+          <button type="button" class="topbar-icon-btn hide-on-mobile" data-sidebar-collapse-toggle aria-label="Toggle sidebar">
+            <i class="bi bi-layout-sidebar-inset"></i>
+          </button>
+          <div class="topbar-title-block">
+            <span class="topbar-page-title" data-topbar-title>Dashboard</span>
+            <nav class="breadcrumb-ui hide-on-mobile" aria-label="Breadcrumb">
+              <span class="breadcrumb-ui-item"><a href="#">Home</a></span>
+              <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
+              <span class="breadcrumb-ui-item is-current">Dashboard</span>
+            </nav>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="topbar-search hide-on-mobile">
+            <i class="bi bi-search topbar-search-icon"></i>
+            <input type="search" placeholder="Search animals, owners, appointments…" aria-label="Search" />
+          </div>
+
+          <!-- Notification dropdown -->
+          <div class="dropdown-anchor">
+            <button type="button" class="topbar-icon-btn notif-btn" data-dropdown-trigger="notifications" aria-label="Notifications">
+              <i class="bi bi-bell"></i>
+              <span class="notif-dot" data-notif-dot></span>
+            </button>
+
+            <div class="dropdown-panel notif-panel" data-dropdown-panel="notifications" role="menu">
+              <div class="notif-panel-header">
+                <span class="notif-panel-title">Notifications</span>
+                <span class="notif-panel-badge" data-notif-count>3 new</span>
+              </div>
+              <div class="notif-list">
+                <div class="notif-item is-unread">
+                  <div class="notif-icon is-success"><i class="bi bi-calendar-check"></i></div>
+                  <div class="notif-content">
+                    <p class="notif-text">Appointment confirmed for Bella (Golden Retriever)</p>
+                    <span class="notif-time">5 minutes ago</span>
+                  </div>
+                </div>
+                <div class="notif-item is-unread">
+                  <div class="notif-icon is-info"><i class="bi bi-file-earmark-medical"></i></div>
+                  <div class="notif-content">
+                    <p class="notif-text">New treatment plan added for Max</p>
+                    <span class="notif-time">1 hour ago</span>
+                  </div>
+                </div>
+                <div class="notif-item is-unread">
+                  <div class="notif-icon is-warning"><i class="bi bi-exclamation-circle"></i></div>
+                  <div class="notif-content">
+                    <p class="notif-text">Payment pending for invoice #1042</p>
+                    <span class="notif-time">3 hours ago</span>
+                  </div>
+                </div>
+                <div class="notif-item">
+                  <div class="notif-icon is-accent"><i class="bi bi-star"></i></div>
+                  <div class="notif-content">
+                    <p class="notif-text">Luna's annual checkup is coming up next week</p>
+                    <span class="notif-time">Yesterday</span>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-panel-footer">
+                <button type="button" data-mark-all-read style="font-size: var(--font-size-tiny); color: var(--color-muted); margin-right: 8px;">Mark all read</button>
+                <a href="#">View all notifications</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile dropdown -->
+          <div class="dropdown-anchor">
+            <button type="button" class="profile-trigger" data-dropdown-trigger="profile" aria-label="Open user menu">
+              <span class="avatar avatar-md">SY</span>
+              <span class="profile-trigger-info">
+                <span class="profile-trigger-name">Sevim Y.</span>
+                <span class="profile-trigger-role">Manager</span>
+              </span>
+              <i class="bi bi-chevron-down profile-trigger-caret"></i>
+            </button>
+
+            <div class="dropdown-panel" data-dropdown-panel="profile" role="menu" style="min-width: 260px;">
+              <div class="dropdown-profile-header">
+                <span class="avatar avatar-lg">SY</span>
+                <div>
+                  <div class="dropdown-profile-name">Sevim Y.</div>
+                  <div class="dropdown-profile-email">sevim@vetcare.app</div>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item"><i class="bi bi-person"></i> Profile</a>
+              <a href="#" class="dropdown-item"><i class="bi bi-gear"></i> Settings</a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item is-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ================================================================
+           MAIN CONTENT — Component Playground
+           ================================================================ -->
+      <main class="app-content">
+        <div class="app-content-inner">
+
+          <div class="page-header">
+            <div>
+              <h1 class="text-page-title">Global UI Foundation</h1>
+              <p class="text-muted" style="margin-top: 6px; max-width: 640px;">
+                A standalone playground for the VetCare OS design system — every reusable
+                component that future Customer and Manager pages will be built from.
+              </p>
+            </div>
+            <div class="section-header-actions">
+              <span class="badge-ui badge-ui--primary"><i class="bi bi-palette"></i> Design System v1.0</span>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               TABLE OF CONTENTS
+               ============================================================ -->
+          <nav class="card-ui" aria-label="Component index">
+            <div class="row-start" style="flex-wrap: wrap; gap: 8px;">
+              <a class="demo-toc-link" data-toc-link href="#sec-colors">Colors</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-typography">Typography</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-buttons">Buttons</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-badges">Badges</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-dashboard-cards">Dashboard Cards</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-cards">Card Variants</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-forms">Forms</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-modals">Modals</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-alerts">Alerts &amp; Toasts</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-loading">Loading</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-empty">Empty States</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-error">Error States</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-pagination">Pagination</a>
+              <a class="demo-toc-link" data-toc-link href="#sec-headers">Section Headers</a>
+            </div>
+          </nav>
+
+          <!-- ============================================================
+               COLORS / DESIGN TOKENS
+               ============================================================ -->
+          <section id="sec-colors" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Color System</h2>
+                <p class="section-header-desc">CSS custom properties defined in css/variables.css</p>
+              </div>
+            </div>
+            <div class="card-ui">
+              <div class="grid-auto-fit">
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-primary);"></div>
+                  <span class="text-small fw-medium">Primary</span>
+                  <span class="text-tiny text-muted-light">#6C63A8</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-primary-dark);"></div>
+                  <span class="text-small fw-medium">Primary Dark</span>
+                  <span class="text-tiny text-muted-light">#554C91</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-secondary);"></div>
+                  <span class="text-small fw-medium">Secondary</span>
+                  <span class="text-tiny text-muted-light">#8FC9B5</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-accent);"></div>
+                  <span class="text-small fw-medium">Accent</span>
+                  <span class="text-tiny text-muted-light">#F3B7A5</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-background); border: 1px solid var(--color-border);"></div>
+                  <span class="text-small fw-medium">Background</span>
+                  <span class="text-tiny text-muted-light">#F8F7FC</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-surface); border: 1px solid var(--color-border);"></div>
+                  <span class="text-small fw-medium">Surface</span>
+                  <span class="text-tiny text-muted-light">#FFFFFF</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-text);"></div>
+                  <span class="text-small fw-medium">Text</span>
+                  <span class="text-tiny text-muted-light">#303044</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-muted);"></div>
+                  <span class="text-small fw-medium">Muted</span>
+                  <span class="text-tiny text-muted-light">#7B7B90</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-success);"></div>
+                  <span class="text-small fw-medium">Success</span>
+                  <span class="text-tiny text-muted-light">#71B58A</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-warning);"></div>
+                  <span class="text-small fw-medium">Warning</span>
+                  <span class="text-tiny text-muted-light">#E8B86A</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-danger);"></div>
+                  <span class="text-small fw-medium">Danger</span>
+                  <span class="text-tiny text-muted-light">#DF7C89</span>
+                </div>
+                <div class="demo-swatch">
+                  <div class="demo-swatch-color" style="background-color: var(--color-info);"></div>
+                  <span class="text-small fw-medium">Info</span>
+                  <span class="text-tiny text-muted-light">#7FAFD0</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               TYPOGRAPHY
+               ============================================================ -->
+          <section id="sec-typography" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Typography</h2>
+                <p class="section-header-desc">Poppins — weights 400 / 500 / 600 / 700</p>
+              </div>
+            </div>
+            <div class="card-ui stack">
+              <p class="text-page-title" style="margin:0;">Page title — 36px / Bold</p>
+              <p class="text-section-title" style="margin:0;">Section title — 22px / Semibold</p>
+              <p class="text-card-title" style="margin:0;">Card title — 18px / Semibold</p>
+              <p class="text-body" style="margin:0;">Body text — 15px / Regular. Used for descriptions, table cells, and general reading content across the application.</p>
+              <p class="text-small text-muted" style="margin:0;">Small metadata — 13px / Regular, muted color.</p>
+              <p class="text-tiny text-muted-light" style="margin:0;">Tiny label — 12px, used for timestamps and helper hints.</p>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               BUTTONS
+               ============================================================ -->
+          <section id="sec-buttons" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Buttons</h2>
+                <p class="section-header-desc">Variants, sizes, icon usage and states</p>
+              </div>
+            </div>
+
+            <div class="card-ui stack">
+              <div class="btn-group-ui">
+                <button class="btn-ui btn-ui--primary"><i class="bi bi-plus-lg"></i> Primary</button>
+                <button class="btn-ui btn-ui--secondary">Secondary</button>
+                <button class="btn-ui btn-ui--outline">Outline</button>
+                <button class="btn-ui btn-ui--ghost">Ghost</button>
+                <button class="btn-ui btn-ui--success"><i class="bi bi-check-lg"></i> Success</button>
+                <button class="btn-ui btn-ui--warning">Warning</button>
+                <button class="btn-ui btn-ui--danger"><i class="bi bi-trash3"></i> Danger</button>
+                <button class="btn-ui btn-ui--info">Info</button>
+              </div>
+
+              <div class="dropdown-divider" style="margin: 4px 0;"></div>
+
+              <div class="row-start" style="flex-wrap: wrap;">
+                <button class="btn-ui btn-ui--primary btn-ui--sm">Small</button>
+                <button class="btn-ui btn-ui--primary">Medium</button>
+                <button class="btn-ui btn-ui--primary btn-ui--lg">Large</button>
+                <button class="btn-ui btn-ui--outline btn-ui--icon-only" aria-label="Icon only"><i class="bi bi-three-dots"></i></button>
+                <button class="btn-ui btn-ui--primary btn-ui--icon-only" aria-label="Add"><i class="bi bi-plus-lg"></i></button>
+              </div>
+
+              <div class="dropdown-divider" style="margin: 4px 0;"></div>
+
+              <div class="row-start" style="flex-wrap: wrap;">
+                <button class="btn-ui btn-ui--primary" disabled>Disabled</button>
+                <button class="btn-ui btn-ui--primary" data-loading-demo>Click to load <i class="bi bi-arrow-clockwise"></i></button>
+                <button class="btn-ui btn-ui--outline" data-loading-demo>Outline loading</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               BADGES
+               ============================================================ -->
+          <section id="sec-badges" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Status Badges</h2>
+                <p class="section-header-desc">Compact status indicators used across cards and tables</p>
+              </div>
+            </div>
+            <div class="card-ui">
+              <div class="row-start" style="flex-wrap: wrap; gap: 10px;">
+                <span class="badge-ui badge-ui--info">Scheduled</span>
+                <span class="badge-ui badge-ui--success">Completed</span>
+                <span class="badge-ui badge-ui--danger">Cancelled</span>
+                <span class="badge-ui badge-ui--success">Paid</span>
+                <span class="badge-ui badge-ui--warning">Pending</span>
+                <span class="badge-ui badge-ui--danger">Debt</span>
+                <span class="badge-ui badge-ui--primary">Active</span>
+                <span class="badge-ui badge-ui--neutral">Inactive</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               DASHBOARD COMPONENT FOUNDATION
+               ============================================================ -->
+          <section id="sec-dashboard-cards" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Dashboard Component Foundation</h2>
+                <p class="section-header-desc">Reusable building blocks for future Customer &amp; Manager dashboards</p>
+              </div>
+            </div>
+
+            <!-- Statistic cards -->
+            <div class="grid-4">
+              <div class="card-ui stat-card">
+                <div class="row-between">
+                  <span class="stat-card-label">Total Animals</span>
+                  <div class="card-icon-tile is-primary"><i class="bi bi-clipboard2-pulse"></i></div>
+                </div>
+                <span class="stat-card-value">1,284</span>
+                <span class="stat-trend is-up"><i class="bi bi-arrow-up-short"></i> 8.2% this month</span>
+              </div>
+              <div class="card-ui stat-card">
+                <div class="row-between">
+                  <span class="stat-card-label">Appointments Today</span>
+                  <div class="card-icon-tile is-secondary"><i class="bi bi-calendar2-week"></i></div>
+                </div>
+                <span class="stat-card-value">18</span>
+                <span class="stat-trend is-flat"><i class="bi bi-dash"></i> Same as yesterday</span>
+              </div>
+              <div class="card-ui stat-card">
+                <div class="row-between">
+                  <span class="stat-card-label">Pending Payments</span>
+                  <div class="card-icon-tile is-warning"><i class="bi bi-credit-card-2-back"></i></div>
+                </div>
+                <span class="stat-card-value">$2,430</span>
+                <span class="stat-trend is-down"><i class="bi bi-arrow-down-short"></i> 3.1% vs last week</span>
+              </div>
+              <div class="card-ui stat-card">
+                <div class="row-between">
+                  <span class="stat-card-label">Active Treatments</span>
+                  <div class="card-icon-tile is-accent"><i class="bi bi-capsule"></i></div>
+                </div>
+                <span class="stat-card-value">42</span>
+                <span class="stat-trend is-up"><i class="bi bi-arrow-up-short"></i> 5 new this week</span>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <!-- Large statistic card -->
+              <div class="card-ui card-ui--elevated stat-card stat-card--large">
+                <div class="row-between">
+                  <span class="stat-card-label">Monthly Revenue</span>
+                  <div class="card-icon-tile is-success"><i class="bi bi-graph-up-arrow"></i></div>
+                </div>
+                <span class="stat-card-value">$18,920</span>
+                <span class="stat-trend is-up"><i class="bi bi-arrow-up-short"></i> 12.4% vs last month</span>
+              </div>
+
+              <!-- Small statistic cards -->
+              <div class="stack" style="gap: var(--space-4);">
+                <div class="card-ui stat-card stat-card--small">
+                  <span class="stat-card-label">New Owners</span>
+                  <span class="stat-card-value">36</span>
+                </div>
+                <div class="card-ui stat-card stat-card--small">
+                  <span class="stat-card-label">No-shows</span>
+                  <span class="stat-card-value">2</span>
+                </div>
+              </div>
+
+              <!-- Weather placeholder card -->
+              <div class="card-ui weather-card">
+                <div class="row-between">
+                  <span class="text-small">Clinic Location</span>
+                  <i class="bi bi-cloud-sun" style="font-size:1.4rem;"></i>
+                </div>
+                <div class="weather-card-temp" style="margin-top: 10px;">21°C</div>
+                <span class="text-small text-muted">Partly cloudy · Feels like 20°C</span>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <!-- Summary / section card -->
+              <div class="card-ui">
+                <div class="card-header-row">
+                  <div>
+                    <h3 class="text-card-title">Recent Activity</h3>
+                    <span class="text-tiny text-muted">Latest clinic events</span>
+                  </div>
+                  <div class="card-icon-tile is-primary"><i class="bi bi-activity"></i></div>
+                </div>
+                <div>
+                  <div class="activity-row">
+                    <div class="activity-dot" style="background-color: var(--color-success-light); color: var(--color-success);"><i class="bi bi-check2"></i></div>
+                    <div class="activity-body">
+                      <div class="activity-title">Treatment completed for Rocky</div>
+                      <div class="activity-meta">10 minutes ago</div>
+                    </div>
+                  </div>
+                  <div class="activity-row">
+                    <div class="activity-dot" style="background-color: var(--color-info-light); color: var(--color-info);"><i class="bi bi-calendar-plus"></i></div>
+                    <div class="activity-body">
+                      <div class="activity-title">New appointment booked by Ayşe K.</div>
+                      <div class="activity-meta">42 minutes ago</div>
+                    </div>
+                  </div>
+                  <div class="activity-row">
+                    <div class="activity-dot" style="background-color: var(--color-warning-light); color: var(--color-warning);"><i class="bi bi-cash-coin"></i></div>
+                    <div class="activity-body">
+                      <div class="activity-title">Invoice #1042 marked as pending</div>
+                      <div class="activity-meta">2 hours ago</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Appointment card -->
+              <div class="card-ui card-ui--status is-info">
+                <div class="card-header-row">
+                  <div>
+                    <h3 class="text-card-title">Bella — Checkup</h3>
+                    <span class="text-tiny text-muted">Golden Retriever · Owner: Ayşe K.</span>
+                  </div>
+                  <span class="badge-ui badge-ui--info">Scheduled</span>
+                </div>
+                <div class="stack" style="gap: 8px;">
+                  <div class="row-start"><i class="bi bi-calendar3 text-muted"></i><span class="text-small">Sep 16, 2026 · 10:30 AM</span></div>
+                  <div class="row-start"><i class="bi bi-person text-muted"></i><span class="text-small">Dr. Elif Aksoy</span></div>
+                </div>
+              </div>
+
+              <!-- Financial summary card -->
+              <div class="card-ui">
+                <div class="card-header-row">
+                  <h3 class="text-card-title">Financial Summary</h3>
+                  <div class="card-icon-tile is-success"><i class="bi bi-wallet2"></i></div>
+                </div>
+                <div class="financial-row">
+                  <span class="text-small text-muted">Total Paid</span>
+                  <span class="text-small fw-semibold">$14,280</span>
+                </div>
+                <div class="financial-row">
+                  <span class="text-small text-muted">Outstanding</span>
+                  <span class="text-small fw-semibold" style="color: var(--color-danger);">$2,430</span>
+                </div>
+                <div class="financial-row">
+                  <span class="text-small text-muted">This Month</span>
+                  <span class="text-small fw-semibold">$18,920</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <!-- Animal card placeholder -->
+              <div class="card-ui card-ui--interactive">
+                <div class="entity-card-media"><i class="bi bi-image"></i></div>
+                <div class="row-between">
+                  <div>
+                    <h3 class="text-card-title">Luna</h3>
+                    <span class="text-tiny text-muted">Siamese Cat · 3 yrs</span>
+                  </div>
+                  <span class="badge-ui badge-ui--success">Active</span>
+                </div>
+              </div>
+
+              <!-- Profile-style card -->
+              <div class="card-ui card-ui--profile">
+                <span class="avatar avatar-lg">AK</span>
+                <div>
+                  <h3 class="text-card-title" style="margin-bottom: 2px;">Ayşe Kaya</h3>
+                  <span class="text-tiny text-muted">Customer · 3 animals registered</span>
+                </div>
+              </div>
+
+              <!-- Quick action card -->
+              <button type="button" class="card-ui card-ui--interactive quick-action-card">
+                <div class="card-icon-tile is-primary"><i class="bi bi-calendar-plus"></i></div>
+                <h3 class="text-card-title">New Appointment</h3>
+                <span class="text-small text-muted">Schedule a visit for a registered animal</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               CARD VARIANTS
+               ============================================================ -->
+          <section id="sec-cards" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Card Variants</h2>
+                <p class="section-header-desc">Standard, elevated, interactive and status treatments</p>
+              </div>
+            </div>
+            <div class="grid-4">
+              <div class="card-ui">
+                <h3 class="text-card-title">Standard</h3>
+                <p class="text-small text-muted">Default surface with a soft border and subtle shadow.</p>
+              </div>
+              <div class="card-ui card-ui--elevated">
+                <h3 class="text-card-title">Elevated</h3>
+                <p class="text-small text-muted">Stronger shadow, no border — used for emphasis.</p>
+              </div>
+              <div class="card-ui card-ui--interactive">
+                <h3 class="text-card-title">Interactive</h3>
+                <p class="text-small text-muted">Lifts on hover — used for clickable cards.</p>
+              </div>
+              <div class="card-ui card-ui--status is-danger">
+                <h3 class="text-card-title">Status</h3>
+                <p class="text-small text-muted">Left accent bar reflects a status color.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               FORMS
+               ============================================================ -->
+          <section id="sec-forms" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Form Controls</h2>
+                <p class="section-header-desc">Inputs, selects, checkboxes, radios and file upload</p>
+              </div>
+            </div>
+
+            <div class="card-ui">
+              <div class="form-grid-2">
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-name">Animal name <span class="is-required">*</span></label>
+                  <input class="form-control-ui" type="text" id="f-name" placeholder="e.g. Bella" />
+                </div>
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-email">Owner email</label>
+                  <div class="input-icon-wrap">
+                    <input class="form-control-ui" type="email" id="f-email" placeholder="owner@email.com" />
+                    <i class="bi bi-envelope input-icon-wrap-icon"></i>
+                  </div>
+                </div>
+
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-password">Password</label>
+                  <div class="input-icon-wrap">
+                    <input class="form-control-ui" type="password" id="f-password" placeholder="••••••••" />
+                    <i class="bi bi-lock input-icon-wrap-icon"></i>
+                    <button type="button" class="input-suffix-btn" aria-label="Show password"><i class="bi bi-eye"></i></button>
+                  </div>
+                </div>
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-weight">Weight (kg)</label>
+                  <input class="form-control-ui" type="number" id="f-weight" placeholder="0.0" />
+                </div>
+
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-date">Appointment date</label>
+                  <input class="form-control-ui" type="date" id="f-date" />
+                </div>
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-time">Appointment time</label>
+                  <input class="form-control-ui" type="time" id="f-time" />
+                </div>
+
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-species">Species</label>
+                  <select class="form-control-ui" id="f-species">
+                    <option>Dog</option>
+                    <option>Cat</option>
+                    <option>Bird</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="form-group-ui">
+                  <label class="form-label-ui" for="f-search">Search owner</label>
+                  <div class="input-icon-wrap">
+                    <input class="form-control-ui" type="search" id="f-search" placeholder="Search by name or phone" />
+                    <i class="bi bi-search input-icon-wrap-icon"></i>
+                  </div>
+                </div>
+
+                <div class="form-group-ui is-valid">
+                  <label class="form-label-ui" for="f-valid">Microchip ID</label>
+                  <input class="form-control-ui" type="text" id="f-valid" value="TR-993-2201" />
+                  <span class="form-feedback is-valid"><i class="bi bi-check-circle"></i> Looks good</span>
+                </div>
+                <div class="form-group-ui is-invalid">
+                  <label class="form-label-ui" for="f-invalid">Phone number</label>
+                  <input class="form-control-ui" type="text" id="f-invalid" value="12345" />
+                  <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Enter a valid phone number</span>
+                </div>
+              </div>
+
+              <div class="form-group-ui" style="margin-top: var(--space-4);">
+                <label class="form-label-ui" for="f-notes">Notes</label>
+                <textarea class="form-control-ui" id="f-notes" placeholder="Additional notes about the visit…"></textarea>
+              </div>
+
+              <div class="row-start" style="margin-top: var(--space-4); gap: var(--space-6); flex-wrap: wrap;">
+                <label class="check-ui"><input type="checkbox" checked /> Send reminder to owner</label>
+                <label class="radio-ui"><input type="radio" name="demo-radio" checked /> New patient</label>
+                <label class="radio-ui"><input type="radio" name="demo-radio" /> Returning patient</label>
+              </div>
+
+              <div class="form-group-ui" style="margin-top: var(--space-4);">
+                <label class="form-label-ui">Animal photo</label>
+                <div class="upload-dropzone">
+                  <div class="upload-dropzone-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+                  <span class="upload-dropzone-title">Click to upload or drag and drop</span>
+                  <span class="upload-dropzone-hint">PNG or JPG, up to 5MB</span>
+                </div>
+              </div>
+
+              <div class="form-group-ui" style="margin-top: var(--space-4);">
+                <label class="form-label-ui" for="f-disabled">Clinic ID (read-only)</label>
+                <input class="form-control-ui" type="text" id="f-disabled" value="VET-001" disabled />
+              </div>
+
+              <div class="form-actions">
+                <button class="btn-ui btn-ui--ghost">Cancel</button>
+                <button class="btn-ui btn-ui--primary"><i class="bi bi-check2"></i> Save</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               MODALS
+               ============================================================ -->
+          <section id="sec-modals" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Modals</h2>
+                <p class="section-header-desc">Confirmation, quick action and payment dialogs</p>
+              </div>
+            </div>
+            <div class="card-ui">
+              <div class="btn-group-ui">
+                <button class="btn-ui btn-ui--danger" data-modal-open="modal-delete"><i class="bi bi-trash3"></i> Delete Confirmation</button>
+                <button class="btn-ui btn-ui--outline" data-modal-open="modal-status"><i class="bi bi-arrow-repeat"></i> Status Change</button>
+                <button class="btn-ui btn-ui--success" data-modal-open="modal-payment"><i class="bi bi-credit-card"></i> Payment Confirmation</button>
+              </div>
+            </div>
+
+            <!-- Delete confirmation modal -->
+            <div class="modal-ui-overlay" data-modal="modal-delete">
+              <div class="modal-ui" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title">
+                <div class="modal-ui-header">
+                  <div class="modal-ui-icon is-danger"><i class="bi bi-exclamation-triangle"></i></div>
+                  <div class="modal-ui-title-block">
+                    <h3 class="modal-ui-title" id="modal-delete-title">Delete this record?</h3>
+                    <p class="modal-ui-subtitle">This action cannot be undone.</p>
+                  </div>
+                  <button type="button" class="modal-ui-close" data-modal-close aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-ui-body">
+                  You are about to permanently remove <strong>Bella's</strong> record, including
+                  all related appointments and treatment history.
+                </div>
+                <div class="modal-ui-footer">
+                  <button class="btn-ui btn-ui--ghost" data-modal-close>Cancel</button>
+                  <button class="btn-ui btn-ui--danger" data-modal-close>Delete</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status change modal -->
+            <div class="modal-ui-overlay" data-modal="modal-status">
+              <div class="modal-ui" role="dialog" aria-modal="true" aria-labelledby="modal-status-title">
+                <div class="modal-ui-header">
+                  <div class="modal-ui-icon"><i class="bi bi-arrow-repeat"></i></div>
+                  <div class="modal-ui-title-block">
+                    <h3 class="modal-ui-title" id="modal-status-title">Update appointment status</h3>
+                    <p class="modal-ui-subtitle">Bella — Checkup, Sep 16</p>
+                  </div>
+                  <button type="button" class="modal-ui-close" data-modal-close aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-ui-body">
+                  <div class="form-group-ui">
+                    <label class="form-label-ui" for="modal-status-select">New status</label>
+                    <select class="form-control-ui" id="modal-status-select">
+                      <option>Scheduled</option>
+                      <option>Completed</option>
+                      <option>Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-ui-footer">
+                  <button class="btn-ui btn-ui--ghost" data-modal-close>Cancel</button>
+                  <button class="btn-ui btn-ui--primary" data-modal-close>Update</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment confirmation modal -->
+            <div class="modal-ui-overlay" data-modal="modal-payment">
+              <div class="modal-ui" role="dialog" aria-modal="true" aria-labelledby="modal-payment-title">
+                <div class="modal-ui-header">
+                  <div class="modal-ui-icon is-success"><i class="bi bi-check-circle"></i></div>
+                  <div class="modal-ui-title-block">
+                    <h3 class="modal-ui-title" id="modal-payment-title">Confirm payment</h3>
+                    <p class="modal-ui-subtitle">Invoice #1042</p>
+                  </div>
+                  <button type="button" class="modal-ui-close" data-modal-close aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-ui-body">
+                  Mark this invoice of <strong>$2,430.00</strong> as paid in full?
+                </div>
+                <div class="modal-ui-footer">
+                  <button class="btn-ui btn-ui--ghost" data-modal-close>Cancel</button>
+                  <button class="btn-ui btn-ui--success" data-modal-close>Confirm Payment</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               ALERTS / TOASTS
+               ============================================================ -->
+          <section id="sec-alerts" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Alerts &amp; Toasts</h2>
+                <p class="section-header-desc">Inline alerts and transient toast notifications</p>
+              </div>
+            </div>
+
+            <div class="card-ui stack">
+              <div class="alert-ui alert-ui--success">
+                <div class="alert-ui-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="alert-ui-body">
+                  <div class="alert-ui-title">Appointment saved</div>
+                  <div class="alert-ui-message">The appointment for Bella has been scheduled successfully.</div>
+                </div>
+                <button type="button" class="alert-ui-close" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
+              </div>
+              <div class="alert-ui alert-ui--warning">
+                <div class="alert-ui-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                <div class="alert-ui-body">
+                  <div class="alert-ui-title">Payment overdue</div>
+                  <div class="alert-ui-message">Invoice #1042 is 5 days past its due date.</div>
+                </div>
+                <button type="button" class="alert-ui-close" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
+              </div>
+              <div class="alert-ui alert-ui--danger">
+                <div class="alert-ui-icon"><i class="bi bi-x-circle-fill"></i></div>
+                <div class="alert-ui-body">
+                  <div class="alert-ui-title">Unable to save changes</div>
+                  <div class="alert-ui-message">Please check the highlighted fields and try again.</div>
+                </div>
+                <button type="button" class="alert-ui-close" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
+              </div>
+              <div class="alert-ui alert-ui--info">
+                <div class="alert-ui-icon"><i class="bi bi-info-circle-fill"></i></div>
+                <div class="alert-ui-body">
+                  <div class="alert-ui-title">Scheduled maintenance</div>
+                  <div class="alert-ui-message">The system will be briefly unavailable tonight at 2 AM.</div>
+                </div>
+                <button type="button" class="alert-ui-close" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>
+              </div>
+            </div>
+
+            <div class="card-ui">
+              <h3 class="text-card-title" style="margin-bottom: var(--space-3);">Toast demo</h3>
+              <div class="btn-group-ui">
+                <button class="btn-ui btn-ui--success" data-toast-demo="success" data-toast-message="Animal record updated successfully.">Trigger Success</button>
+                <button class="btn-ui btn-ui--danger" data-toast-demo="danger" data-toast-message="Failed to reach the server. Please retry.">Trigger Error</button>
+                <button class="btn-ui btn-ui--warning" data-toast-demo="warning" data-toast-message="This appointment overlaps with another booking.">Trigger Warning</button>
+                <button class="btn-ui btn-ui--info" data-toast-demo="info" data-toast-message="A new version of VetCare OS is available.">Trigger Info</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               LOADING STATES
+               ============================================================ -->
+          <section id="sec-loading" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Loading States</h2>
+                <p class="section-header-desc">Spinners, skeletons and full-page loading</p>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="card-ui" style="align-items:center; display:flex; flex-direction:column; gap: var(--space-3); justify-content:center;">
+                <div class="spinner-ui spinner-ui--sm"></div>
+                <span class="text-tiny text-muted">Small spinner</span>
+              </div>
+              <div class="card-ui" style="align-items:center; display:flex; flex-direction:column; gap: var(--space-3); justify-content:center;">
+                <div class="spinner-ui"></div>
+                <span class="text-tiny text-muted">Default spinner</span>
+              </div>
+              <div class="card-ui" style="align-items:center; display:flex; flex-direction:column; gap: var(--space-3); justify-content:center;">
+                <div class="spinner-ui spinner-ui--lg"></div>
+                <span class="text-tiny text-muted">Large spinner</span>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <!-- Card skeleton -->
+              <div class="card-ui skeleton-card">
+                <div class="row-start" style="margin-bottom: var(--space-4);">
+                  <div class="skeleton skeleton-avatar"></div>
+                  <div style="flex:1;">
+                    <div class="skeleton skeleton-text" style="width: 50%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 35%;"></div>
+                  </div>
+                </div>
+                <div class="skeleton skeleton-text" style="width: 100%;"></div>
+                <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                <div class="skeleton skeleton-text" style="width: 60%;"></div>
+              </div>
+
+              <!-- List skeleton -->
+              <div class="card-ui">
+                <div class="skeleton-list-row">
+                  <div class="skeleton skeleton-avatar" style="width:40px; height:40px;"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton skeleton-text" style="width: 70%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 40%;"></div>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <div class="skeleton skeleton-avatar" style="width:40px; height:40px;"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 30%;"></div>
+                  </div>
+                </div>
+                <div class="skeleton-list-row">
+                  <div class="skeleton skeleton-avatar" style="width:40px; height:40px;"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 45%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-ui">
+              <div class="page-loading">
+                <div class="spinner-ui"></div>
+                <span>Loading appointments…</span>
+              </div>
+            </div>
+
+            <div class="card-ui">
+              <button class="btn-ui btn-ui--primary" data-loading-demo>Save changes</button>
+              <span class="text-tiny text-muted" style="margin-left: 10px;">↑ Button loading state (click to preview)</span>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               EMPTY STATES
+               ============================================================ -->
+          <section id="sec-empty" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Empty States</h2>
+                <p class="section-header-desc">Shown when a list or section has no data yet</p>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="card-ui">
+                <div class="state-panel">
+                  <div class="state-panel-icon"><i class="bi bi-clipboard2-pulse"></i></div>
+                  <h3 class="state-panel-title">No animals yet</h3>
+                  <p class="state-panel-desc">Register your first animal to start tracking appointments and treatments.</p>
+                  <div class="state-panel-actions">
+                    <button class="btn-ui btn-ui--primary"><i class="bi bi-plus-lg"></i> Add Animal</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-ui">
+                <div class="state-panel">
+                  <div class="state-panel-icon"><i class="bi bi-calendar2-week"></i></div>
+                  <h3 class="state-panel-title">No appointments yet</h3>
+                  <p class="state-panel-desc">Once appointments are booked, they will show up here.</p>
+                  <div class="state-panel-actions">
+                    <button class="btn-ui btn-ui--primary"><i class="bi bi-calendar-plus"></i> New Appointment</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-ui">
+                <div class="state-panel">
+                  <div class="state-panel-icon"><i class="bi bi-credit-card-2-back"></i></div>
+                  <h3 class="state-panel-title">No payments yet</h3>
+                  <p class="state-panel-desc">Payment history for this account will appear here.</p>
+                </div>
+              </div>
+              <div class="card-ui">
+                <div class="state-panel">
+                  <div class="state-panel-icon"><i class="bi bi-bell"></i></div>
+                  <h3 class="state-panel-title">No notifications</h3>
+                  <p class="state-panel-desc">You're all caught up — new updates will appear here.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               ERROR STATES
+               ============================================================ -->
+          <section id="sec-error" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Error States</h2>
+                <p class="section-header-desc">Failure and access-restriction feedback</p>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="card-ui">
+                <div class="state-panel is-error">
+                  <div class="state-panel-icon"><i class="bi bi-wifi-off"></i></div>
+                  <h3 class="state-panel-title">Something went wrong</h3>
+                  <p class="state-panel-desc">We couldn't load this data. Check your connection and try again.</p>
+                  <div class="state-panel-actions">
+                    <button class="btn-ui btn-ui--primary"><i class="bi bi-arrow-clockwise"></i> Try Again</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-ui">
+                <div class="state-panel is-error">
+                  <div class="state-panel-icon"><i class="bi bi-shield-lock"></i></div>
+                  <h3 class="state-panel-title">Access restricted</h3>
+                  <p class="state-panel-desc">You don't have permission to view this page.</p>
+                  <div class="state-panel-actions">
+                    <button class="btn-ui btn-ui--outline">Go Back</button>
+                    <button class="btn-ui btn-ui--primary">Return to Dashboard</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-ui">
+                <div class="state-panel is-error">
+                  <div class="state-panel-icon"><i class="bi bi-search"></i></div>
+                  <h3 class="state-panel-title">Page not found</h3>
+                  <p class="state-panel-desc">The page you're looking for doesn't exist or was moved.</p>
+                  <div class="state-panel-actions">
+                    <button class="btn-ui btn-ui--primary">Return to Dashboard</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-ui">
+                <div class="state-panel is-error">
+                  <div class="state-panel-icon"><i class="bi bi-exclamation-octagon"></i></div>
+                  <h3 class="state-panel-title">API request failed</h3>
+                  <p class="state-panel-desc">Error 500 — the server encountered an unexpected condition.</p>
+                  <div class="state-panel-actions">
+                    <button class="btn-ui btn-ui--primary"><i class="bi bi-arrow-clockwise"></i> Try Again</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               PAGINATION
+               ============================================================ -->
+          <section id="sec-pagination" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Pagination</h2>
+                <p class="section-header-desc">Minimal, consistent page navigation</p>
+              </div>
+            </div>
+            <div class="card-ui">
+              <nav class="pagination-ui" aria-label="Pagination">
+                <button class="pagination-ui-item is-disabled" aria-label="Previous page"><i class="bi bi-chevron-left"></i></button>
+                <button class="pagination-ui-item is-active">1</button>
+                <button class="pagination-ui-item">2</button>
+                <button class="pagination-ui-item">3</button>
+                <span class="pagination-ui-ellipsis">…</span>
+                <button class="pagination-ui-item">12</button>
+                <button class="pagination-ui-item" aria-label="Next page"><i class="bi bi-chevron-right"></i></button>
+              </nav>
+            </div>
+          </section>
+
+          <!-- ============================================================
+               SECTION HEADERS (as a component, standalone example)
+               ============================================================ -->
+          <section id="sec-headers" class="demo-section stack">
+            <div class="section-header">
+              <div class="section-header-text">
+                <h2 class="text-section-title">Section Header Component</h2>
+                <p class="section-header-desc">Title, description, badge, filters and action — reusable across every list page</p>
+              </div>
+            </div>
+
+            <div class="card-ui">
+              <div class="section-header">
+                <div class="section-header-text">
+                  <div class="section-header-title-row">
+                    <h3 class="text-card-title" style="margin:0;">Animals</h3>
+                    <span class="badge-ui badge-ui--primary">128 total</span>
+                  </div>
+                  <p class="section-header-desc">Manage clinic animals and their medical records</p>
+                </div>
+                <div class="section-header-actions">
+                  <div class="section-header-filters">
+                    <select class="form-control-ui" style="height:40px; width: auto;">
+                      <option>All species</option>
+                      <option>Dogs</option>
+                      <option>Cats</option>
+                    </select>
+                  </div>
+                  <button class="btn-ui btn-ui--primary"><i class="bi bi-plus-lg"></i> Add Animal</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="text-center text-tiny text-muted-light" style="padding: var(--space-6) 0;">
+            VetCare OS Global UI Foundation — © <span data-current-year></span>
+          </footer>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (used only for bundled utilities the demo doesn't hand-roll) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- VetCare OS reusable interactions (order matters) -->
+  <script src="js/sidebar.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/modals.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+﻿@{
+    decimal totalAmountPaid = (decimal)ViewBag.TotalAmountPaid;
+    decimal totalDebt = (decimal)ViewBag.TotalDebt;
+    decimal averagePaymentAmount = (decimal)ViewBag.AveragePaymentAmount;
+}
+
+<section class="payment-stats">
+
+            <!-- Total Paid -->
+
+            <div class="payment-stat-card">
+
+                <div class="payment-stat-icon green">
+                    <i class="bi bi-coin"></i>
+                </div>
+
+                <div class="payment-stat-content">
+
+                    <p class="payment-stat-label">
+                        Toplam Ödenen Tutar
+                    </p>
+
+                    <p class="payment-stat-value">
+                        ₺ @totalAmountPaid.ToString("N2")
+                    </p>
+
+                    <p class="payment-stat-description">
+                        Tüm zamanlar
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Total Debt -->
+
+            <div class="payment-stat-card">
+
+                <div class="payment-stat-icon red">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+
+                <div class="payment-stat-content">
+
+                    <p class="payment-stat-label">
+                        Toplam Borç
+                    </p>
+
+                    <p class="payment-stat-value debt">
+                        ₺ @totalDebt.ToString("N2")
+                    </p>
+
+                    <p class="payment-stat-description">
+                        Ödenmemiş tutar
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Payment Count -->
+
+            <div class="payment-stat-card">
+
+                <div class="payment-stat-icon purple">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div class="payment-stat-content">
+
+                    <p class="payment-stat-label">
+                        Toplam Ödeme Sayısı
+                    </p>
+
+                    <p class="payment-stat-value">
+                        @ViewBag.TotalNumberOfPayments
+                    </p>
+
+                    <p class="payment-stat-description">
+                        Gerçekleşen ödeme
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Average -->
+
+            <div class="payment-stat-card">
+
+                <div class="payment-stat-icon blue">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+                <div class="payment-stat-content">
+
+                    <p class="payment-stat-label">
+                        Ortalama Ödeme Tutarı
+                    </p>
+
+                    <p class="payment-stat-value">
+                        ₺ @averagePaymentAmount.ToString("N2")
+                    </p>
+
+                    <p class="payment-stat-description">
+                        Tüm ödemeler
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>

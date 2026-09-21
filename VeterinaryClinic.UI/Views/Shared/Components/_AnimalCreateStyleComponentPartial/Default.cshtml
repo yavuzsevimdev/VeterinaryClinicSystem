@@ -1,0 +1,86 @@
+﻿<style>
+
+    /* ==========================================================================
+         ANIMAL / CREATE (Customer) — page-specific styles only.
+         Assumes the global VetCare OS foundation already provides: Poppins,
+         Bootstrap 5.3.3, Bootstrap Icons, CSS variables, .btn-ui, .card-ui,
+         .card-icon-tile, .form-grid-2, .form-group-ui, .form-label-ui,
+         .form-control-ui, .input-icon-wrap, .form-feedback, .form-actions,
+         .link-action, .section-header, text/typography utilities, and the
+         .animal-card* classes introduced on the Animals / Index page.
+         ========================================================================== */
+
+    .animal-create-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 0.75rem;
+    }
+
+    .animal-create-grid {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 1.75rem;
+        align-items: start;
+    }
+
+    /* Unit suffix shown inside the label rather than inventing a new input widget */
+    .animal-form-unit {
+        color: var(--color-muted-light);
+        font-weight: 500;
+    }
+
+    /* The global .form-feedback component renders its text permanently and only
+         recolors on .is-valid/.is-invalid; scoped here so a feedback message only
+         appears once its .form-group-ui is actually marked invalid. */
+    .animal-create-page .form-feedback {
+        display: none;
+    }
+
+    .animal-create-page .form-group-ui.is-invalid .form-feedback {
+        display: flex;
+    }
+
+    /* ---- Live preview column ---- */
+
+    .animal-preview-wrap {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .animal-preview-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 0.6rem;
+    }
+
+    .animal-preview-card {
+        padding: 0;
+        overflow: hidden;
+    }
+
+        .animal-preview-card .animal-card-media {
+            height: 220px;
+        }
+
+    @@media (min-width: 992px) {
+        .animal-preview-wrap {
+            position: sticky;
+            top: calc(var(--topbar-height, 72px) + 1.5rem);
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .animal-create-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .animal-create-grid {
+            gap: 1.25rem;
+        }
+    }
+
+</style>

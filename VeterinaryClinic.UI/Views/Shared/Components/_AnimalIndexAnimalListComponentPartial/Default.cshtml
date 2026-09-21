@@ -1,0 +1,85 @@
+﻿@model List<AnimalDto>
+<section aria-label="Hayvan listesi">
+    <div class="animal-grid" id="animalGrid">
+
+        @foreach (var item in Model)
+        {
+            <article class="card-ui card-ui--interactive animal-card" data-id="@item.Id" data-name="@item.Name" data-species="@item.Species" data-age="@item.Age" data-created="@item.Age">
+                <div class="animal-card-media">
+                    <i class="bi bi-image animal-card-media-fallback" aria-hidden="true"></i>
+                    <img src="@item.ImageUrl" alt="@item.Name" loading="lazy">
+                    <div class="animal-card-media-overlay"></div>
+                    <span class="animal-card-species-badge">@item.Species</span>
+                    <div class="animal-card-overlay-text">
+                        <span class="animal-card-name">@item.Name</span>
+                        <span class="animal-card-breed">@item.Breed</span>
+                    </div>
+                </div>
+                <div class="animal-card-body">
+                    <div class="animal-card-metrics">
+                        <div class="animal-card-metric"><span class="animal-card-metric-value">@item.Age yıl</span><span class="animal-card-metric-label">Yaş</span></div>
+                        <div class="animal-card-metric"><span class="animal-card-metric-value">@item.Weight kg</span><span class="animal-card-metric-label">Ağırlık</span></div>
+                        <div class="animal-card-metric"><span class="animal-card-metric-value">@item.Height cm</span><span class="animal-card-metric-label">Boy</span></div>
+                    </div>
+                    <div class="animal-card-history">
+                        <span class="animal-card-history-label">Tıbbi Geçmiş</span>
+                        <p>@item.MedicalHistory</p>
+                    </div>
+                    <div class="animal-card-footer"
+                         style="display: flex; justify-content: center; gap: 0.5rem;">
+
+                        <!-- Detay -->
+                        <a href="/animal/detail/@item.Id"
+                           class="btn-ui btn-ui--outline btn-ui--sm"
+                           title="Detayları Görüntüle"
+                           aria-label="@item.Name detaylarını görüntüle">
+
+                            <i class="bi bi-eye"></i>
+
+                        </a>
+
+
+                        <!-- Güncelle -->
+                        <a href="/animal/update/@item.Id"
+                           class="btn-ui btn-ui--outline  btn-ui--sm"
+                           title="Hayvanı Güncelle"
+                           aria-label="@item.Name bilgilerini güncelle">
+
+                            <i class="bi bi-pencil"></i>
+
+                        </a>
+
+
+                        <!-- Sil -->
+                        <a href="/animal/delete/@item.Id"
+                                class="btn btn-ui btn-ui--outline btn-ui--sm"
+                                title="Hayvanı Sil"
+                                aria-label="@item.Name hayvanını sil"
+                                data-animal-id="@item.Id"
+                                data-animal-name="@item.Name">
+
+                            <i class="bi bi-trash3"></i>
+
+                        </a>
+
+                    </div>
+                </div>
+            </article>
+        }
+
+    </div>
+
+    <p class="animal-no-results text-small text-muted" id="animalNoResults" hidden>
+        <i class="bi bi-search"></i> Aramanızla eşleşen hayvan bulunamadı.
+    </p>
+</section>
+<section class="state-panel animal-empty-state" id="animalEmptyState" aria-label="Kayıtlı hayvan bulunamadı">
+    <div class="state-panel-icon"><i class="bi bi-heart"></i></div>
+    <h2 class="state-panel-title">Henüz kayıtlı bir hayvanınız yok</h2>
+    <p class="state-panel-desc">İlk evcil hayvanınızı ekleyerek randevu ve sağlık geçmişini takip etmeye başlayın.</p>
+    <div class="state-panel-actions">
+        <button type="button" class="btn-ui btn-ui--primary" id="addAnimalBtnEmpty">
+            <i class="bi bi-plus-lg"></i> Hayvan Ekle
+        </button>
+    </div>
+</section>

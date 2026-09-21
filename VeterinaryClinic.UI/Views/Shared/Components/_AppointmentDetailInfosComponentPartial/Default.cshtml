@@ -1,0 +1,20 @@
+﻿@model AppointmentDto
+
+<section class="card-ui" aria-label="Randevu bilgileri">
+    <div class="card-header-row">
+        <div class="card-header-title">
+            <div class="card-icon-tile is-primary"><i class="bi bi-info-square"></i></div>
+            <h2 class="text-section-title">Randevu Bilgileri</h2>
+        </div>
+        <button type="button" class="btn-ui btn-ui--ghost btn-ui--sm" data-toast="Düzenleme bu prototipte pasif durumdadır."><i class="bi bi-pencil"></i> Düzenle</button>
+    </div>
+    <div class="appointment-detail-info-list">
+        <div class="appointment-detail-info-row"><i class="bi bi-calendar3"></i><span class="appointment-detail-info-label">Tarih</span><span class="appointment-detail-info-value">@Model.Date.ToString("dd MMMM yyyy, dddd")</span></div>
+        <div class="appointment-detail-info-row"><i class="bi bi-clock"></i><span class="appointment-detail-info-label">Saat</span><span class="appointment-detail-info-value">@Model.Time.ToString(@"hh\:mm")</span></div>
+        <div class="appointment-detail-info-row"><i class="bi bi-person-badge"></i><span class="appointment-detail-info-label">Veteriner Hekim</span><span class="appointment-detail-info-value">Doç. Dr. Yavuz Bahadır SEVİM</span></div>
+        <div class="appointment-detail-info-row"><i class="bi bi-door-open"></i><span class="appointment-detail-info-label">Muayene Odası</span><span class="appointment-detail-info-value">Muayene Odası 1</span></div>
+        <div class="appointment-detail-info-row"><i class="bi bi-clipboard2-pulse"></i><span class="appointment-detail-info-label">Randevu Türü</span><span class="appointment-detail-info-value">@Model.AppointmentType</span></div>
+        <div class="appointment-detail-info-row"><i class="bi bi-info-circle"></i><span class="appointment-detail-info-label">Durum</span><span class="appointment-detail-info-value"><span class="badge-ui badge-ui--success"><i class="bi bi-check2"></i> @Model.Status</span></span></div>
+        <div class="appointment-detail-info-row"><i class="bi bi-journal-text"></i><span class="appointment-detail-info-label">Not</span><span class="appointment-detail-info-value">@Model.Notes</span></div>
+    </div>
+</section>

@@ -1,0 +1,144 @@
+﻿@model AppointmentDetailTimelineDto
+
+<section class="card-ui" aria-label="Tedavi süreci">
+    <div class="card-header-row" style="margin-bottom: 0.5rem;">
+        <div class="card-header-title">
+            <div class="card-icon-tile is-primary"><i class="bi bi-activity"></i></div>
+            <h2 class="text-section-title">Tedavi Süreci</h2>
+        </div>
+    </div>
+    <p class="appointment-detail-card-desc">Bu randevuda gerçekleştirilen işlemler ve süreç.</p>
+
+    <div class="appointment-timeline">
+        <div class="appointment-timeline-item">
+            <div class="appointment-timeline-time">
+                @Model.StartTime.ToString("HH:mm")
+            </div>
+            <div class="appointment-timeline-marker">
+                <div class="appointment-timeline-dot is-success"><i class="bi bi-check-lg"></i></div>
+                <div class="appointment-timeline-line"></div>
+            </div>
+            <div class="appointment-timeline-body">
+                <div class="appointment-timeline-title">
+                    @if (Model.Status == "Scheduled")
+                    {
+                        <span>Randevu Planlandı</span>
+                    }
+                    else
+                    {
+                        <span>Kliniğe Giriş</span>
+                    }
+                </div>
+                <div class="appointment-timeline-text">
+                    @if (Model.Status == "Scheduled")
+                    {
+                        <span>Randevunuz planlandı.</span>
+                    }
+                    else
+                    {
+                        <span>Hastamız kliniğe kabul edildi.</span>
+                    }
+                </div>
+            </div>
+            <div class="appointment-timeline-stamp">
+                @Model.StartTime.ToString("dd MMM yyyy")
+                <br>
+                @Model.StartTime.ToString("HH:mm")
+            </div>
+        </div>
+
+        @foreach (var item in Model.Treatments)
+        {
+            if (item.Date.HasValue)
+            {
+                <div class="appointment-timeline-item">
+                    <div class="appointment-timeline-time">@item.Date.Value.ToString("HH:mm")</div>
+                    <div class="appointment-timeline-marker">
+                        <div class="appointment-timeline-dot is-info"><i class="bi bi-clipboard2-pulse"></i></div>
+                        <div class="appointment-timeline-line"></div>
+                    </div>
+                    <div class="appointment-timeline-body">
+                        <div class="appointment-timeline-title">@item.TreatmentType</div>
+                        <div class="appointment-timeline-text">@item.Notes</div>
+                    </div>
+                    <div class="appointment-timeline-stamp">@item.Date.Value.ToString("dd MMM yyyy")<br>@item.Date.Value.ToString("HH:mm")</div>
+                </div>
+            }
+        }
+        @if (Model.Status == "Completed" && Model.EndTime.HasValue)
+        {
+            <div class="appointment-timeline-item">
+                <div class="appointment-timeline-time">@Model.EndTime.Value.ToString("HH:mm")</div>
+                <div class="appointment-timeline-marker">
+                    <div class="appointment-timeline-dot is-success"><i class="bi bi-file-earmark-check"></i></div>
+                    <div class="appointment-timeline-line"></div>
+                </div>
+                <div class="appointment-timeline-body">
+                    <div class="appointment-timeline-title">Randevu Tamamlandı</div>
+                    <div class="appointment-timeline-text">Hasta taburcu edildi.</div>
+                </div>
+                <div class="appointment-timeline-stamp">
+                    @Model.EndTime.Value.ToString("dd MMM yyyy")
+                    <br>
+                    @Model.EndTime.Value.ToString("HH:mm")
+                </div>
+            </div>
+        }
+        @if (Model.Status == "Cancelled")
+        {
+            <div class="appointment-timeline-item">
+
+                <div class="appointment-timeline-time">
+                    @if (Model.EndTime.HasValue)
+                    {
+                        @Model.EndTime.Value.ToString("HH:mm")
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </div>
+                <div class="appointment-timeline-marker">
+                    <div class="appointment-timeline-dot is-danger">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+                    <div class="appointment-timeline-line"></div>
+                </div>
+
+                <div class="appointment-timeline-body">
+                    <div class="appointment-timeline-title">
+                        Randevu İptal Edildi
+                    </div>
+                    <div class="appointment-timeline-text">
+                        Randevu süreci tamamlanmadan iptal edildi.
+                    </div>
+                </div>
+
+                @if (Model.EndTime.HasValue)
+                {
+                    <div class="appointment-timeline-stamp">
+                        @Model.EndTime.Value.ToString("dd MMM yyyy")
+                        <br>
+                        @Model.EndTime.Value.ToString("HH:mm")
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+
+    <!-- 6) BİLGİ MESAJI -->
+    <div class="appointment-detail-notice">
+        <div class="card-icon-tile"><i class="bi bi-shield-check"></i></div>
+        <div>
+            <div class="appointment-detail-notice-title">
+                Her şey yolunda!
+            </div>
+
+            <div class="appointment-detail-notice-text">
+                Randevu sürecine ait bilgiler burada görüntülenmektedir.
+            </div>
+        </div>
+    </div>
+</section>

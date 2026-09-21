@@ -1,0 +1,27 @@
+﻿@model List<ManagerDashboardRecentTreatmentsDto>
+
+<section class="dashboard-treatments card-ui" id="dashboard-treatments" aria-label="Recent treatments">
+    <div class="card-header-row">
+        <div>
+            <h2 class="text-card-title">Son Tedaviler
+            </h2>
+            <span class="text-tiny text-muted">En son bulunan tedavi kayıtları</span>
+        </div>
+        <a href="#" class="link-action">Hepsini Görüntüle <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+
+    <div>
+        @foreach(var item in Model)
+        {
+            <div class="treatment-row">
+                <div class="treatment-icon"><i class="bi bi-clipboard2-pulse"></i></div>
+                <div class="treatment-body">
+                    <div class="treatment-type">@item.TreatmentType <span class="text-tiny text-muted-light">(@item.AnimalName)</span></div>
+                    <div class="treatment-meta">Randevu #@item.AppointmentId · @item.Notes</div>
+                </div>
+                <div class="treatment-cost">₺@item.Cost</div>
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,9 @@
+﻿@model WeatherDto
+
+<section class="dashboard-weather card-ui weather-card" id="dashboard-weather" aria-label="Klinik Hava Durumu">
+    <div class="weather-icon-tile"><i class="bi bi-cloud-sun-fill"></i></div>
+    <span class="weather-city"><i class="bi bi-geo-alt-fill"></i> @Model.City</span>
+    <span class="weather-temp">@Model.Temperature.ToString("0")°C</span>
+    <span class="weather-desc">@Model.Description</span>
+    <span class="weather-date">@Model.Date.ToString("dddd, dd MMMM, yyyy")</span>
+</section>

@@ -1,0 +1,438 @@
+﻿<style>
+
+  /* ==========================================================================
+     APPOINTMENT / CREATE (Customer) — yalnızca bu sayfaya özel stiller.
+     Global UI Foundation'ın sağladığı sınıflar kullanılır: .card-ui, .btn-ui*,
+     .badge-ui*, .card-icon-tile, .form-grid-2, .form-group-ui, .form-label-ui,
+     .form-control-ui, .input-icon-wrap*, .form-feedback, .form-actions,
+     .breadcrumb-ui, .section-header*, tipografi yardımcıları ve window.VetCareToast.
+     ========================================================================== */
+
+  .appointment-create-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .appointment-create-topline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .appointment-create-card { padding: 0; overflow: hidden; }
+
+  /* ---- Numaralı bölümler ---- */
+
+  .appointment-create-section {
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .appointment-create-section:last-child { border-bottom: none; background-color: var(--color-surface-alt); }
+
+  .appointment-create-section-head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .appointment-create-step {
+    flex: 0 0 auto;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: #fff;
+    font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-primary-glow);
+  }
+
+  .appointment-create-section-title { font-size: 1.1rem; font-weight: 600; }
+  .appointment-create-section-desc { font-size: 0.8125rem; color: var(--color-muted); margin-top: 1px; }
+
+  /* Global .form-feedback metni kalıcı gösterir; burada yalnızca grup geçersizken görünür. */
+  .appointment-create-page .form-feedback { display: none; }
+  .appointment-create-page .form-group-ui.is-invalid .form-feedback { display: flex; }
+
+  .appointment-create-hint { font-size: 0.75rem; color: var(--color-muted-light); }
+
+  /* ---- Bölüm 1: hayvan + bilgi paneli ---- */
+
+  .appointment-create-pet-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .appointment-create-select-lg { height: 54px; font-size: 0.95rem; font-weight: 500; }
+
+  .appointment-create-pet-preview {
+    display: none;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.85rem;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-secondary-light);
+  }
+
+  .appointment-create-pet-preview.is-visible { display: flex; }
+
+  .appointment-create-pet-avatar {
+    flex: 0 0 auto;
+    width: 44px; height: 44px; border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+
+  .appointment-create-pet-name { font-weight: 700; font-size: 0.9rem; }
+  .appointment-create-pet-breed { font-size: 0.78rem; color: var(--color-muted); }
+
+  .appointment-create-help {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.15rem 1.25rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-primary-light);
+    border: 1px solid var(--color-border);
+  }
+
+  .appointment-create-help-title { font-size: 0.9rem; font-weight: 700; color: var(--color-primary-dark); }
+  .appointment-create-help-text { font-size: 0.8125rem; color: var(--color-muted); }
+  .appointment-create-help .btn-ui { align-self: flex-start; margin-top: 0.25rem; }
+
+  /* ---- Bölüm 2: randevu bilgileri ---- */
+
+  .appointment-create-details-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .appointment-create-col { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
+
+  .appointment-create-date-shortcuts { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+  .appointment-create-chip {
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-strong);
+    background-color: var(--color-surface);
+    font-size: 0.75rem; font-weight: 500; color: var(--color-muted);
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .appointment-create-chip:hover { border-color: var(--color-primary); color: var(--color-primary-dark); background-color: var(--color-primary-light); }
+
+  /* Saat seçimi: radyo tabanlı slot düğmeleri (name="Time") */
+  .appointment-create-slots {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .appointment-create-slot { position: relative; }
+  .appointment-create-slot input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+
+  .appointment-create-slot span {
+    display: block;
+    text-align: center;
+    padding: 0.55rem 0;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--color-border);
+    background-color: var(--color-surface-alt);
+    font-size: 0.8125rem; font-weight: 500; color: var(--color-text);
+    transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .appointment-create-slot:hover span { border-color: var(--color-border-strong); background-color: var(--color-primary-light); }
+  .appointment-create-slot input:checked + span { background: var(--gradient-primary); border-color: transparent; color: #fff; font-weight: 600; }
+  .appointment-create-slot input:focus-visible + span { box-shadow: 0 0 0 4px rgba(108, 99, 168, 0.25); }
+  .appointment-create-slot input:disabled { cursor: not-allowed; }
+  .appointment-create-slot input:disabled + span { opacity: 0.4; text-decoration: line-through; background-color: var(--color-border); }
+
+  /* Randevu türü: görsel olarak öne çıkan seçici + açıklama kartı */
+  .appointment-create-type-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--color-accent-light);
+    border: 1px dashed rgba(201, 107, 79, 0.35);
+    margin-top: 0.85rem;
+  }
+
+  .appointment-create-type-card.is-empty { background-color: var(--color-surface-alt); border-color: var(--color-border-strong); }
+
+  .appointment-create-type-icon {
+    flex: 0 0 auto;
+    width: 44px; height: 44px; border-radius: var(--radius-md);
+    background-color: rgba(255, 255, 255, 0.85); color: #c96b4f;
+    display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+  }
+
+  .appointment-create-type-card.is-empty .appointment-create-type-icon { color: var(--color-muted-light); }
+  .appointment-create-type-name { font-weight: 700; font-size: 0.9rem; }
+  .appointment-create-type-text { font-size: 0.78rem; color: var(--color-muted); margin-top: 1px; }
+
+  .appointment-create-status {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    padding: 0.8rem 1rem; border-radius: var(--radius-md);
+    background-color: var(--color-surface-alt); border: 1px solid var(--color-border);
+    font-size: 0.8125rem; color: var(--color-muted);
+  }
+
+  .appointment-create-notes { margin-top: 1.5rem; }
+
+  /* ---- Bölüm 3: onay ---- */
+
+  .appointment-create-info {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    padding: 1rem 1.15rem; border-radius: var(--radius-md);
+    background-color: var(--color-info-light); border: 1px solid rgba(127, 175, 208, 0.3);
+  }
+
+  .appointment-create-info .card-icon-tile { background-color: rgba(255, 255, 255, 0.8); color: var(--color-info); width: 38px; height: 38px; }
+  .appointment-create-info-title { font-size: 0.875rem; font-weight: 700; }
+  .appointment-create-info-text { font-size: 0.8125rem; color: var(--color-muted); margin-top: 1px; }
+
+  .appointment-create-summary {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .appointment-create-summary-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 0.4rem 0.85rem; border-radius: var(--radius-pill);
+    background-color: var(--color-surface); border: 1px solid var(--color-border);
+    font-size: 0.78rem; font-weight: 500; color: var(--color-text);
+  }
+
+  .appointment-create-summary-item i { color: var(--color-primary); }
+  .appointment-create-summary-item.is-empty { color: var(--color-muted-light); }
+  .appointment-create-summary-item.is-empty i { color: var(--color-muted-light); }
+
+  .appointment-create-actions { margin-top: 1.5rem; padding-top: 1.25rem; }
+  .appointment-create-actions .btn-ui--primary { min-width: 200px; padding-top: 0.85rem; padding-bottom: 0.85rem; }
+
+  /* ---- Responsive ---- */
+
+  @@media (max-width: 991.98px) {
+    .appointment-create-details-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .appointment-create-pet-grid { grid-template-columns: 1fr; }
+  }
+
+  @@media (max-width: 767.98px) {
+    .appointment-create-topline { flex-direction: column; align-items: stretch; }
+    .appointment-create-topline .btn-ui { width: 100%; }
+    .appointment-create-section { padding: 1.25rem; }
+    .appointment-create-slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @@media (max-width: 419.98px) {
+    .appointment-create-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .appointment-create-actions .btn-ui--primary { min-width: 0; }
+  }
+
+</style>
+
+<div class="appointment-create-page">
+
+  <!-- ==================================================================
+       ÜST BÖLÜM: breadcrumb + başlık + geri dönüş
+       ================================================================== -->
+  <nav class="breadcrumb-ui" aria-label="Breadcrumb">
+    <span class="breadcrumb-ui-item"><a href="#">Randevular</a></span>
+    <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
+    <span class="breadcrumb-ui-item is-current">Yeni Randevu</span>
+  </nav>
+
+  <div class="appointment-create-topline">
+    <div>
+      <h1 class="text-page-title">Yeni Randevu</h1>
+      <p class="section-header-desc">Evcil hayvanınız için yeni bir randevu oluşturun</p>
+    </div>
+    <a href="#" class="btn-ui btn-ui--ghost" id="appointmentBackBtn"><i class="bi bi-arrow-left"></i> Randevulara Dön</a>
+  </div>
+
+  <!-- ==================================================================
+       FORM — Appointment: AnimalId, Date, Time, AppointmentType, Notes, Status
+       (Id, Animal, Treatments, Payments formda yer almaz)
+       ================================================================== -->
+       @await Component.InvokeAsync("_AppointmentCreateFormComponentPartial")
+
+</div>
+
+<script>
+  /* ==========================================================================
+     APPOINTMENT / CREATE — yalnızca sayfaya özel JavaScript.
+     API çağrısı / gönderim yoktur; doğrulama ve önizleme prototip amaçlıdır.
+     Global toast varsa (window.VetCareToast) onu kullanır.
+     ========================================================================== */
+
+  (function () {
+    'use strict';
+
+    var form = document.getElementById('appointmentCreateForm');
+    if (!form) return;
+
+    var animalSelect = document.getElementById('AnimalId');
+    var dateInput = document.getElementById('Date');
+    var typeSelect = document.getElementById('AppointmentType');
+    var slotsWrap = document.getElementById('timeSlots');
+
+    var groups = {
+      animal: document.getElementById('animalGroup'),
+      date: document.getElementById('dateGroup'),
+      time: document.getElementById('timeGroup'),
+      type: document.getElementById('typeGroup')
+    };
+
+    function notify(message) {
+      if (window.VetCareToast && typeof window.VetCareToast.showToast === 'function') {
+        window.VetCareToast.showToast('info', message);
+      }
+    }
+
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+    function toIsoDate(d) {
+      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    }
+
+    /* ---- Geçmiş tarihleri engelle ---- */
+    var today = new Date();
+    dateInput.min = toIsoDate(today);
+
+    /* ---- Saat slotları (09:00 – 17:30, 30 dk) ---- */
+    var SLOT_TIMES = [];
+    for (var h = 9; h <= 17; h++) {
+      SLOT_TIMES.push(pad(h) + ':00');
+      SLOT_TIMES.push(pad(h) + ':30');
+    }
+
+    slotsWrap.innerHTML = SLOT_TIMES.map(function (t) {
+      return '<label class="appointment-create-slot"><input type="radio" name="Time" value="' + t + '"><span>' + t + '</span></label>';
+    }).join('');
+
+    function refreshSlotAvailability() {
+      var isToday = dateInput.value === toIsoDate(new Date());
+      var now = new Date();
+      var nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+      slotsWrap.querySelectorAll('input').forEach(function (input) {
+        var parts = input.value.split(':');
+        var minutes = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+        var disabled = isToday && minutes <= nowMinutes;
+        input.disabled = disabled;
+        if (disabled && input.checked) input.checked = false;
+      });
+    }
+
+    /* ---- Doğrulama yardımcıları ---- */
+    function setInvalid(group, invalid) { group.classList.toggle('is-invalid', invalid); }
+
+    function validateAnimal() { var ok = animalSelect.value !== ''; setInvalid(groups.animal, !ok); return ok; }
+    function validateType() { var ok = typeSelect.value !== ''; setInvalid(groups.type, !ok); return ok; }
+    function validateTime() { var ok = !!slotsWrap.querySelector('input:checked'); setInvalid(groups.time, !ok); return ok; }
+
+    function validateDate() {
+      var feedback = document.querySelector('#dateFeedback span');
+      var value = dateInput.value;
+      var ok = true;
+      if (!value) { ok = false; feedback.textContent = 'Lütfen bir tarih seçin.'; }
+      else if (value < dateInput.min) { ok = false; feedback.textContent = 'Geçmiş bir tarih seçemezsiniz.'; }
+      setInvalid(groups.date, !ok);
+      return ok;
+    }
+
+    /* ---- Önizlemeler ---- */
+    var petPreview = document.getElementById('petPreview');
+
+    function updateAnimal() {
+      var opt = animalSelect.options[animalSelect.selectedIndex];
+      if (animalSelect.value) {
+        document.getElementById('petPreviewIcon').textContent = opt.dataset.icon || '🐾';
+        document.getElementById('petPreviewName').textContent = opt.dataset.name;
+        document.getElementById('petPreviewBreed').textContent = opt.dataset.breed;
+        petPreview.classList.add('is-visible');
+      } else {
+        petPreview.classList.remove('is-visible');
+      }
+    }
+
+    function updateType() {
+      var opt = typeSelect.options[typeSelect.selectedIndex];
+      var card = document.getElementById('typeCard');
+      var hasValue = typeSelect.value !== '';
+      card.classList.toggle('is-empty', !hasValue);
+      document.getElementById('typeCardIcon').className = 'bi ' + (hasValue ? opt.dataset.icon : 'bi-clipboard2-pulse');
+      document.getElementById('typeCardName').textContent = hasValue ? opt.value : 'Randevu türü seçilmedi';
+      document.getElementById('typeCardText').textContent = hasValue ? opt.dataset.text : 'Seçtiğiniz türe göre kısa bir açıklama burada görünür.';
+    }
+
+    function setSummary(key, text, filled) {
+      var el = document.querySelector('[data-summary="' + key + '"]');
+      var icon = el.querySelector('i').outerHTML;
+      el.innerHTML = icon + ' ' + text;
+      el.classList.toggle('is-empty', !filled);
+    }
+
+    function updateSummary() {
+      var animalOpt = animalSelect.options[animalSelect.selectedIndex];
+      setSummary('animal', animalSelect.value ? animalOpt.dataset.name : 'Hayvan seçilmedi', !!animalSelect.value);
+
+      if (dateInput.value) {
+        var d = new Date(dateInput.value + 'T00:00:00');
+        setSummary('date', d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }), true);
+      } else {
+        setSummary('date', 'Tarih seçilmedi', false);
+      }
+
+      var checked = slotsWrap.querySelector('input:checked');
+      setSummary('time', checked ? checked.value : 'Saat seçilmedi', !!checked);
+      setSummary('type', typeSelect.value || 'Tür seçilmedi', !!typeSelect.value);
+    }
+
+    /* ---- Olaylar ---- */
+    animalSelect.addEventListener('change', function () { updateAnimal(); updateSummary(); if (groups.animal.classList.contains('is-invalid')) validateAnimal(); });
+    typeSelect.addEventListener('change', function () { updateType(); updateSummary(); if (groups.type.classList.contains('is-invalid')) validateType(); });
+    dateInput.addEventListener('change', function () { refreshSlotAvailability(); updateSummary(); if (groups.date.classList.contains('is-invalid')) validateDate(); if (groups.time.classList.contains('is-invalid')) validateTime(); });
+    slotsWrap.addEventListener('change', function () { updateSummary(); if (groups.time.classList.contains('is-invalid')) validateTime(); });
+
+    document.querySelectorAll('[data-date-offset]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var d = new Date();
+        d.setDate(d.getDate() + parseInt(btn.getAttribute('data-date-offset'), 10));
+        dateInput.value = toIsoDate(d);
+        dateInput.dispatchEvent(new Event('change'));
+      });
+    });
+
+
+
+    document.getElementById('appointmentCancelBtn').addEventListener('click', function () {
+      form.reset();
+      refreshSlotAvailability();
+      updateAnimal();
+      updateType();
+      updateSummary();
+      Object.keys(groups).forEach(function (k) { setInvalid(groups[k], false); });
+    });
+
+    ['appointmentBackBtn', 'addAnimalBtn'].forEach(function (id) {
+      document.getElementById(id).addEventListener('click', function (e) { e.preventDefault(); });
+    });
+
+    refreshSlotAvailability();
+  })();
+</script>

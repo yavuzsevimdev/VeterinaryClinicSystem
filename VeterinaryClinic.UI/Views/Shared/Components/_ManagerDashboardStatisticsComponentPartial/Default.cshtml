@@ -1,0 +1,38 @@
+﻿@model ManagerDashboardStatisticsDto
+
+<section class="dashboard-statistics" id="dashboard-statistics" aria-label="Clinic statistics">
+    <div class="grid-4">
+        <div class="card-ui stat-card">
+            <div class="row-between">
+                <span class="stat-card-label">Toplam Hayvan</span>
+                <div class="card-icon-tile is-primary"><i class="bi bi-clipboard2-pulse"></i></div>
+            </div>
+            <span class="stat-card-value">@Model.TotalAnimals</span>
+            <span class="stat-card-support is-accent"><i class="bi bi-arrow-up-short"></i> 6 hayvan bu hafta eklendi</span>
+        </div>
+        <div class="card-ui stat-card">
+            <div class="row-between">
+                <span class="stat-card-label">Bugün Randevuları</span>
+                <div class="card-icon-tile is-info"><i class="bi bi-calendar2-week"></i></div>
+            </div>
+            <span class="stat-card-value">@Model.TodayAppointments</span>
+            <span class="stat-card-support">@Model.ScheduledRemainingToday geriye kalan planlı randevu</span>
+        </div>
+        <div class="card-ui stat-card">
+            <div class="row-between">
+                <span class="stat-card-label">Tamamlanan Randevular</span>
+                <div class="card-icon-tile is-success"><i class="bi bi-capsule"></i></div>
+            </div>
+            <span class="stat-card-value">@Model.CompletedTreatments</span>
+            <span class="stat-card-support">Tüm zamanlar</span>
+        </div>
+        <div class="card-ui stat-card">
+            <div class="row-between">
+                <span class="stat-card-label">Toplam Kalan Ödemeler</span>
+                <div class="card-icon-tile is-danger"><i class="bi bi-cash-coin"></i></div>
+            </div>
+            <span class="stat-card-value">@Model.OutstandingDebt.ToString("N0") ₺</span>
+            <span class="stat-card-support is-warn"><i class="bi bi-exclamation-circle"></i> 9 Ödenmesi gereken bakiye</span>
+        </div>
+    </div>
+</section>

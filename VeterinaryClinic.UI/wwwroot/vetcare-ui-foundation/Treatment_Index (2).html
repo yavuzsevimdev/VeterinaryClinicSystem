@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tedavi Geçmişi | VetCare</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Global VetCare UI Foundation -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        .treatment-history-page {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* ------------------------------------------------------------
+           Page Header
+        ------------------------------------------------------------ */
+        .treatment-history-header {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(380px, 540px);
+            gap: 24px;
+            align-items: center;
+        }
+
+        .treatment-history-title {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .treatment-history-title-icon {
+            width: 72px;
+            height: 72px;
+            flex: 0 0 72px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(145deg, var(--color-primary), #8078d5);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(108, 99, 168, .18);
+            font-size: 34px;
+        }
+
+        .treatment-history-heading {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .treatment-history-subtitle {
+            margin: 5px 0 0;
+            color: var(--color-muted);
+            font-size: 14px;
+        }
+
+        .treatment-history-banner {
+            min-height: 102px;
+            padding: 13px 18px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(135deg, #f3f0ff 0%, #ece8ff 100%);
+            overflow: hidden;
+        }
+
+        .treatment-banner-animals {
+            width: 150px;
+            height: 82px;
+            flex: 0 0 150px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .banner-dog,
+        .banner-cat {
+            font-size: 58px;
+            line-height: 1;
+            filter: drop-shadow(0 6px 8px rgba(76, 67, 145, .10));
+        }
+
+        .banner-cat {
+            margin-left: -16px;
+            transform: translateY(5px);
+        }
+
+        .treatment-banner-copy {
+            min-width: 0;
+        }
+
+        .treatment-banner-title {
+            margin: 0;
+            color: #4c43b6;
+            font-size: 16px;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+
+        .treatment-banner-copy p {
+            margin: 6px 0 0;
+            color: #8581ae;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        /* ------------------------------------------------------------
+           Stats
+        ------------------------------------------------------------ */
+        .treatment-history-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .history-stat-card {
+            position: relative;
+            min-height: 112px;
+            padding: 17px 18px;
+            overflow: hidden;
+        }
+
+        .history-stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 21px;
+        }
+
+        .history-stat-icon.is-primary {
+            color: #6258d0;
+            background: #f0eeff;
+        }
+
+        .history-stat-icon.is-success {
+            color: #4ea58b;
+            background: #e9f7f1;
+        }
+
+        .history-stat-icon.is-info {
+            color: #439be4;
+            background: #eaf5ff;
+        }
+
+        .history-stat-icon.is-accent {
+            color: #7267d5;
+            background: #f1efff;
+        }
+
+        .history-stat-label {
+            margin: 0 0 3px;
+            color: #72729b;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .history-stat-value {
+            display: block;
+            color: #11183d;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .history-stat-meta {
+            margin-top: 7px;
+            color: #9898b2;
+            font-size: 11px;
+        }
+
+        .history-stat-decoration {
+            position: absolute;
+            right: 16px;
+            bottom: 15px;
+            color: #8f89e8;
+            opacity: .34;
+            font-size: 37px;
+        }
+
+        /* ------------------------------------------------------------
+           Filters
+        ------------------------------------------------------------ */
+        .treatment-history-filters {
+            padding: 16px 18px 14px;
+        }
+
+        .history-filters-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.35fr auto auto;
+            gap: 18px;
+            align-items: end;
+        }
+
+        .history-filter-label {
+            display: block;
+            margin: 0 0 7px;
+            color: #585982;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .history-date-range {
+            height: 42px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #dedcf0;
+            border-radius: 10px;
+            background: #fff;
+            color: #8a89a5;
+            font-size: 12px;
+        }
+
+        .history-date-range i {
+            color: #6c63a8;
+            font-size: 15px;
+        }
+
+        .history-date-range .arrow {
+            color: #aaa8bc;
+        }
+
+        .history-filter-btn {
+            height: 42px;
+            padding: 0 22px;
+        }
+
+        /* ------------------------------------------------------------
+           List
+        ------------------------------------------------------------ */
+        .treatment-history-list {
+            overflow: hidden;
+        }
+
+        .history-list-head {
+            padding: 17px 18px 11px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .history-list-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-list-title-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #f0eeff;
+            color: #6c63d8;
+            font-size: 16px;
+        }
+
+        .history-list-title h2 {
+            margin: 0;
+            color: #13193f;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .history-table-wrap {
+            padding: 0 18px 8px;
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            min-width: 960px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+        }
+
+        .history-table thead th {
+            padding: 11px 14px;
+            background: #f6f5fb;
+            border-bottom: 1px solid #ebe9f5;
+            color: #666687;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .history-table thead th:first-child {
+            border-top-left-radius: 9px;
+        }
+
+        .history-table thead th:last-child {
+            border-top-right-radius: 9px;
+        }
+
+        .history-table tbody td {
+            padding: 13px 14px;
+            border-bottom: 1px solid #ecebf4;
+            color: #35375a;
+            vertical-align: middle;
+            font-size: 12px;
+        }
+
+        .history-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .history-table tbody tr:hover {
+            background: #fcfbff;
+        }
+
+        .history-animal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 145px;
+        }
+
+        .history-animal-image {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #f0eef9;
+            background: #f3f1fa;
+        }
+
+        .history-animal-fallback {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #f1effa;
+            color: #766ed4;
+            font-size: 17px;
+        }
+
+        .history-animal-name {
+            margin: 0;
+            color: #202348;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .history-animal-breed {
+            margin-top: 2px;
+            color: #9291ab;
+            font-size: 10px;
+        }
+
+        .history-date {
+            color: #3c3e60;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .history-treatment-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 27px;
+            padding: 0 11px;
+            border-radius: 999px;
+            white-space: nowrap;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .history-treatment-badge.is-vaccine {
+            color: #32a582;
+            background: #e7f7f0;
+        }
+
+        .history-treatment-badge.is-checkup {
+            color: #5f56c8;
+            background: #efedff;
+        }
+
+        .history-treatment-badge.is-dental {
+            color: #e7637a;
+            background: #ffe8ee;
+        }
+
+        .history-treatment-badge.is-urgent {
+            color: #dc6b16;
+            background: #fff0e1;
+        }
+
+        .history-treatment-badge.is-control {
+            color: #4b91d9;
+            background: #e9f3ff;
+        }
+
+        .history-note {
+            max-width: 260px;
+            line-height: 1.4;
+            color: #5b5c78;
+        }
+
+        .history-cost {
+            color: #3c3f63;
+            white-space: nowrap;
+        }
+
+        .history-appointment {
+            color: #4e4c94;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .history-action-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 7px;
+        }
+
+        .history-detail-btn {
+            height: 32px;
+            padding: 0 14px;
+            border: 1px solid #dddaf4;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff;
+            color: #5b52c7;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .history-detail-btn:hover {
+            background: #f7f5ff;
+            color: #4c43b5;
+        }
+
+        .history-more-btn {
+            width: 34px;
+            height: 32px;
+            border: 1px solid #e3e0ef;
+            border-radius: 9px;
+            display: grid;
+            place-items: center;
+            background: #fff;
+            color: #6d6c90;
+        }
+
+        .history-more-btn:hover {
+            color: #5c54c3;
+            border-color: #d7d2f1;
+        }
+
+        .history-pagination {
+            padding: 12px 18px 17px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .history-pagination-info {
+            color: #777796;
+            font-size: 11px;
+        }
+
+        .history-pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .history-page-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #e6e3f1;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #fff;
+            color: #5d5c80;
+            font-size: 12px;
+        }
+
+        .history-page-btn.is-active {
+            border-color: #6c63a8;
+            background: #6c63a8;
+            color: #fff;
+            box-shadow: 0 7px 16px rgba(108, 99, 168, .20);
+        }
+
+        .history-page-btn.is-disabled {
+            color: #c7c5d2;
+        }
+
+        .history-page-size {
+            height: 36px;
+            padding: 0 12px;
+            margin-left: 8px;
+            border: 1px solid #e6e3f1;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #505177;
+            background: #fff;
+            font-size: 11px;
+        }
+
+        .history-empty {
+            display: none;
+            padding: 42px 20px;
+            text-align: center;
+        }
+
+        .history-empty-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 12px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: #f1effb;
+            color: #6c63a8;
+            font-size: 23px;
+        }
+
+        @media (max-width: 1100px) {
+            .treatment-history-header {
+                grid-template-columns: 1fr;
+            }
+
+            .history-filters-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .history-date-field {
+                grid-column: 1 / -1;
+            }
+
+            .treatment-history-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 680px) {
+            .treatment-history-title {
+                align-items: flex-start;
+            }
+
+            .treatment-history-title-icon {
+                width: 60px;
+                height: 60px;
+                flex-basis: 60px;
+                font-size: 28px;
+            }
+
+            .treatment-history-heading {
+                font-size: 22px;
+            }
+
+            .treatment-history-banner {
+                min-height: 94px;
+            }
+
+            .treatment-banner-animals {
+                width: 95px;
+                flex-basis: 95px;
+            }
+
+            .banner-dog,
+            .banner-cat {
+                font-size: 42px;
+            }
+
+            .history-filters-grid,
+            .treatment-history-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .history-date-field {
+                grid-column: auto;
+            }
+
+            .history-pagination {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="app-content">
+    <div class="app-content-inner">
+
+        <div class="treatment-history-page">
+
+            <!-- Page Header -->
+            <div class="treatment-history-header">
+                <div class="treatment-history-title">
+                    <div class="treatment-history-title-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+
+                    <div>
+                        <h1 class="treatment-history-heading">Tedavi Geçmişi</h1>
+                        <p class="treatment-history-subtitle">
+                            Evcil hayvanlarınızın tüm tedavi geçmişini görüntüleyin
+                        </p>
+                    </div>
+                </div>
+
+                <div class="treatment-history-banner">
+                    <div class="treatment-banner-animals" aria-hidden="true">
+                        <span class="banner-dog">🐶</span>
+                        <span class="banner-cat">🐱</span>
+                    </div>
+
+                    <div class="treatment-banner-copy">
+                        <h2 class="treatment-banner-title">
+                            Sağlıklı patiler,<br>
+                            mutlu yarınlar ❤️
+                        </h2>
+                        <p>
+                            Düzenli tedaviler, onların daha uzun<br>
+                            ve sağlıklı bir yaşam sürmesine yardımcı olur.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="treatment-history-stats">
+
+                <div class="card-ui history-stat-card">
+                    <div class="row-start" style="gap:12px; align-items:center;">
+                        <div class="history-stat-icon is-primary">
+                            <i class="bi bi-clipboard2-pulse"></i>
+                        </div>
+                        <div>
+                            <p class="history-stat-label">Toplam Tedavi</p>
+                            <span class="history-stat-value">8</span>
+                            <div class="history-stat-meta">↗ +2 bu yıl</div>
+                        </div>
+                    </div>
+                    <div class="history-stat-decoration">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </div>
+                </div>
+
+                <div class="card-ui history-stat-card">
+                    <div class="row-start" style="gap:12px; align-items:center;">
+                        <div class="history-stat-icon is-success">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div>
+                            <p class="history-stat-label">Tedavi Edilen Hayvan</p>
+                            <span class="history-stat-value">3</span>
+                            <div class="history-stat-meta">Toplam evcil hayvanınız</div>
+                        </div>
+                    </div>
+                    <div class="history-stat-decoration" style="color:#75b7ee;">
+                        <i class="bi bi-person-hearts"></i>
+                    </div>
+                </div>
+
+                <div class="card-ui history-stat-card">
+                    <div class="row-start" style="gap:12px; align-items:center;">
+                        <div class="history-stat-icon is-info">
+                            <i class="bi bi-stack"></i>
+                        </div>
+                        <div>
+                            <p class="history-stat-label">Toplam Maliyet</p>
+                            <span class="history-stat-value">4.250 ₺</span>
+                            <div class="history-stat-meta">Bu yıl: 2.100 ₺</div>
+                        </div>
+                    </div>
+                    <div class="history-stat-decoration" style="color:#5bc8b1;">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="card-ui history-stat-card">
+                    <div class="row-start" style="gap:12px; align-items:center;">
+                        <div class="history-stat-icon is-accent">
+                            <i class="bi bi-calendar2-heart"></i>
+                        </div>
+                        <div>
+                            <p class="history-stat-label">Son Tedavi</p>
+                            <span class="history-stat-value" style="font-size:18px;">12 Eyl 2026</span>
+                            <div class="history-stat-meta">Mavi · Aşı</div>
+                        </div>
+                    </div>
+                    <div class="history-stat-decoration" style="color:#8a87eb;">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Filters -->
+            <section class="card-ui treatment-history-filters">
+                <div class="history-filters-grid">
+
+                    <div class="form-group-ui">
+                        <label class="history-filter-label" for="animalFilter">Hayvan</label>
+                        <select id="animalFilter" class="form-control-ui">
+                            <option value="">Tümü</option>
+                            <option value="Mavi">Mavi</option>
+                            <option value="Luna">Luna</option>
+                            <option value="Pamuk">Pamuk</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-ui">
+                        <label class="history-filter-label" for="typeFilter">Tedavi Türü</label>
+                        <select id="typeFilter" class="form-control-ui">
+                            <option value="">Tümü</option>
+                            <option value="Aşı">Aşı</option>
+                            <option value="Genel Muayene">Genel Muayene</option>
+                            <option value="Diş Kontrolü">Diş Kontrolü</option>
+                            <option value="Acil Muayene">Acil Muayene</option>
+                            <option value="Kontrol">Kontrol</option>
+                        </select>
+                    </div>
+
+                    <div class="history-date-field form-group-ui">
+                        <label class="history-filter-label">Tarih Aralığı</label>
+                        <div class="history-date-range">
+                            <i class="bi bi-calendar3"></i>
+                            <span>Başlangıç</span>
+                            <span class="arrow">→</span>
+                            <span>Bitiş</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-ui btn-ui--primary history-filter-btn" id="filterButton">
+                        <i class="bi bi-search"></i>
+                        Filtrele
+                    </button>
+
+                    <button type="button" class="btn-ui btn-ui--ghost history-filter-btn" id="clearButton">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Temizle
+                    </button>
+
+                </div>
+            </section>
+
+            <!-- Treatment List -->
+            <section class="card-ui treatment-history-list">
+
+                <div class="history-list-head">
+                    <div class="history-list-title">
+                        <div class="history-list-title-icon">
+                            <i class="bi bi-list-task"></i>
+                        </div>
+                        <h2>Tedavi Listesi (<span id="listCount">8</span>)</h2>
+                    </div>
+                </div>
+
+                <div class="history-table-wrap">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Tarih <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                                <th>Hayvan <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                                <th>Tedavi Türü <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                                <th>Açıklama / Not <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                                <th>Maliyet <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                                <th>Randevu <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                                <th style="text-align:right;">İşlemler</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="treatmentTableBody">
+
+                            <tr data-row data-animal="Mavi" data-type="Aşı">
+                                <td class="history-date">12.09.2026</td>
+                                <td>
+                                    <div class="history-animal">
+                                        <!-- Razor dönüşümünde src değerini @item.ImageUrl yap -->
+                                        <img
+                                            class="history-animal-image"
+                                            src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=120&q=80"
+                                            alt="Mavi">
+                                        <div>
+                                            <p class="history-animal-name">Mavi</p>
+                                            <div class="history-animal-breed">Golden Retriever</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="history-treatment-badge is-vaccine">Aşı</span>
+                                </td>
+                                <td>
+                                    <div class="history-note">Karma aşı uygulandı.</div>
+                                </td>
+                                <td class="history-cost">500 ₺</td>
+                                <td class="history-appointment">12.09.2026</td>
+                                <td>
+                                    <div class="history-action-group">
+                                        <a href="/Treatment/Detail/1" class="history-detail-btn">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                            Detay
+                                        </a>
+                                        <button type="button" class="history-more-btn" title="Diğer işlemler">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row data-animal="Luna" data-type="Genel Muayene">
+                                <td class="history-date">05.08.2026</td>
+                                <td>
+                                    <div class="history-animal">
+                                        <img
+                                            class="history-animal-image"
+                                            src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=120&q=80"
+                                            alt="Luna">
+                                        <div>
+                                            <p class="history-animal-name">Luna</p>
+                                            <div class="history-animal-breed">Scottish Fold</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="history-treatment-badge is-checkup">Genel Muayene</span>
+                                </td>
+                                <td>
+                                    <div class="history-note">Rutin kontrol. Genel durumu iyi.</div>
+                                </td>
+                                <td class="history-cost">750 ₺</td>
+                                <td class="history-appointment">05.08.2026</td>
+                                <td>
+                                    <div class="history-action-group">
+                                        <a href="/Treatment/Detail/2" class="history-detail-btn">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                            Detay
+                                        </a>
+                                        <button type="button" class="history-more-btn">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row data-animal="Mavi" data-type="Diş Kontrolü">
+                                <td class="history-date">18.06.2026</td>
+                                <td>
+                                    <div class="history-animal">
+                                        <img
+                                            class="history-animal-image"
+                                            src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=120&q=80"
+                                            alt="Mavi">
+                                        <div>
+                                            <p class="history-animal-name">Mavi</p>
+                                            <div class="history-animal-breed">Golden Retriever</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="history-treatment-badge is-dental">Diş Kontrolü</span>
+                                </td>
+                                <td>
+                                    <div class="history-note">Diş temizliği yapıldı.</div>
+                                </td>
+                                <td class="history-cost">600 ₺</td>
+                                <td class="history-appointment">18.06.2026</td>
+                                <td>
+                                    <div class="history-action-group">
+                                        <a href="/Treatment/Detail/3" class="history-detail-btn">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                            Detay
+                                        </a>
+                                        <button type="button" class="history-more-btn">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row data-animal="Pamuk" data-type="Genel Muayene">
+                                <td class="history-date">10.04.2026</td>
+                                <td>
+                                    <div class="history-animal">
+                                        <img
+                                            class="history-animal-image"
+                                            src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=120&q=80"
+                                            alt="Pamuk">
+                                        <div>
+                                            <p class="history-animal-name">Pamuk</p>
+                                            <div class="history-animal-breed">Netherland Dwarf</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="history-treatment-badge is-checkup">Genel Muayene</span>
+                                </td>
+                                <td>
+                                    <div class="history-note">Genel sağlık kontrolü.</div>
+                                </td>
+                                <td class="history-cost">550 ₺</td>
+                                <td class="history-appointment">10.04.2026</td>
+                                <td>
+                                    <div class="history-action-group">
+                                        <a href="/Treatment/Detail/4" class="history-detail-btn">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                            Detay
+                                        </a>
+                                        <button type="button" class="history-more-btn">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row data-animal="Luna" data-type="Acil Muayene">
+                                <td class="history-date">22.02.2026</td>
+                                <td>
+                                    <div class="history-animal">
+                                        <img
+                                            class="history-animal-image"
+                                            src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=120&q=80"
+                                            alt="Luna">
+                                        <div>
+                                            <p class="history-animal-name">Luna</p>
+                                            <div class="history-animal-breed">Scottish Fold</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="history-treatment-badge is-urgent">Acil Muayene</span>
+                                </td>
+                                <td>
+                                    <div class="history-note">İştahsızlık ve kusma şikayeti.</div>
+                                </td>
+                                <td class="history-cost">1.200 ₺</td>
+                                <td class="history-appointment">22.02.2026</td>
+                                <td>
+                                    <div class="history-action-group">
+                                        <a href="/Treatment/Detail/5" class="history-detail-btn">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                            Detay
+                                        </a>
+                                        <button type="button" class="history-more-btn">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row data-animal="Mavi" data-type="Kontrol">
+                                <td class="history-date">15.01.2026</td>
+                                <td>
+                                    <div class="history-animal">
+                                        <img
+                                            class="history-animal-image"
+                                            src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=120&q=80"
+                                            alt="Mavi">
+                                        <div>
+                                            <p class="history-animal-name">Mavi</p>
+                                            <div class="history-animal-breed">Golden Retriever</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="history-treatment-badge is-control">Kontrol</span>
+                                </td>
+                                <td>
+                                    <div class="history-note">Önceki tedavi sonrası kontrol.</div>
+                                </td>
+                                <td class="history-cost">650 ₺</td>
+                                <td class="history-appointment">15.01.2026</td>
+                                <td>
+                                    <div class="history-action-group">
+                                        <a href="/Treatment/Detail/6" class="history-detail-btn">
+                                            <i class="bi bi-arrow-up-right-square"></i>
+                                            Detay
+                                        </a>
+                                        <button type="button" class="history-more-btn">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="history-empty" id="emptyState">
+                        <div class="history-empty-icon">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <h3 class="text-card-title" style="margin-bottom:6px;">Tedavi kaydı bulunamadı</h3>
+                        <p class="text-muted" style="margin:0;">
+                            Seçtiğiniz filtrelere uygun tedavi kaydı bulunmuyor.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="history-pagination">
+                    <div class="history-pagination-info">
+                        <span id="paginationInfo">8 kayıttan 1 - 6 arası gösteriliyor</span>
+                    </div>
+
+                    <div class="history-pagination-controls">
+                        <button class="history-page-btn is-disabled" aria-label="Önceki sayfa">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button class="history-page-btn is-active">1</button>
+                        <button class="history-page-btn">2</button>
+                        <button class="history-page-btn">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                        <div class="history-page-size">
+                            6 / sayfa
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+</main>
+
+<script>
+    const animalFilter = document.getElementById("animalFilter");
+    const typeFilter = document.getElementById("typeFilter");
+    const filterButton = document.getElementById("filterButton");
+    const clearButton = document.getElementById("clearButton");
+    const rows = [...document.querySelectorAll("[data-row]")];
+    const emptyState = document.getElementById("emptyState");
+    const listCount = document.getElementById("listCount");
+
+    function applyFilters() {
+        const animal = animalFilter.value;
+        const type = typeFilter.value;
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const matchesAnimal = !animal || row.dataset.animal === animal;
+            const matchesType = !type || row.dataset.type === type;
+            const show = matchesAnimal && matchesType;
+
+            row.style.display = show ? "" : "none";
+
+            if (show) {
+                visibleCount++;
+            }
+        });
+
+        emptyState.style.display = visibleCount === 0 ? "block" : "none";
+        listCount.textContent = visibleCount;
+    }
+
+    filterButton.addEventListener("click", applyFilters);
+
+    clearButton.addEventListener("click", () => {
+        animalFilter.value = "";
+        typeFilter.value = "";
+        applyFilters();
+    });
+
+    rows.forEach(row => {
+        const image = row.querySelector(".history-animal-image");
+
+        if (!image) return;
+
+        image.addEventListener("error", () => {
+            const fallback = document.createElement("div");
+            fallback.className = "history-animal-fallback";
+            fallback.innerHTML = '<i class="bi bi-heart"></i>';
+            image.replaceWith(fallback);
+        });
+    });
+</script>
+
+</body>
+</html>

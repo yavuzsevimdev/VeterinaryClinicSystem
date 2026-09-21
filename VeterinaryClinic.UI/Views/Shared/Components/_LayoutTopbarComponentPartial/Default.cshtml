@@ -1,0 +1,165 @@
+﻿@{
+    string role = "";
+    if (User.IsInRole("Manager"))
+    {
+        role = "Manager";
+    }
+    else if(User.IsInRole("Customer"))
+    {
+        role = "Customer";
+    }
+}
+@{
+    var fullName = User.Identity?.Name ?? "";
+    var nameParts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+    var initials = nameParts.Length >= 2
+        ? $"{nameParts[0][0]}{nameParts[^1][0]}"
+        : nameParts.Length == 1
+            ? nameParts[0][0].ToString()
+            : "?";
+
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button type="button"
+                class="topbar-icon-btn mobile-menu-btn"
+                data-mobile-nav-toggle
+                aria-label="Open navigation menu">
+
+            <i class="bi bi-list"></i>
+
+        </button>
+
+
+        <button type="button"
+                class="topbar-icon-btn hide-on-mobile"
+                data-sidebar-collapse-toggle
+                aria-label="Toggle sidebar">
+
+            <i class="bi bi-layout-sidebar-inset"></i>
+
+        </button>
+
+
+        <div class="topbar-title-block">
+
+            <span class="topbar-page-title"
+                  data-topbar-title>
+
+                @currentAction
+
+            </span>
+
+
+            <nav class="breadcrumb-ui hide-on-mobile"
+                 aria-label="Breadcrumb">
+
+                <span class="breadcrumb-ui-item">
+                    <a href="/@currentController/Index">
+                        @currentController
+                    </a>
+                </span>
+
+                <span class="breadcrumb-ui-sep">
+                    <i class="bi bi-chevron-right"></i>
+                </span>
+
+                <span class="breadcrumb-ui-item is-current">
+                    @currentAction
+                </span>
+
+            </nav>
+
+        </div>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+
+        <!-- Search -->
+
+        <div class="topbar-search hide-on-mobile">
+
+            <i class="bi bi-search topbar-search-icon"></i>
+
+            <input type="search"
+                   placeholder="Hayvanları, randevuları ara …"
+                   aria-label="Ara" />
+
+        </div>
+
+
+        <!-- Notifications -->
+
+        <div class="dropdown-anchor">
+            <button type="button" class="topbar-icon-btn notif-btn" data-dropdown-trigger="notifications" aria-label="Bildirimler">
+                <i class="bi bi-bell"></i>
+                <span class="notif-dot"></span>
+            </button>
+            <div class="dropdown-panel notif-panel" data-dropdown-panel="notifications" role="menu">
+                <div class="notif-panel-header">
+                    <span class="notif-panel-title">Bildirimler</span>
+                    <span class="notif-panel-badge">3 yeni</span>
+                </div>
+                <div class="notif-list">
+                    <div class="notif-item is-unread">
+                        <div class="notif-icon is-warning"><i class="bi bi-exclamation-circle"></i></div>
+                        <div class="notif-content">
+                            <p class="notif-text">3 invoices are past due</p>
+                            <span class="notif-time">20 minutes ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item is-unread">
+                        <div class="notif-icon is-info"><i class="bi bi-calendar-plus"></i></div>
+                        <div class="notif-content">
+                            <p class="notif-text">New appointment booked for today</p>
+                            <span class="notif-time">1 hour ago</span>
+                        </div>
+                    </div>
+                    <div class="notif-item is-unread">
+                        <div class="notif-icon is-success"><i class="bi bi-check2-circle"></i></div>
+                        <div class="notif-content">
+                            <p class="notif-text">Treatment marked completed for Max</p>
+                            <span class="notif-time">2 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="notif-panel-footer"><a href="#">View all notifications</a></div>
+            </div>
+        </div>
+
+        <div class="dropdown-anchor">
+            <button type="button" class="profile-trigger" data-dropdown-trigger="profile" aria-label="Kullanıcı menüsünü aç">
+                <span class="avatar avatar-md">EA</span>
+                <span class="profile-trigger-info">
+                    <span class="profile-trigger-name">@User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value</span>
+                    <span class="profile-trigger-role">@role</span>
+                </span>
+                <i class="bi bi-chevron-down profile-trigger-caret"></i>
+            </button>
+            <div class="dropdown-panel" data-dropdown-panel="profile" role="menu" style="min-width:240px;">
+                <div class="dropdown-profile-header">
+                    <span class="avatar avatar-lg">@initials</span>
+                    <div>
+                        <div class="dropdown-profile-name">@User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value</div>
+                        <div class="dropdown-profile-email">@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item"><i class="bi bi-person"></i> Profil</a>
+                <a href="#" class="dropdown-item"><i class="bi bi-gear"></i> Ayarlar</a>
+                <div class="dropdown-divider"></div>
+                <a href="/account/logout" class="dropdown-item is-danger"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</a>
+            </div>
+        </div>
+
+    </div>
+
+</header>

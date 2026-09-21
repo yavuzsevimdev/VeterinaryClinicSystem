@@ -1,0 +1,42 @@
+﻿@model WeatherDto
+
+<div class="card-ui weather-card">
+
+
+    <div class="row-between">
+
+        <span class="text-small">
+            Klinik Hava Durumu
+        </span>
+
+        <i class="bi bi-cloud-sun"
+           style="font-size:1.4rem;">
+        </i>
+
+    </div>
+
+
+    <div class="weather-card-temp"
+         style="margin-top:10px;">
+
+        @Model.Temperature.ToString("0")°C
+
+    </div>
+
+
+    <span class="text-small text-muted">
+
+        @Model.City · @Model.Description
+
+    </span>
+
+
+    <div style="margin-top:var(--space-3);">
+
+        <span class="text-tiny text-muted">
+            Bugünün Klinik Hava Durumu
+        </span>
+
+    </div>
+
+</div>

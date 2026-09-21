@@ -1,0 +1,162 @@
+﻿<script>
+    /* ==========================================================================
+       JAVASCRIPT
+       Lightweight, prototype-only interactions: sidebar collapse/drawer,
+       dropdown toggling, and toast feedback for non-functional demo actions.
+       No API calls, no authentication, no backend logic.
+       ========================================================================== */
+
+    (function () {
+        'use strict';
+
+        /* ---- Sidebar collapse (desktop) + mobile drawer ---- */
+        var appShell = document.querySelector('[data-app-shell]');
+        var overlay = document.querySelector('[data-app-overlay]');
+        var collapseToggles = document.querySelectorAll('[data-sidebar-collapse-toggle]');
+        var mobileToggles = document.querySelectorAll('[data-mobile-nav-toggle]');
+        var STORAGE_KEY = 'vetcare.managerSidebarCollapsed';
+
+        function applyStoredCollapse() {
+            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                appShell.classList.add('is-sidebar-collapsed');
+            }
+        }
+
+        collapseToggles.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var collapsed = appShell.classList.toggle('is-sidebar-collapsed');
+                localStorage.setItem(STORAGE_KEY, String(collapsed));
+            });
+        });
+
+        function openMobileNav() {
+            appShell.classList.add('is-mobile-nav-open');
+            overlay.classList.add('is-visible');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileNav() {
+            appShell.classList.remove('is-mobile-nav-open');
+            overlay.classList.remove('is-visible');
+            document.body.style.overflow = '';
+        }
+
+        mobileToggles.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                appShell.classList.contains('is-mobile-nav-open') ? closeMobileNav() : openMobileNav();
+            });
+        });
+
+        overlay.addEventListener('click', closeMobileNav);
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 991.98) closeMobileNav();
+        });
+
+        applyStoredCollapse();
+
+        /* ---- Active sidebar link (demo only — real app drives this from routing) ---- */
+        document.querySelectorAll('[data-sidebar-link]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                if (link.getAttribute('href') === '#') e.preventDefault();
+                document.querySelectorAll('[data-sidebar-link]').forEach(function (l) { l.classList.remove('is-active'); });
+                link.classList.add('is-active');
+                if (window.innerWidth <= 991.98) closeMobileNav();
+            });
+        });
+
+        /* ---- Generic dropdown open/close (notifications + profile) ---- */
+        var triggers = document.querySelectorAll('[data-dropdown-trigger]');
+
+        function triggerFor(panel) {
+            return document.querySelector('[data-dropdown-trigger="' + panel.getAttribute('data-dropdown-panel') + '"]');
+        }
+
+        function closeAllDropdowns(except) {
+            document.querySelectorAll('.dropdown-panel.is-open').forEach(function (panel) {
+                if (panel === except) return;
+                panel.classList.remove('is-open');
+                var t = triggerFor(panel);
+                if (t) t.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        triggers.forEach(function (trigger) {
+            var id = trigger.getAttribute('data-dropdown-trigger');
+            var panel = document.querySelector('[data-dropdown-panel="' + id + '"]');
+            if (!panel) return;
+            trigger.setAttribute('aria-haspopup', 'true');
+            trigger.setAttribute('aria-expanded', 'false');
+
+            trigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var willOpen = !panel.classList.contains('is-open');
+                closeAllDropdowns(willOpen ? panel : null);
+                panel.classList.toggle('is-open', willOpen);
+                trigger.setAttribute('aria-expanded', String(willOpen));
+            });
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.dropdown-anchor')) closeAllDropdowns();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeAllDropdowns();
+        });
+
+        /* ---- Toast feedback for prototype-only actions (quick actions, reports, appointment view) ---- */
+        function ensureToastStack() {
+            var stack = document.querySelector('[data-toast-stack]');
+            if (!stack) {
+                stack = document.createElement('div');
+                stack.className = 'toast-stack';
+                stack.setAttribute('data-toast-stack', '');
+                stack.setAttribute('aria-live', 'polite');
+                document.body.appendChild(stack);
+            }
+            return stack;
+        }
+
+        function showToast(title, message) {
+            var stack = ensureToastStack();
+            var toast = document.createElement('div');
+            toast.className = 'toast-ui is-success';
+            toast.setAttribute('role', 'status');
+            toast.innerHTML =
+                '<i class="bi bi-info-circle-fill toast-ui-icon"></i>' +
+                '<div class="toast-ui-body">' +
+                '<div class="toast-ui-title">' + title + '</div>' +
+                '<div class="toast-ui-message">' + message + '</div>' +
+                '</div>' +
+                '<button type="button" class="toast-ui-close" aria-label="Dismiss"><i class="bi bi-x-lg"></i></button>';
+
+            toast.querySelector('.toast-ui-close').addEventListener('click', function () { dismissToast(toast); });
+            stack.appendChild(toast);
+            var timer = setTimeout(function () { dismissToast(toast); }, 3200);
+            toast.dataset.timer = timer;
+        }
+
+        function dismissToast(toast) {
+            if (!toast || toast.classList.contains('is-leaving')) return;
+            clearTimeout(toast.dataset.timer);
+            toast.classList.add('is-leaving');
+            toast.addEventListener('animationend', function () { toast.remove(); }, { once: true });
+        }
+
+        document.querySelectorAll('[data-toast-action]').forEach(function (el) {
+            el.addEventListener('click', function () {
+                var action = el.getAttribute('data-toast-action');
+                showToast(action, 'This is a design prototype — no backend action was performed.');
+            });
+            el.addEventListener('keydown', function (e) {
+                if ((e.key === 'Enter' || e.key === ' ') && el.getAttribute('role') === 'button') {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+        });
+
+        var yearEl = document.querySelector('[data-current-year]');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
+</script>

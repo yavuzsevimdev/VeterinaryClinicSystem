@@ -1,0 +1,81 @@
+/* ==========================================================================
+   VetCare OS — Global Responsive Rules
+   Component-specific responsive tweaks live inside their own files.
+   This file covers cross-cutting breakpoint behavior + the demo page.
+   ========================================================================== */
+
+/* Breakpoints reference (Bootstrap-aligned):
+   xs  < 576px
+   sm  >= 576px
+   md  >= 768px
+   lg  >= 992px
+   xl  >= 1200px
+   xxl >= 1400px
+*/
+
+/* ---- Large desktop: give content more breathing room ---- */
+@media (min-width: 1400px) {
+  .app-content {
+    padding: var(--space-7) var(--space-8);
+  }
+}
+
+/* ---- Tablet: sidebar collapses by default, handled via JS state,
+   but ensure content reflows gracefully regardless ---- */
+@media (max-width: 991.98px) {
+  .app-content {
+    padding: var(--space-5);
+  }
+
+  .hide-on-tablet {
+    display: none !important;
+  }
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 767.98px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  .stack-on-mobile {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .btn-group-ui.stack-on-mobile .btn-ui {
+    width: 100%;
+  }
+
+  table.table-ui-responsive {
+    display: block;
+  }
+
+  .table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ---- Small mobile ---- */
+@media (max-width: 419.98px) {
+  .text-page-title {
+    font-size: 1.5rem;
+  }
+
+  .app-content {
+    padding: var(--space-3);
+  }
+}
+
+/* Prevent any horizontal page overflow from wide inner content */
+.table-scroll {
+  overflow-x: auto;
+}
+
+.table-ui-responsive {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}

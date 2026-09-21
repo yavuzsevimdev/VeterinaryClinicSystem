@@ -1,0 +1,221 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<aside class="sidebar" aria-label="Primary navigation">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-brand-mark" aria-hidden="true">
+                <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+
+            <div class="sidebar-brand-text">
+                <span class="sidebar-brand-name">VetCare OS</span>
+                <span class="sidebar-brand-tag">Clinic Management</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <div>
+
+                <div class="sidebar-group-label">
+                    Genel
+                </div>
+
+                <ul class="sidebar-list">
+
+                    <li>
+                        <a href="/home/dashboard"
+                       class="sidebar-link @(currentController == "Home" && currentAction == "Dashboard" ? "is-active" : "")"
+                           data-sidebar-link
+                           data-page-title="Dashboard"
+                           data-label="Dashboard">
+
+                            <span class="sidebar-link-icon">
+                                <i class="bi bi-grid-1x2-fill"></i>
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="/animal/index"
+                       class="sidebar-link @(currentController == "Animal" && currentAction == "Index" ? "is-active" : "")"
+                           data-sidebar-link
+                           data-page-title="Animals"
+                           data-label="Animals">
+
+<span class="sidebar-link-icon">
+    <i class="bi bi-heart-pulse-fill"></i>
+</span>
+
+                            <span class="sidebar-link-text">
+                                Hayvanlar
+                            </span>
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="/appointment/index"
+                       class="sidebar-link @(currentController == "Appointment" && currentAction == "Index" ? "is-active" : "")"
+                           data-sidebar-link
+                           data-page-title="Appointments"
+                           data-label="Appointments">
+
+                            <span class="sidebar-link-icon">
+                                <i class="bi bi-calendar2-week"></i>
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Randevular
+                            </span>
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="/treatment/index"
+                       class="sidebar-link @(currentController == "Treatment" && currentAction == "Index" ? "is-active" : "")    "
+                           data-sidebar-link
+                           data-page-title="Treatments"
+                           data-label="Treatments">
+
+                            <span class="sidebar-link-icon">
+                                <i class="bi bi-capsule"></i>
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Tedaviler
+                            </span>
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="/payment/index"
+                       class="sidebar-link @(currentController == "Payment" && currentAction == "Index" ? "is-active" : "")"
+                           data-sidebar-link
+                           data-page-title="Payments"
+                           data-label="Payments">
+
+                            <span class="sidebar-link-icon">
+                                <i class="bi bi-credit-card-2-back"></i>
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Ödemeler
+                            </span>
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <div class="sidebar-group-label">
+                    Hesap
+                </div>
+
+                <ul class="sidebar-list">
+
+                    <li>
+                        <a href="#"
+                           class="sidebar-link"
+                           data-sidebar-link
+                           data-page-title="Profile"
+                           data-label="Profile">
+
+                            <span class="sidebar-link-icon">
+                                <i class="bi bi-person-circle"></i>
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Profil
+                            </span>
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="#"
+                           class="sidebar-link"
+                           data-sidebar-link
+                           data-page-title="Settings"
+                           data-label="Settings">
+
+                            <span class="sidebar-link-icon">
+                                <i class="bi bi-gear"></i>
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Ayarlar
+                            </span>
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <ul class="sidebar-list" style="margin-bottom: 8px;">
+
+                <li>
+
+                    <a href="/Account/Logout"
+                       class="sidebar-link"
+                       data-label="Logout">
+
+                        <span class="sidebar-link-icon">
+                            <i class="bi bi-box-arrow-left"></i>
+                        </span>
+
+                        <span class="sidebar-link-text">
+                            Çıkış Yap
+                        </span>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+
+            <button type="button"
+                    class="sidebar-toggle-inline"
+                    data-sidebar-collapse-toggle
+                    aria-label="Collapse sidebar">
+
+                <i class="bi bi-layout-sidebar-inset"></i>
+
+                <span>
+                    Küçült
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>

@@ -1,0 +1,65 @@
+/* ==========================================================================
+   VetCare OS — Global Stylesheet Entry Point
+   Import order matters: tokens -> reset -> type -> layout -> shell parts
+   -> components -> forms -> modals -> responsive (last, so it can override).
+
+   In the future ASP.NET Core project, this file (or its @import list)
+   is referenced once from _Layout.cshtml's <head>.
+   ========================================================================== */
+
+@import url('variables.css');
+@import url('reset.css');
+@import url('typography.css');
+@import url('layout.css');
+@import url('sidebar.css');
+@import url('topbar.css');
+@import url('components.css');
+@import url('forms.css');
+@import url('modals.css');
+@import url('responsive.css');
+
+/* ---- Small demo-page-only helpers (kept minimal & generic) ---- */
+
+.demo-section {
+  scroll-margin-top: calc(var(--topbar-height) + var(--space-4));
+}
+
+.demo-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.demo-swatch-color {
+  height: 64px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.demo-toc {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-4));
+}
+
+.demo-toc-link {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-small);
+  color: var(--color-muted);
+  font-weight: var(--font-weight-medium);
+  border-left: 2px solid transparent;
+}
+
+.demo-toc-link:hover {
+  color: var(--color-primary-dark);
+  background-color: var(--color-primary-light);
+}
+
+.demo-toc-link.is-active {
+  color: var(--color-primary-dark);
+  border-left-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+

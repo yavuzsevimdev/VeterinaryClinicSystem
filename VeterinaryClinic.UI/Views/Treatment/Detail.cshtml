@@ -1,0 +1,972 @@
+﻿@{
+    ViewData["Title"] = "Tedavi Detayı";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* ================================
+       TREATMENT DETAIL VARIABLES
+       SADECE BU SAYFAYI ETKİLER
+       ================================ */
+
+    .treatment-detail-page {
+        --td-p: #6C63A8;
+        --td-pd: #554C91;
+        --td-pl: #EDEBF7;
+        --td-bg: #F8F7FC;
+        --td-s: #FFFFFF;
+        --td-b: #E7E4F2;
+        --td-t: #303044;
+        --td-m: #7B7B90;
+        --td-g: #71B58A;
+        --td-gl: #E7F5EC;
+        --td-r: 16px;
+
+        background: var(--td-bg);
+        color: var(--td-t);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100%;
+    }
+
+    .treatment-detail-page * {
+        box-sizing: border-box;
+    }
+
+
+    /* ================================
+       PAGE
+       ================================ */
+
+    .treatment-detail-page .page {
+        width: min(1440px, calc(100% - 48px));
+        margin: auto;
+        padding: 30px 0 40px;
+    }
+
+
+    /* ================================
+       BREADCRUMB
+       ================================ */
+
+    .treatment-detail-page .crumb {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 22px;
+        font-size: 13px;
+    }
+
+    .treatment-detail-page .crumb a {
+        color: var(--td-m);
+        text-decoration: none;
+    }
+
+    .treatment-detail-page .crumb a:hover {
+        color: var(--td-p);
+    }
+
+    .treatment-detail-page .crumb .current {
+        color: var(--td-t);
+        font-weight: 600;
+    }
+
+    .treatment-detail-page .crumb i {
+        font-size: 10px;
+        color: #aaa7b8;
+    }
+
+
+    /* ================================
+       PAGE INTRO
+       ================================ */
+
+    .treatment-detail-page .intro {
+        display: grid;
+        grid-template-columns: 1fr 440px;
+        gap: 24px;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .treatment-detail-page .title-wrap {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+    }
+
+    .treatment-detail-page .title-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #7a70bd, #554c91);
+        color: #fff;
+        font-size: 27px;
+        box-shadow: 0 10px 24px rgba(108, 99, 168, 0.22);
+    }
+
+    .treatment-detail-page .title h1 {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 700;
+    }
+
+    .treatment-detail-page .title p {
+        margin: 5px 0 0;
+        color: var(--td-m);
+        font-size: 14px;
+    }
+
+    .treatment-detail-page .banner {
+        min-height: 118px;
+        padding: 18px 22px;
+        border: 1px solid #e4e0f5;
+        border-radius: var(--td-r);
+        background: linear-gradient(135deg, #f1effc, #fbfaff);
+        display: flex;
+        align-items: center;
+    }
+
+    .treatment-detail-page .banner strong {
+        display: block;
+        color: var(--td-pd);
+        font-size: 17px;
+        line-height: 1.35;
+    }
+
+    .treatment-detail-page .banner span {
+        display: block;
+        max-width: 300px;
+        margin-top: 5px;
+        color: var(--td-m);
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+
+    /* ================================
+       MAIN GRID
+       ================================ */
+
+    .treatment-detail-page .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(330px, 0.85fr);
+        gap: 22px;
+    }
+
+    .treatment-detail-page .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+
+    /* ================================
+       CARD
+       ================================ */
+
+    .treatment-detail-page .card {
+        background: var(--td-s);
+        border: 1px solid var(--td-b);
+        border-radius: var(--td-r);
+        padding: 22px;
+        box-shadow: 0 2px 8px rgba(48, 48, 68, 0.05);
+    }
+
+    .treatment-detail-page .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .treatment-detail-page .head-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .treatment-detail-page .icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: var(--td-pl);
+        color: var(--td-p);
+        font-size: 18px;
+    }
+
+    .treatment-detail-page .head h2 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+
+    /* ================================
+       BADGES
+       ================================ */
+
+    .treatment-detail-page .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .treatment-detail-page .bp {
+        background: var(--td-pl);
+        color: var(--td-pd);
+    }
+
+    .treatment-detail-page .bs {
+        background: var(--td-gl);
+        color: #39815a;
+    }
+
+    .treatment-detail-page .badge.danger {
+        background-color: #fdecef;
+        color: #df7c89;
+    }
+
+
+    /* ================================
+       ANIMAL
+       ================================ */
+
+    .treatment-detail-page .animal {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .treatment-detail-page .animal img {
+        width: 142px;
+        height: 142px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 6px solid #f0eef9;
+        box-shadow: 0 4px 16px rgba(48, 48, 68, 0.07);
+    }
+
+    .treatment-detail-page .animal h3 {
+        margin: 0;
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+    .treatment-detail-page .meta {
+        margin: 4px 0 18px;
+        color: var(--td-m);
+        font-size: 13px;
+    }
+
+    .treatment-detail-page .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+    }
+
+    .treatment-detail-page .stat {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .treatment-detail-page .stat i {
+        color: var(--td-p);
+        font-size: 17px;
+    }
+
+    .treatment-detail-page .stat strong {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .treatment-detail-page .stat span {
+        display: block;
+        color: var(--td-m);
+        font-size: 10px;
+    }
+
+
+    /* ================================
+       INFO ROWS
+       ================================ */
+
+    .treatment-detail-page .rows {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .treatment-detail-page .row {
+        min-height: 48px;
+        display: grid;
+        grid-template-columns: 26px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        border-bottom: 1px solid #efedf5;
+    }
+
+    .treatment-detail-page .row:last-child {
+        border: 0;
+    }
+
+    .treatment-detail-page .row > i {
+        color: var(--td-p);
+    }
+
+    .treatment-detail-page .label {
+        color: var(--td-m);
+        font-size: 12px;
+    }
+
+    .treatment-detail-page .value {
+        font-size: 13px;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .treatment-detail-page .price {
+        font-size: 15px;
+    }
+
+
+    /* ================================
+       NOTE
+       ================================ */
+
+    .treatment-detail-page .note {
+        padding: 16px 17px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f5f3fd, #faf9ff);
+        border: 1px solid #ebe8f7;
+        color: #62627a;
+        font-size: 13px;
+        line-height: 1.75;
+    }
+
+
+    /* ================================
+       TIMELINE
+       ================================ */
+
+    .treatment-detail-page .timeline {
+        position: relative;
+    }
+
+    .treatment-detail-page .timeline::before {
+        content: "";
+        position: absolute;
+        left: 22px;
+        top: 16px;
+        bottom: 20px;
+        width: 2px;
+        background: #ddd9ee;
+    }
+
+    .treatment-detail-page .item {
+        position: relative;
+        display: grid;
+        grid-template-columns: 44px 95px 42px 1fr;
+        align-items: center;
+        gap: 12px;
+        min-height: 92px;
+    }
+
+    .treatment-detail-page .item.is-current {
+        background: #f3f1fc;
+        border: 1px solid #ddd8f2;
+        border-radius: 14px;
+    }
+
+    .treatment-detail-page .dot {
+        width: 15px;
+        height: 15px;
+        margin-left: 15px;
+        border-radius: 50%;
+        background: #c9c5df;
+        border: 4px solid #fff;
+        box-shadow: 0 0 0 1px #d9d5e9;
+        z-index: 2;
+    }
+
+    .treatment-detail-page .item:first-child .dot {
+        background: var(--td-p);
+        box-shadow: 0 0 0 1px var(--td-p);
+    }
+
+    .treatment-detail-page .date {
+        font-size: 11px;
+        line-height: 1.6;
+        color: var(--td-m);
+    }
+
+    .treatment-detail-page .date strong {
+        display: block;
+        color: var(--td-t);
+        font-size: 12px;
+    }
+
+    .treatment-detail-page .ticon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #f0eef9;
+        color: var(--td-p);
+        z-index: 2;
+    }
+
+    .treatment-detail-page .content strong {
+        display: block;
+        font-size: 13px;
+    }
+
+    .treatment-detail-page .content span {
+        display: block;
+        margin-top: 4px;
+        color: var(--td-m);
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+
+    /* ================================
+       RECOMMENDATIONS
+       ================================ */
+
+    .treatment-detail-page .recommend {
+        padding: 15px 17px;
+        border-radius: 12px;
+        background: var(--td-gl);
+        border: 1px solid #d8eee5;
+    }
+
+    .treatment-detail-page .rec {
+        display: flex;
+        gap: 10px;
+        color: #527467;
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .treatment-detail-page .rec + .rec {
+        margin-top: 11px;
+    }
+
+    .treatment-detail-page .rec i {
+        color: #55a878;
+    }
+
+
+    /* ================================
+       DOCUMENTS
+       ================================ */
+
+    .treatment-detail-page .docs {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .treatment-detail-page .doc {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        border: 1px solid #eceaf3;
+        border-radius: 12px;
+    }
+
+    .treatment-detail-page .doc-icon {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: var(--td-pl);
+        color: var(--td-p);
+    }
+
+    .treatment-detail-page .doc-info {
+        flex: 1;
+    }
+
+    .treatment-detail-page .doc-info strong {
+        display: block;
+        font-size: 12px;
+    }
+
+    .treatment-detail-page .doc-info span {
+        color: var(--td-m);
+        font-size: 10px;
+    }
+
+
+    /* ================================
+       PRIMARY
+       ================================ */
+
+    .treatment-detail-page .primary {
+        background: linear-gradient(135deg, var(--td-p), var(--td-pd));
+        color: #fff;
+        border-color: transparent;
+    }
+
+    .treatment-detail-page .primary:hover {
+        color: #fff;
+    }
+
+
+    /* ================================
+       BOTTOM ACTIONS
+       ================================ */
+
+    .treatment-detail-page .bottom {
+        margin-top: 22px;
+        padding: 16px 20px;
+        background: #fff;
+        border: 1px solid var(--td-b);
+        border-radius: var(--td-r);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .treatment-detail-page .actions {
+        display: flex;
+        gap: 10px;
+    }
+
+
+    /* ================================
+       TREATMENT DETAIL NAVIGATION
+       ================================ */
+
+    .treatment-detail-page .treatment-detail-navrow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 22px;
+    }
+
+    .treatment-detail-page .treatment-detail-right-actions {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+
+    /* ================================
+       RESPONSIVE
+       ================================ */
+
+    @@media (max-width: 1050px) {
+
+        .treatment-detail-page .intro,
+        .treatment-detail-page .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 700px) {
+
+        .treatment-detail-page .page {
+            width: calc(100% - 24px);
+            padding-top: 18px;
+        }
+
+        .treatment-detail-page .title h1 {
+            font-size: 27px;
+        }
+
+        .treatment-detail-page .animal {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .treatment-detail-page .animal img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .treatment-detail-page .item {
+            grid-template-columns: 34px 72px 38px 1fr;
+            gap: 8px;
+        }
+
+        .treatment-detail-page .timeline::before {
+            left: 17px;
+        }
+
+        .treatment-detail-page .dot {
+            margin-left: 10px;
+        }
+
+        .treatment-detail-page .bottom {
+            flex-direction: column;
+        }
+
+        .treatment-detail-page .actions {
+            width: 100%;
+        }
+
+        .treatment-detail-page .actions .btn {
+            flex: 1;
+        }
+
+        .treatment-detail-page .treatment-detail-navrow {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .treatment-detail-page .treatment-detail-right-actions {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+
+        .treatment-detail-page .treatment-detail-right-actions {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="treatment-detail-page">
+
+    <div class="page">
+
+        <!-- Breadcrumb -->
+        <nav class="crumb">
+
+            <a href="/Home/CustomerDashboard">
+                Ana Sayfa
+            </a>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <a href="/Treatment/Index">
+                Tedavi Geçmişi
+            </a>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <span class="current">
+                Tedavi Detayı
+            </span>
+
+        </nav>
+
+
+        <!-- Page Header -->
+        <section class="intro">
+
+            <div class="title-wrap">
+
+                <div class="title-icon">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+
+                <div class="title">
+
+                    <h1>
+                        Tedavi Detayı
+                    </h1>
+
+                    <p>
+                        Mavi'nin tedavi bilgilerini görüntüleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="banner">
+
+                <div>
+
+                    <strong>
+                        Sağlıklı patiler,<br />
+                        mutlu yarınlar ❤️
+                    </strong>
+
+                    <span>
+                        Düzenli tedaviler, onların daha uzun ve
+                        sağlıklı bir yaşam sürmesine yardımcı olur.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Detail Navigation -->
+        <div class="treatment-detail-navrow">
+
+            <a href="/Treatment/Index"
+               class="btn-ui btn-ui--ghost btn-ui--sm"
+               id="backBtn">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Tedavi Geçmişine Dön
+
+            </a>
+
+
+            <div class="treatment-detail-right-actions">
+
+                <a href="#"
+                   class="btn-ui btn-ui--outline btn-ui--sm">
+
+                    <i class="bi bi-file-earmark-pdf"></i>
+
+                    PDF İndir
+
+                </a>
+
+
+                <button type="button"
+                        class="btn-ui btn-ui--outline btn-ui--sm"
+                        id="printBtn"
+                        onclick="window.print()">
+
+                    <i class="bi bi-printer"></i>
+
+                    Yazdır
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <br />
+
+
+        <!-- Main Content -->
+        <section class="grid">
+
+
+            <!-- ==========================================
+                 LEFT COLUMN
+                 ========================================== -->
+
+            <div class="stack">
+
+                <!-- Animal Information + Note -->
+                @await Component.InvokeAsync(
+                    "_TreatmenDetailAnimalInfosAndNoteComponentPartial",
+                    new { id = (int)ViewBag.TreatmentId }
+                )
+
+
+                <!-- Treatment Timeline -->
+                @await Component.InvokeAsync(
+                    "_TreatmenDetailTimelineComponentPartial",
+                    new { id = (int)ViewBag.TreatmentId }
+                )
+
+            </div>
+
+
+            <!-- ==========================================
+                 RIGHT COLUMN
+                 ========================================== -->
+
+            <div class="stack">
+
+
+                <!-- Treatment Summary -->
+                @await Component.InvokeAsync(
+                    "_TreatmenDetailTreatmentSummaryComponentPartial",
+                    new { id = (int)ViewBag.TreatmentId }
+                )
+
+
+                <!-- Appointment Information -->
+                @await Component.InvokeAsync(
+                    "_TreatmenDetailAppointmentInfoComponentPartial",
+                    new { id = (int)ViewBag.TreatmentId }
+                )
+
+
+                <!-- Recommendations -->
+                <section class="card">
+
+                    <div class="head">
+
+                        <div class="head-left">
+
+                            <div class="icon">
+                                <i class="bi bi-lightbulb"></i>
+                            </div>
+
+                            <h2>
+                                Öneriler
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="recommend">
+
+                        <div class="rec">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <span>
+                                6 ayda bir genel kontrol yapılması önerilir.
+                            </span>
+
+                        </div>
+
+
+                        <div class="rec">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <span>
+                                Düzenli aşı takibi takip edilmelidir.
+                            </span>
+
+                        </div>
+
+
+                        <div class="rec">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <span>
+                                Beslenme düzenine dikkat edilmeli ve ideal kilo korunmalıdır.
+                            </span>
+
+                        </div>
+
+
+                        <div class="rec">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <span>
+                                Herhangi bir davranış değişikliğinde veterinere danışılmalıdır.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- Documents -->
+                <section class="card">
+
+                    <div class="head">
+
+                        <div class="head-left">
+
+                            <div class="icon">
+                                <i class="bi bi-file-earmark-arrow-down"></i>
+                            </div>
+
+                            <h2>
+                                İlgili Dokümanlar
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="docs">
+
+                        <div class="doc">
+
+                            <div class="doc-icon">
+                                <i class="bi bi-file-earmark-pdf"></i>
+                            </div>
+
+                            <div class="doc-info">
+
+                                <strong>
+                                    Muayene Raporu
+                                </strong>
+
+                                <span>
+                                    PDF • 245 KB
+                                </span>
+
+                            </div>
+
+                            <a href="#"
+                               class="btn">
+
+                                <i class="bi bi-download"></i>
+
+                                İndir
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="doc">
+
+                            <div class="doc-icon">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </div>
+
+                            <div class="doc-info">
+
+                                <strong>
+                                    Aşı Karnesi Güncellemesi
+                                </strong>
+
+                                <span>
+                                    PDF • 180 KB
+                                </span>
+
+                            </div>
+
+                            <a href="#"
+                               class="btn">
+
+                                <i class="bi bi-download"></i>
+
+                                İndir
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>

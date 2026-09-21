@@ -1,0 +1,228 @@
+﻿@model List<PaymentIndexListDto>
+@{
+    int count = 0;
+}
+
+<section class="payment-table-card">
+
+    <div class="payment-table-wrapper">
+
+        <table class="payment-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Tarih
+                    </th>
+
+                    <th>
+                        Hayvan
+                    </th>
+
+                    <th>
+                        Açıklama
+                    </th>
+
+                    <th>
+                        Randevu
+                    </th>
+
+                    <th>
+                        Toplam Ödeme
+                    </th>
+
+                    <th>
+                        Toplam Borç
+                    </th>
+
+                    <th>
+                        Ödeme Yöntemi
+                    </th>
+
+                    <th>
+                        Durum
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <!-- ROW 1 -->
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+
+                        <td>
+                            @count
+                        </td>
+
+                        <td class="payment-date">
+
+                            <span class="payment-date-main">
+                                @item.PaymentDate.ToString("dd MMM yyyy")
+                            </span>
+
+                            <span class="payment-date-time">
+                                @item.PaymentDate.ToString("HH:mm")
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="payment-animal">
+
+                                <img src="@item.Animal.ImageUrl"
+                                     alt="@item.Animal.Name"
+                                     class="payment-animal-image">
+
+                                <div class="payment-animal-info">
+
+                                    <p class="payment-animal-name">
+                                        @item.Animal.Name
+                                    </p>
+
+                                    <p class="payment-animal-breed">
+                                        @item.Animal.Breed
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            @item.Appointment.AppointmentType
+                        </td>
+
+
+                        <td class="payment-appointment">
+                            #@item.Appointment.Id
+                        </td>
+
+
+                        <td class="payment-amount">
+                            ₺ @item.AmountPaid
+                        </td>
+
+                        <td class="payment-amount">
+                            ₺ @item.TotalDebt
+                        </td>
+
+                        <td>
+
+                            <div class="payment-method">
+                                @if(item.PaymentMethod == "Kredi Kartı")
+                                {
+                                    <span class="payment-method-icon">
+                                        <i class="bi bi-credit-card-fill"></i>
+                                    </span>
+                                }
+                                @if (item.PaymentMethod == "Nakit")
+                                {
+                                    <span class="payment-method-icon">
+                                        <i class="bi bi-cash-stack"></i>
+                                    </span>
+                                }
+                                @if (item.PaymentMethod == "Havale/EFT")
+                                {
+                                    <span class="payment-method-icon">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                    </span>
+                                }
+
+                            
+                                <span class="payment-method-text">
+                                    @item.PaymentMethod
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            @if(item.TotalDebt - item.AmountPaid == 0)
+                            {
+                                <span class="payment-status paid">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Ödendi
+                                </span>
+                            }
+                            @if (item.TotalDebt - item.AmountPaid > 0)
+                            {
+                                <span class="payment-status unpaid">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    Ödenmedi
+                                </span>
+                            }
+
+                        </td>
+
+
+                    </tr>
+                }
+
+                
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =================================================
+                 TABLE FOOTER
+                 ================================================= -->
+
+    <div class="payment-table-footer">
+
+        <p class="payment-result-count">
+            Toplam @Model.Count kayıt gösteriliyor.
+        </p>
+
+
+        <div class="payment-pagination">
+
+            <button type="button"
+                    class="payment-pagination-btn"
+                    disabled>
+
+                <i class="bi bi-chevron-left"></i>
+
+            </button>
+
+
+            <button type="button"
+                    class="payment-pagination-btn active">
+
+                1
+
+            </button>
+
+
+            <button type="button"
+                    class="payment-pagination-btn">
+
+                <i class="bi bi-chevron-right"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>

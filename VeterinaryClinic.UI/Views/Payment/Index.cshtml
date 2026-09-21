@@ -1,0 +1,1090 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Geçmişi</title>
+
+    <!-- Global UI Foundation -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        /* =========================================================
+           PAYMENT INDEX PAGE
+           Sidebar + Topbar are provided by Layout
+           ========================================================= */
+
+        .payment-page {
+            --payment-primary: #6c63a8;
+            --payment-primary-dark: #554c91;
+            --payment-primary-light: #f1effb;
+
+            --payment-background: #f8f7fc;
+            --payment-surface: #ffffff;
+
+            --payment-text: #303044;
+            --payment-muted: #7b7b90;
+            --payment-border: #e7e4f0;
+
+            --payment-success: #71b58a;
+            --payment-success-bg: #e7f7ec;
+
+            --payment-danger: #df7c89;
+            --payment-danger-bg: #fdecef;
+
+            --payment-info: #7fafd0;
+            --payment-info-bg: #edf6fc;
+
+            --payment-warning: #e8b86a;
+            --payment-warning-bg: #fff6e5;
+
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            color: var(--payment-text);
+        }
+
+        /* =========================================================
+           PAGE HEADER
+           ========================================================= */
+
+        .payment-page .payment-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: var(--payment-muted);
+        }
+
+        .payment-page .payment-breadcrumb a {
+            color: var(--payment-muted);
+            text-decoration: none;
+            transition: color .2s ease;
+        }
+
+        .payment-page .payment-breadcrumb a:hover {
+            color: var(--payment-primary);
+        }
+
+        .payment-page .payment-breadcrumb i {
+            font-size: 12px;
+        }
+
+        .payment-page .payment-breadcrumb .current {
+            color: var(--payment-text);
+            font-weight: 500;
+        }
+
+        .payment-page .payment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 28px;
+        }
+
+        .payment-page .payment-header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .payment-page .payment-header-icon {
+            width: 62px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: #eeeafb;
+            color: var(--payment-primary);
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .payment-page .payment-header-content h1 {
+            margin: 0 0 5px;
+            font-size: 30px;
+            line-height: 1.2;
+            font-weight: 700;
+            color: #24243d;
+        }
+
+        .payment-page .payment-header-content p {
+            margin: 0;
+            color: var(--payment-muted);
+            font-size: 14px;
+        }
+
+        /* =========================================================
+           HEADER INFO BANNER
+           ========================================================= */
+
+        .payment-page .payment-info-banner {
+            min-width: 330px;
+            height: 112px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            border: 1px solid #ebe8f3;
+            border-radius: 18px;
+            background: linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #faf9ff 100%
+            );
+        }
+
+        .payment-page .payment-info-banner::after {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            right: -25px;
+            top: -40px;
+            border-radius: 50%;
+            background: rgba(108, 99, 168, .07);
+        }
+
+        .payment-page .payment-info-banner-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .payment-page .payment-info-banner-text {
+            margin: 0;
+            color: var(--payment-primary);
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .payment-page .payment-info-banner-text i {
+            color: #ed6eb4;
+            margin-left: 3px;
+        }
+
+        .payment-page .payment-info-banner-icon {
+            position: absolute;
+            z-index: 2;
+            right: 22px;
+            bottom: 13px;
+            color: var(--payment-primary);
+            font-size: 52px;
+            opacity: .85;
+        }
+
+        /* =========================================================
+           STAT CARDS
+           ========================================================= */
+
+        .payment-page .payment-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .payment-page .payment-stat-card {
+            min-height: 130px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            border: 1px solid #ebe8f3;
+            border-radius: 16px;
+            background: var(--payment-surface);
+            box-shadow: 0 3px 14px rgba(48, 48, 68, .035);
+        }
+
+        .payment-page .payment-stat-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-size: 25px;
+            flex-shrink: 0;
+        }
+
+        .payment-page .payment-stat-icon.green {
+            color: #45a968;
+            background: #e4f7ea;
+        }
+
+        .payment-page .payment-stat-icon.red {
+            color: #df5269;
+            background: #fde5ea;
+        }
+
+        .payment-page .payment-stat-icon.purple {
+            color: var(--payment-primary);
+            background: #eeeafb;
+        }
+
+        .payment-page .payment-stat-icon.blue {
+            color: #4b96cf;
+            background: #e8f4fc;
+        }
+
+        .payment-page .payment-stat-content {
+            min-width: 0;
+        }
+
+        .payment-page .payment-stat-label {
+            margin: 0 0 5px;
+            font-size: 13px;
+            color: #686883;
+            font-weight: 500;
+        }
+
+        .payment-page .payment-stat-value {
+            margin: 0 0 3px;
+            font-size: 22px;
+            line-height: 1.2;
+            color: #25253d;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .payment-page .payment-stat-value.debt {
+            color: #e0526a;
+        }
+
+        .payment-page .payment-stat-description {
+            margin: 0;
+            font-size: 11px;
+            color: var(--payment-muted);
+        }
+
+        /* =========================================================
+           FILTER CARD
+           ========================================================= */
+
+        .payment-page .payment-filter-card {
+            display: grid;
+            grid-template-columns: 1.2fr .9fr .9fr 1fr auto auto;
+            align-items: end;
+            gap: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ebe8f3;
+            border-radius: 16px;
+            background: var(--payment-surface);
+            box-shadow: 0 3px 14px rgba(48, 48, 68, .035);
+        }
+
+        .payment-page .payment-filter-group {
+            min-width: 0;
+        }
+
+        .payment-page .payment-filter-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #55556f;
+        }
+
+        .payment-page .payment-filter-input,
+        .payment-page .payment-filter-select {
+            width: 100%;
+            height: 42px;
+            padding: 0 13px;
+            border: 1px solid #dfdceb;
+            border-radius: 10px;
+            outline: none;
+            background: #fff;
+            color: #56566f;
+            font-family: inherit;
+            font-size: 12px;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .payment-page .payment-filter-input:focus,
+        .payment-page .payment-filter-select:focus {
+            border-color: var(--payment-primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 168, .08);
+        }
+
+        .payment-page .payment-search-wrapper {
+            position: relative;
+        }
+
+        .payment-page .payment-search-wrapper i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--payment-muted);
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .payment-page .payment-search-wrapper input {
+            padding-left: 38px;
+        }
+
+        .payment-page .payment-filter-btn {
+            height: 42px;
+            padding: 0 17px;
+            border: none;
+            border-radius: 10px;
+            background: var(--payment-primary);
+            color: white;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all .2s ease;
+        }
+
+        .payment-page .payment-filter-btn:hover {
+            background: var(--payment-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(108, 99, 168, .18);
+        }
+
+        .payment-page .payment-clear-btn {
+            height: 42px;
+            padding: 0 16px;
+            border: 1px solid #dcd8eb;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--payment-primary);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all .2s ease;
+        }
+
+        .payment-page .payment-clear-btn:hover {
+            background: #f7f5fd;
+            border-color: #cfc9e6;
+        }
+
+        /* =========================================================
+           TABLE CARD
+           ========================================================= */
+
+        .payment-page .payment-table-card {
+            border: 1px solid #ebe8f3;
+            border-radius: 16px;
+            background: var(--payment-surface);
+            box-shadow: 0 3px 14px rgba(48, 48, 68, .035);
+            overflow: hidden;
+        }
+
+        .payment-page .payment-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .payment-page .payment-table {
+            width: 100%;
+            min-width: 1050px;
+            border-collapse: collapse;
+        }
+
+        .payment-page .payment-table thead {
+            background: #f5f4fa;
+        }
+
+        .payment-page .payment-table th {
+            padding: 15px 14px;
+            text-align: left;
+            color: #464661;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .payment-page .payment-table th:first-child {
+            padding-left: 22px;
+            width: 55px;
+        }
+
+        .payment-page .payment-table td {
+            padding: 13px 14px;
+            border-top: 1px solid #f0eef5;
+            color: #4f4f68;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        .payment-page .payment-table td:first-child {
+            padding-left: 22px;
+            color: #72728a;
+            font-weight: 500;
+        }
+
+        .payment-page .payment-table tbody tr {
+            transition: background-color .2s ease;
+        }
+
+        .payment-page .payment-table tbody tr:hover {
+            background: #faf9fd;
+        }
+
+        /* =========================================================
+           ANIMAL CELL
+           ========================================================= */
+
+        .payment-page .payment-animal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+
+        .payment-page .payment-animal-image {
+            width: 38px;
+            height: 38px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #f0edf8;
+            flex-shrink: 0;
+        }
+
+        .payment-page .payment-animal-info {
+            min-width: 0;
+        }
+
+        .payment-page .payment-animal-name {
+            margin: 0 0 1px;
+            color: #2e2e47;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .payment-page .payment-animal-breed {
+            margin: 0;
+            color: #8a899d;
+            font-size: 10px;
+        }
+
+        /* =========================================================
+           DATE
+           ========================================================= */
+
+        .payment-page .payment-date {
+            white-space: nowrap;
+        }
+
+        .payment-page .payment-date-main {
+            display: block;
+            margin-bottom: 2px;
+            color: #41415b;
+            font-weight: 500;
+        }
+
+        .payment-page .payment-date-time {
+            display: block;
+            color: #9997a8;
+            font-size: 10px;
+        }
+
+        /* =========================================================
+           APPOINTMENT
+           ========================================================= */
+
+        .payment-page .payment-appointment {
+            color: var(--payment-primary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           AMOUNT
+           ========================================================= */
+
+        .payment-page .payment-amount {
+            color: #28283f;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           PAYMENT METHOD
+           ========================================================= */
+
+        .payment-page .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .payment-page .payment-method-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #f1effa;
+            color: var(--payment-primary);
+            font-size: 13px;
+        }
+
+        .payment-page .payment-method-text {
+            color: #66667d;
+            font-size: 11px;
+        }
+
+        /* =========================================================
+           STATUS
+           ========================================================= */
+
+        .payment-page .payment-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .payment-page .payment-status.paid {
+            color: #4b9e67;
+            background: var(--payment-success-bg);
+        }
+
+        .payment-page .payment-status.unpaid {
+            color: #db5f72;
+            background: var(--payment-danger-bg);
+        }
+
+        .payment-page .payment-status i {
+            font-size: 10px;
+        }
+
+        /* =========================================================
+           ACTION
+           ========================================================= */
+
+        .payment-page .payment-action {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e2deed;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--payment-primary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all .2s ease;
+        }
+
+        .payment-page .payment-action:hover {
+            background: #f6f4ff;
+            border-color: #d4cee9;
+            color: var(--payment-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 9px rgba(108, 99, 168, .08);
+        }
+
+        /* =========================================================
+           TABLE FOOTER
+           ========================================================= */
+
+        .payment-page .payment-table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 17px 22px;
+            border-top: 1px solid #eeeaf4;
+        }
+
+        .payment-page .payment-result-count {
+            margin: 0;
+            color: #77768b;
+            font-size: 12px;
+        }
+
+        .payment-page .payment-pagination {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .payment-page .payment-pagination-btn {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e4e0ee;
+            border-radius: 8px;
+            background: #fff;
+            color: var(--payment-primary);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .payment-page .payment-pagination-btn:hover {
+            border-color: #d1cae8;
+            background: #f7f5fd;
+        }
+
+        .payment-page .payment-pagination-btn.active {
+            border-color: var(--payment-primary);
+            background: var(--payment-primary);
+            color: #fff;
+        }
+
+        .payment-page .payment-pagination-btn:disabled {
+            color: #b8b5c3;
+            background: #faf9fc;
+            cursor: not-allowed;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @@media (max-width: 1250px) {
+
+            .payment-page .payment-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .payment-page .payment-filter-card {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .payment-page .payment-filter-btn,
+            .payment-page .payment-clear-btn {
+                width: 100%;
+            }
+        }
+
+        @@media (max-width: 900px) {
+
+            .payment-page .payment-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .payment-page .payment-info-banner {
+                width: 100%;
+            }
+
+            .payment-page .payment-filter-card {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @@media (max-width: 650px) {
+
+            .payment-page .payment-header-content h1 {
+                font-size: 24px;
+            }
+
+            .payment-page .payment-header-icon {
+                width: 54px;
+                height: 54px;
+                font-size: 24px;
+            }
+
+            .payment-page .payment-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-page .payment-filter-card {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-page .payment-table-footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .payment-page .payment-pagination {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="payment-page">
+
+        <!-- =====================================================
+             BREADCRUMB
+             ===================================================== -->
+
+        <div class="payment-breadcrumb">
+            <a href="/Home/CustomerDashboard">
+                Ana Sayfa
+            </a>
+
+            <i class="bi bi-chevron-right"></i>
+
+            <span class="current">
+                Ödeme Geçmişi
+            </span>
+        </div>
+
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+
+        <div class="payment-header">
+
+            <div class="payment-header-left">
+
+                <div class="payment-header-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div class="payment-header-content">
+                    <h1>Ödeme Geçmişi</h1>
+
+                    <p>
+                        Yapmış olduğunuz ödemeleri ve güncel bakiye durumunuzu görüntüleyin.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="payment-info-banner">
+
+                <div class="payment-info-banner-content">
+                    <p class="payment-info-banner-text">
+                        Minik dostlarımız için<br>
+                        her zaman yanınızdayız.
+                        <i class="bi bi-heart-fill"></i>
+                    </p>
+                </div>
+
+                <i class="bi bi-credit-card-2-front-fill payment-info-banner-icon"></i>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             STATISTICS
+             ===================================================== -->
+        @await Component.InvokeAsync("_PaymentIndexStatisticsComponentPartial")
+
+        <!-- =====================================================
+             FILTERS
+             ===================================================== -->
+
+        <section class="payment-filter-card">
+
+            <!-- Date -->
+
+            <div class="payment-filter-group">
+
+                <label class="payment-filter-label">
+                    Tarih Aralığı
+                </label>
+
+                <input
+                    type="text"
+                    class="payment-filter-input"
+                    placeholder="Başlangıç - Bitiş Tarihi">
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="payment-filter-group">
+
+                <label class="payment-filter-label">
+                    Ödeme Durumu
+                </label>
+
+                <select class="payment-filter-select">
+
+                    <option value="">
+                        Tümü
+                    </option>
+
+                    <option value="paid">
+                        Ödendi
+                    </option>
+
+                    <option value="unpaid">
+                        Ödenmedi
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Method -->
+
+            <div class="payment-filter-group">
+
+                <label class="payment-filter-label">
+                    Ödeme Yöntemi
+                </label>
+
+                <select class="payment-filter-select">
+
+                    <option value="">
+                        Tümü
+                    </option>
+
+                    <option value="cash">
+                        Nakit
+                    </option>
+
+                    <option value="credit-card">
+                        Kredi Kartı
+                    </option>
+
+                    <option value="transfer">
+                        Havale / EFT
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Search -->
+
+            <div class="payment-filter-group">
+
+                <label class="payment-filter-label">
+                    Ara
+                </label>
+
+                <div class="payment-search-wrapper">
+
+                    <i class="bi bi-search"></i>
+
+                    <input
+                        type="text"
+                        class="payment-filter-input"
+                        placeholder="Ara...">
+
+                </div>
+
+            </div>
+
+
+            <!-- Filter -->
+
+            <button
+                type="button"
+                class="payment-filter-btn">
+
+                <i class="bi bi-funnel"></i>
+
+                Filtrele
+
+            </button>
+
+
+            <!-- Clear -->
+
+            <button
+                type="button"
+                class="payment-clear-btn">
+
+                <i class="bi bi-arrow-clockwise"></i>
+
+                Filtreleri Temizle
+
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             PAYMENT TABLE
+             ===================================================== -->
+
+             @await Component.InvokeAsync("_PaymentIndexPaymentListComponentPartial")
+
+    </main>
+
+
+    <!-- =========================================================
+         SIMPLE FILTER JS
+         ========================================================= -->
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const searchInput =
+                document.querySelector(".payment-search-wrapper input");
+
+            const rows =
+                document.querySelectorAll(".payment-table tbody tr");
+
+            const statusSelect =
+                document.querySelectorAll(".payment-filter-select")[0];
+
+            const methodSelect =
+                document.querySelectorAll(".payment-filter-select")[1];
+
+            const filterButton =
+                document.querySelector(".payment-filter-btn");
+
+            const clearButton =
+                document.querySelector(".payment-clear-btn");
+
+
+            function filterPayments() {
+
+                const searchValue =
+                    searchInput.value.toLowerCase().trim();
+
+                const statusValue =
+                    statusSelect.value;
+
+                const methodValue =
+                    methodSelect.value;
+
+
+                rows.forEach(row => {
+
+                    const rowText =
+                        row.innerText.toLowerCase();
+
+                    const statusElement =
+                        row.querySelector(".payment-status");
+
+                    const methodElement =
+                        row.querySelector(".payment-method-text");
+
+
+                    const statusText =
+                        statusElement
+                            ? statusElement.innerText.toLowerCase()
+                            : "";
+
+
+                    const methodText =
+                        methodElement
+                            ? methodElement.innerText.toLowerCase()
+                            : "";
+
+
+                    let searchMatch =
+                        !searchValue ||
+                        rowText.includes(searchValue);
+
+
+                    let statusMatch = true;
+
+                    if (statusValue === "paid") {
+                        statusMatch =
+                            statusText.includes("ödendi");
+                    }
+
+                    if (statusValue === "unpaid") {
+                        statusMatch =
+                            statusText.includes("ödenmedi");
+                    }
+
+
+                    let methodMatch = true;
+
+                    if (methodValue === "cash") {
+                        methodMatch =
+                            methodText.includes("nakit");
+                    }
+
+                    if (methodValue === "credit-card") {
+                        methodMatch =
+                            methodText.includes("kredi");
+                    }
+
+                    if (methodValue === "transfer") {
+                        methodMatch =
+                            methodText.includes("havale");
+                    }
+
+
+                    row.style.display =
+                        searchMatch &&
+                        statusMatch &&
+                        methodMatch
+                            ? ""
+                            : "none";
+
+                });
+
+            }
+
+
+            filterButton.addEventListener(
+                "click",
+                filterPayments
+            );
+
+
+            searchInput.addEventListener(
+                "input",
+                filterPayments
+            );
+
+
+            clearButton.addEventListener(
+                "click",
+                function () {
+
+                    searchInput.value = "";
+
+                    statusSelect.value = "";
+
+                    methodSelect.value = "";
+
+
+                    rows.forEach(row => {
+                        row.style.display = "";
+                    });
+
+                }
+            );
+
+        });
+
+    </script>
+
+</body>
+</html>

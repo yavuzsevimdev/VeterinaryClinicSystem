@@ -1,0 +1,50 @@
+﻿@model List<AnimalDto>
+
+<section class="dashboard-animals" id="dashboard-animals" aria-label="Animal overview">
+    <div class="section-header" style="margin-bottom: 1.25rem;">
+        <div>
+            <h2 class="text-section-title">Hayvanlara Genel Bakış</h2>
+            <p class="section-header-desc">Klinik genelinde yakın zamanda aktif olan hastalar</p>
+        </div>
+        <a href="#" class="link-action">Tüm Hayvanları Görüntüle <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <div class="animal-grid">
+        @foreach(var item in Model)
+        {
+            <article class="card-ui card-ui--interactive animal-card">
+                <div class="animal-card-media">
+                    <i class="bi bi-image animal-card-media-fallback-icon"></i>
+                    <img src="@item.ImageUrl"
+                         alt="@item.Name, @item.Breed" loading="lazy"
+                         onerror="this.style.display='none'" />
+                    <div class="animal-card-media-overlay"></div>
+                    <span class="animal-card-species-badge"><i class="bi bi-clipboard2-pulse"></i> @item.Species</span>
+                    <span class="animal-card-name-overlay">@item.Name</span>
+                    <span class="animal-card-breed-overlay">@item.Breed</span>
+                </div>
+                <div class="animal-card-body">
+                    <div class="animal-card-metrics">
+                        <div class="animal-card-metric">
+                            <div class="animal-card-metric-value">@item.Age yıl</div>
+                             <div class="animal-card-metric-label">Yaş</div>
+                        </div>
+                        <div class="animal-card-metric">
+                            <div class="animal-card-metric-value">@item.Weight kg</div>
+                            <div class="animal-card-metric-label">Kilo</div>
+                        </div>
+                        <div class="animal-card-metric">
+                            <div class="animal-card-metric-value">@item.Height cm</div>
+                            <div class="animal-card-metric-label">Uzunluk</div>
+                        </div>
+                    </div>
+                    <p class="animal-card-history">@item.MedicalHistory</p>
+                    <div class="animal-card-footer">
+                        <a href="#" class="link-action">Detayları Görüntüle <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </article>
+
+        }
+    </div>
+</section>

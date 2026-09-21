@@ -1,0 +1,92 @@
+﻿@model AppointmentDto           
+ 
+<section class="card">
+
+                <div class="head">
+
+                    <div class="head-left">
+
+                        <div class="icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+
+                        <h2>Randevu Bilgileri</h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="rows">
+
+                    <div class="row">
+                        <i class="bi bi-calendar3"></i>
+
+                        <span class="label">
+                            Randevu Tarihi
+                        </span>
+
+                        <span class="value">
+                            @Model.Date.ToString("dd.MM.yyyy")
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-clock"></i>
+
+                        <span class="label">
+                            Randevu Saati
+                        </span>
+
+                        <span class="value">
+                            @Model.Date.ToString(@"hh\:mm")
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-geo-alt"></i>
+
+                        <span class="label">
+                            Klinik Şube
+                        </span>
+
+                        <span class="value">
+                            Merkez Klinik
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-calendar2-check"></i>
+
+                        <span class="label">
+                            Randevu Durumu
+                        </span>
+                        @if (Model.Status == "Completed")
+                        {
+                            <span class="badge bs">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Tamamlandı
+                            </span>
+                        }
+                        else if (Model.Status == "Scheduled")
+                        {
+                            <span class="badge warning">
+                                <i class="bi bi-clock-fill"></i>
+                                Planlandı
+                            </span>
+                        }
+                        else if (Model.Status == "Cancelled")
+                        {
+                            <span class="badge danger">
+                                <i class="bi bi-x-circle-fill"></i>
+                                İptal Edildi
+                            </span>
+                        }
+                    </div>
+
+                </div>
+
+            </section>

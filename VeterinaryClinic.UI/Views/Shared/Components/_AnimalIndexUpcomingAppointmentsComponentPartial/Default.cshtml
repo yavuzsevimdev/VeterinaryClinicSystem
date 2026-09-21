@@ -1,0 +1,24 @@
+﻿@model List<UpcomingAppointmentDto>  
+
+<section class="animal-appointments card-ui" aria-label="Yaklaşan randevular">
+    <div class="card-header-row">
+      <h2 class="text-card-title">Yaklaşan Randevular</h2>
+      <a href="/Appointment/Index" class="link-action">Tüm Randevuları Gör <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="animal-appointment-list">
+        @foreach(var item in Model)
+        {
+            <div class="animal-appointment-item">
+                <div class="animal-appointment-icon"><i class="bi bi-calendar2-week"></i></div>
+                <div class="animal-appointment-body">
+                    <span class="animal-appointment-animal">@item.AnimalName</span>
+                    <span class="animal-appointment-type">Genel Kontrol</span>
+                </div>
+                <div class="animal-appointment-meta">
+                    <span class="animal-appointment-time">@item.Date.ToString("dd MMMM") · @item.Time.ToString(@"hh\:mm")</span>
+                    <span class="badge-ui badge-ui--info">@item.Status</span>
+                </div>
+            </div>
+        }
+    </div>
+  </section>

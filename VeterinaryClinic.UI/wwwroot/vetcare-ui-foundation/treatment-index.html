@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tedaviler | VetCare OS</title>
+
+    <!-- Global UI Foundation -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        .treatment-page {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .treatment-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: var(--space-4);
+        }
+
+        .treatment-stat-card {
+            min-height: 150px;
+        }
+
+        .treatment-stat-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 7px;
+            color: var(--color-muted);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .treatment-toolbar {
+            display: grid;
+            grid-template-columns: minmax(260px, 1.5fr) repeat(2, minmax(150px, .65fr)) auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .treatment-search {
+            position: relative;
+        }
+
+        .treatment-search i {
+            position: absolute;
+            left: 14px;
+            bottom: 11px;
+            color: var(--color-muted);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .treatment-search input {
+            padding-left: 40px;
+        }
+
+        .treatment-list-card {
+            overflow: hidden;
+        }
+
+        .treatment-table-wrap {
+            overflow-x: auto;
+        }
+
+        .treatment-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        .treatment-table th {
+            padding: 15px 18px;
+            text-align: left;
+            background: var(--color-background);
+            color: var(--color-muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--color-border);
+            white-space: nowrap;
+        }
+
+        .treatment-table td {
+            padding: 17px 18px;
+            border-bottom: 1px solid var(--color-border);
+            vertical-align: middle;
+            color: var(--color-text);
+            font-size: 13px;
+        }
+
+        .treatment-table tbody tr {
+            transition: background .18s ease;
+        }
+
+        .treatment-table tbody tr:hover {
+            background: rgba(108, 99, 168, .035);
+        }
+
+        .treatment-animal {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .treatment-animal-avatar {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            background: rgba(108, 99, 168, .10);
+            color: var(--color-primary);
+            font-size: 18px;
+        }
+
+        .treatment-animal-name {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .treatment-animal-sub {
+            margin-top: 3px;
+            color: var(--color-muted);
+            font-size: 11px;
+        }
+
+        .treatment-name {
+            font-weight: 600;
+        }
+
+        .treatment-note {
+            max-width: 240px;
+            color: var(--color-muted);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .treatment-appointment {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .treatment-date {
+            white-space: nowrap;
+        }
+
+        .treatment-cost {
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .treatment-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+        }
+
+        .treatment-action-btn {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: var(--color-surface);
+            color: var(--color-muted);
+            transition: .18s ease;
+        }
+
+        .treatment-action-btn:hover {
+            border-color: rgba(108, 99, 168, .28);
+            color: var(--color-primary);
+            transform: translateY(-1px);
+        }
+
+        .treatment-action-btn.is-danger:hover {
+            color: var(--color-danger);
+            border-color: rgba(223, 124, 137, .30);
+        }
+
+        .treatment-empty {
+            display: none;
+            padding: 48px 24px;
+            text-align: center;
+        }
+
+        .treatment-empty-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 14px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: rgba(108, 99, 168, .08);
+            color: var(--color-primary);
+            font-size: 25px;
+        }
+
+        .treatment-pagination-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 18px 4px;
+        }
+
+        .treatment-result-count {
+            color: var(--color-muted);
+            font-size: 12px;
+        }
+
+        .treatment-summary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 1100px) {
+            .treatment-stat-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .treatment-toolbar {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .treatment-toolbar .treatment-search {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .treatment-stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .treatment-toolbar {
+                grid-template-columns: 1fr;
+            }
+
+            .treatment-page .page-header {
+                align-items: flex-start;
+            }
+
+            .treatment-pagination-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="app-content">
+    <div class="app-content-inner">
+        <div class="treatment-page">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <div class="section-header-title-row">
+                        <h1 class="text-page-title" style="margin:0;">Tedaviler</h1>
+                        <span class="badge-ui badge-ui--primary">
+                            <i class="bi bi-heart-pulse"></i> Tedavi Kayıtları
+                        </span>
+                    </div>
+                    <p class="text-muted" style="margin-top:6px; max-width:680px;">
+                        Kliniğinizde gerçekleştirilen tedavileri görüntüleyin, filtreleyin ve yönetin.
+                    </p>
+                </div>
+
+                <div class="section-header-actions">
+                    <a href="/Treatment/Create" class="btn-ui btn-ui--primary">
+                        <i class="bi bi-plus-lg"></i>
+                        Yeni Tedavi
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="treatment-stat-grid">
+                <div class="card-ui stat-card treatment-stat-card">
+                    <div class="row-between">
+                        <span class="stat-card-label">Toplam Tedavi</span>
+                        <div class="card-icon-tile is-primary">
+                            <i class="bi bi-clipboard2-pulse"></i>
+                        </div>
+                    </div>
+                    <span class="stat-card-value">48</span>
+                    <div class="treatment-stat-meta">
+                        <i class="bi bi-layers"></i>
+                        <span>Tüm kayıtlar</span>
+                    </div>
+                </div>
+
+                <div class="card-ui stat-card treatment-stat-card">
+                    <div class="row-between">
+                        <span class="stat-card-label">Bu Ay</span>
+                        <div class="card-icon-tile is-secondary">
+                            <i class="bi bi-calendar2-check"></i>
+                        </div>
+                    </div>
+                    <span class="stat-card-value">12</span>
+                    <div class="treatment-stat-meta">
+                        <i class="bi bi-arrow-up-short"></i>
+                        <span>Son 30 gün</span>
+                    </div>
+                </div>
+
+                <div class="card-ui stat-card treatment-stat-card">
+                    <div class="row-between">
+                        <span class="stat-card-label">Toplam Tedavi Tutarı</span>
+                        <div class="card-icon-tile is-accent">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                    </div>
+                    <span class="stat-card-value">₺18.450</span>
+                    <div class="treatment-stat-meta">
+                        <i class="bi bi-receipt"></i>
+                        <span>Kayıtlı tedaviler</span>
+                    </div>
+                </div>
+
+                <div class="card-ui stat-card treatment-stat-card">
+                    <div class="row-between">
+                        <span class="stat-card-label">Ortalama Tedavi</span>
+                        <div class="card-icon-tile is-info">
+                            <i class="bi bi-bar-chart-line"></i>
+                        </div>
+                    </div>
+                    <span class="stat-card-value">₺384</span>
+                    <div class="treatment-stat-meta">
+                        <i class="bi bi-calculator"></i>
+                        <span>Ortalama maliyet</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter / Search -->
+            <section class="card-ui">
+                <div class="section-header" style="padding-bottom: 0;">
+                    <div class="section-header-text">
+                        <div class="section-header-title-row">
+                            <h2 class="text-card-title" style="margin:0;">Tedavi Listesi</h2>
+                            <span class="badge-ui badge-ui--neutral" id="visibleCount">6 kayıt</span>
+                        </div>
+                        <p class="section-header-desc">Tedavi kayıtlarını hızlıca bulun ve yönetin.</p>
+                    </div>
+                </div>
+
+                <div class="treatment-toolbar" style="margin-top:18px;">
+                    <div class="form-group-ui treatment-search">
+                        <label class="form-label-ui" for="treatmentSearch">Ara</label>
+                        <i class="bi bi-search"></i>
+                        <input
+                            id="treatmentSearch"
+                            type="search"
+                            class="form-control-ui"
+                            placeholder="Hayvan, tedavi veya not ara..."
+                            autocomplete="off">
+                    </div>
+
+                    <div class="form-group-ui">
+                        <label class="form-label-ui" for="treatmentType">Tedavi Türü</label>
+                        <select id="treatmentType" class="form-control-ui">
+                            <option value="">Tümü</option>
+                            <option value="Muayene">Muayene</option>
+                            <option value="Aşı">Aşı</option>
+                            <option value="Cerrahi">Cerrahi</option>
+                            <option value="İlaç Tedavisi">İlaç Tedavisi</option>
+                            <option value="Bakım">Bakım</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-ui">
+                        <label class="form-label-ui" for="dateFilter">Dönem</label>
+                        <select id="dateFilter" class="form-control-ui">
+                            <option value="">Tüm Tarihler</option>
+                            <option value="today">Bugün</option>
+                            <option value="week">Bu Hafta</option>
+                            <option value="month">Bu Ay</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn-ui btn-ui--ghost" id="clearFilters">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Temizle
+                    </button>
+                </div>
+            </section>
+
+            <!-- Treatment Table -->
+            <section class="card-ui treatment-list-card">
+                <div class="treatment-table-wrap">
+                    <table class="treatment-table">
+                        <thead>
+                            <tr>
+                                <th>Hayvan</th>
+                                <th>Tedavi</th>
+                                <th>Randevu</th>
+                                <th>Tarih</th>
+                                <th>Açıklama</th>
+                                <th>Tutar</th>
+                                <th style="text-align:right;">İşlemler</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="treatmentTableBody">
+                            <tr data-row
+                                data-search="max muayene genel sağlık kontrolü"
+                                data-type="Muayene"
+                                data-date="2026-09-18">
+                                <td>
+                                    <div class="treatment-animal">
+                                        <div class="treatment-animal-avatar">
+                                            <i class="bi bi-heart"></i>
+                                        </div>
+                                        <div>
+                                            <p class="treatment-animal-name">Max</p>
+                                            <div class="treatment-animal-sub">Golden Retriever · 4 yaş</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="treatment-name">Genel Muayene</span>
+                                </td>
+                                <td>
+                                    <span class="treatment-appointment">#1024</span>
+                                </td>
+                                <td>
+                                    <span class="treatment-date">18.09.2026</span>
+                                </td>
+                                <td>
+                                    <div class="treatment-note">Genel sağlık kontrolü ve fiziksel değerlendirme.</div>
+                                </td>
+                                <td>
+                                    <span class="treatment-cost">₺450</span>
+                                </td>
+                                <td>
+                                    <div class="treatment-actions">
+                                        <a href="/Treatment/Detail/1" class="treatment-action-btn" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Treatment/Update/1" class="treatment-action-btn" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="treatment-action-btn is-danger" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row
+                                data-search="luna aşı karma aşı uygulaması"
+                                data-type="Aşı"
+                                data-date="2026-09-16">
+                                <td>
+                                    <div class="treatment-animal">
+                                        <div class="treatment-animal-avatar">
+                                            <i class="bi bi-shield-plus"></i>
+                                        </div>
+                                        <div>
+                                            <p class="treatment-animal-name">Luna</p>
+                                            <div class="treatment-animal-sub">British Shorthair · 2 yaş</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="treatment-name">Karma Aşı</span></td>
+                                <td><span class="treatment-appointment">#1021</span></td>
+                                <td><span class="treatment-date">16.09.2026</span></td>
+                                <td><div class="treatment-note">Yıllık karma aşı uygulaması yapıldı.</div></td>
+                                <td><span class="treatment-cost">₺700</span></td>
+                                <td>
+                                    <div class="treatment-actions">
+                                        <a href="/Treatment/Detail/2" class="treatment-action-btn" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Treatment/Update/2" class="treatment-action-btn" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="treatment-action-btn is-danger" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row
+                                data-search="boncuk ilaç tedavisi antibiyotik enfeksiyon"
+                                data-type="İlaç Tedavisi"
+                                data-date="2026-09-14">
+                                <td>
+                                    <div class="treatment-animal">
+                                        <div class="treatment-animal-avatar">
+                                            <i class="bi bi-capsule"></i>
+                                        </div>
+                                        <div>
+                                            <p class="treatment-animal-name">Boncuk</p>
+                                            <div class="treatment-animal-sub">Tekir · 6 yaş</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="treatment-name">İlaç Tedavisi</span></td>
+                                <td><span class="treatment-appointment">#1019</span></td>
+                                <td><span class="treatment-date">14.09.2026</span></td>
+                                <td><div class="treatment-note">Enfeksiyon tedavisi için ilaç desteği başlandı.</div></td>
+                                <td><span class="treatment-cost">₺520</span></td>
+                                <td>
+                                    <div class="treatment-actions">
+                                        <a href="/Treatment/Detail/3" class="treatment-action-btn" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Treatment/Update/3" class="treatment-action-btn" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="treatment-action-btn is-danger" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row
+                                data-search="pati cerrahi operasyon operasyon sonrası kontrol"
+                                data-type="Cerrahi"
+                                data-date="2026-09-10">
+                                <td>
+                                    <div class="treatment-animal">
+                                        <div class="treatment-animal-avatar">
+                                            <i class="bi bi-bandaid"></i>
+                                        </div>
+                                        <div>
+                                            <p class="treatment-animal-name">Pati</p>
+                                            <div class="treatment-animal-sub">Labrador · 5 yaş</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="treatment-name">Cerrahi İşlem</span></td>
+                                <td><span class="treatment-appointment">#1014</span></td>
+                                <td><span class="treatment-date">10.09.2026</span></td>
+                                <td><div class="treatment-note">Küçük cerrahi operasyon ve sonrası kontrol planlandı.</div></td>
+                                <td><span class="treatment-cost">₺2.850</span></td>
+                                <td>
+                                    <div class="treatment-actions">
+                                        <a href="/Treatment/Detail/4" class="treatment-action-btn" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Treatment/Update/4" class="treatment-action-btn" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="treatment-action-btn is-danger" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row
+                                data-search="zeytin bakım tırnak tüy bakım"
+                                data-type="Bakım"
+                                data-date="2026-09-08">
+                                <td>
+                                    <div class="treatment-animal">
+                                        <div class="treatment-animal-avatar">
+                                            <i class="bi bi-scissors"></i>
+                                        </div>
+                                        <div>
+                                            <p class="treatment-animal-name">Zeytin</p>
+                                            <div class="treatment-animal-sub">Pomeranian · 3 yaş</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="treatment-name">Bakım</span></td>
+                                <td><span class="treatment-appointment">#1009</span></td>
+                                <td><span class="treatment-date">08.09.2026</span></td>
+                                <td><div class="treatment-note">Tırnak, tüy ve genel bakım işlemleri tamamlandı.</div></td>
+                                <td><span class="treatment-cost">₺350</span></td>
+                                <td>
+                                    <div class="treatment-actions">
+                                        <a href="/Treatment/Detail/5" class="treatment-action-btn" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Treatment/Update/5" class="treatment-action-btn" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="treatment-action-btn is-danger" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-row
+                                data-search="mia muayene diş kontrolü"
+                                data-type="Muayene"
+                                data-date="2026-09-05">
+                                <td>
+                                    <div class="treatment-animal">
+                                        <div class="treatment-animal-avatar">
+                                            <i class="bi bi-clipboard2-pulse"></i>
+                                        </div>
+                                        <div>
+                                            <p class="treatment-animal-name">Mia</p>
+                                            <div class="treatment-animal-sub">Scottish Fold · 1 yaş</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="treatment-name">Diş Kontrolü</span></td>
+                                <td><span class="treatment-appointment">#1004</span></td>
+                                <td><span class="treatment-date">05.09.2026</span></td>
+                                <td><div class="treatment-note">Ağız ve diş sağlığı kontrolü gerçekleştirildi.</div></td>
+                                <td><span class="treatment-cost">₺280</span></td>
+                                <td>
+                                    <div class="treatment-actions">
+                                        <a href="/Treatment/Detail/6" class="treatment-action-btn" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Treatment/Update/6" class="treatment-action-btn" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="treatment-action-btn is-danger" title="Sil">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="treatment-empty" id="treatmentEmpty">
+                        <div class="treatment-empty-icon">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
+                        <h3 class="text-card-title" style="margin-bottom:6px;">Tedavi bulunamadı</h3>
+                        <p class="text-muted" style="max-width:430px; margin:0 auto;">
+                            Arama veya filtre kriterlerinize uygun bir tedavi kaydı bulunmuyor.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="treatment-pagination-row">
+                    <div class="treatment-summary">
+                        <span class="treatment-result-count">
+                            Gösterilen kayıt: <strong id="resultCount">6</strong>
+                        </span>
+                    </div>
+
+                    <nav class="pagination-ui" aria-label="Tedavi sayfalama">
+                        <button class="pagination-ui-item is-disabled" aria-label="Önceki sayfa">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button class="pagination-ui-item is-active">1</button>
+                        <button class="pagination-ui-item">2</button>
+                        <button class="pagination-ui-item">3</button>
+                        <button class="pagination-ui-item" aria-label="Sonraki sayfa">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<script>
+    const searchInput = document.getElementById("treatmentSearch");
+    const typeSelect = document.getElementById("treatmentType");
+    const dateSelect = document.getElementById("dateFilter");
+    const clearButton = document.getElementById("clearFilters");
+    const rows = [...document.querySelectorAll("[data-row]")];
+    const resultCount = document.getElementById("resultCount");
+    const visibleCount = document.getElementById("visibleCount");
+    const emptyState = document.getElementById("treatmentEmpty");
+
+    function isDateMatch(rowDate, filter) {
+        if (!filter) return true;
+
+        const row = new Date(rowDate + "T12:00:00");
+        const now = new Date();
+
+        if (filter === "today") {
+            return row.toDateString() === now.toDateString();
+        }
+
+        if (filter === "week") {
+            const day = now.getDay();
+            const diff = day === 0 ? 6 : day - 1;
+            const start = new Date(now);
+            start.setHours(0, 0, 0, 0);
+            start.setDate(now.getDate() - diff);
+
+            const end = new Date(start);
+            end.setDate(start.getDate() + 7);
+
+            return row >= start && row < end;
+        }
+
+        if (filter === "month") {
+            return row.getMonth() === now.getMonth() &&
+                   row.getFullYear() === now.getFullYear();
+        }
+
+        return true;
+    }
+
+    function applyFilters() {
+        const searchValue = searchInput.value.trim().toLowerCase();
+        const typeValue = typeSelect.value;
+        const dateValue = dateSelect.value;
+
+        let visible = 0;
+
+        rows.forEach(row => {
+            const searchable = row.dataset.search.toLowerCase();
+            const type = row.dataset.type;
+            const date = row.dataset.date;
+
+            const matchesSearch = !searchValue || searchable.includes(searchValue);
+            const matchesType = !typeValue || type === typeValue;
+            const matchesDate = isDateMatch(date, dateValue);
+
+            const show = matchesSearch && matchesType && matchesDate;
+
+            row.style.display = show ? "" : "none";
+
+            if (show) visible++;
+        });
+
+        resultCount.textContent = visible;
+        visibleCount.textContent = `${visible} kayıt`;
+        emptyState.style.display = visible === 0 ? "block" : "none";
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+    typeSelect.addEventListener("change", applyFilters);
+    dateSelect.addEventListener("change", applyFilters);
+
+    clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        typeSelect.value = "";
+        dateSelect.value = "";
+        applyFilters();
+    });
+
+    applyFilters();
+</script>
+
+</body>
+</html>

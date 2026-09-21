@@ -1,0 +1,50 @@
+﻿<section class="dashboard-reports" id="dashboard-reports" aria-label="Reports">
+    <div class="section-header" style="margin-bottom: 1.25rem;">
+        <div>
+            <h2 class="text-section-title">Raporlar</h2>
+            <p class="section-header-desc">Operasyonel ve finansal öngörü araçları</p>
+        </div>
+    </div>
+
+    <div class="grid-4">
+        <div class="card-ui card-ui--interactive report-tile" data-toast-action="Günlük Rapor" role="button" tabindex="0">
+            <div class="card-icon-tile is-info"><i class="bi bi-calendar-check"></i></div>
+            <h3 class="text-card-title">Günlük Rapor</h3>
+            <p class="report-tile-desc">Bugünkü randevu hareketliliğini gözden geçirin.</p>
+            <div class="report-tile-footer">
+                <span class="text-tiny text-muted-light"> @DateTime.Today.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</span>
+                <i class="bi bi-arrow-right text-muted"></i>
+            </div>
+        </div>
+
+        <div class="card-ui card-ui--interactive report-tile" data-toast-action="Aylık Rapor" role="button" tabindex="0">
+            <div class="card-icon-tile is-primary"><i class="bi bi-bar-chart-line"></i></div>
+            <h3 class="text-card-title">Aylık Rapor</h3>
+            <p class="report-tile-desc">Aylık randevu istatistiklerini görüntüleyin.</p>
+            <div class="report-tile-footer">
+                <span class="text-tiny text-muted-light">@DateTime.Today.ToString("MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</span>
+                <i class="bi bi-arrow-right text-muted"></i>
+            </div>
+        </div>
+
+        <div class="card-ui card-ui--interactive report-tile" data-toast-action="Finansal Rapor" role="button" tabindex="0">
+            <div class="card-icon-tile is-success"><i class="bi bi-graph-up-arrow"></i></div>
+            <h3 class="text-card-title">Finansal Rapor</h3>
+            <p class="report-tile-desc">Tedavi masraflarını, ödemeleri ve borçları inceleyin.</p>
+            <div class="report-tile-footer">
+                <span class="text-tiny text-muted-light"> @DateTime.Today.ToString("MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</span>
+                <i class="bi bi-arrow-right text-muted"></i>
+            </div>
+        </div>
+
+        <div class="card-ui card-ui--interactive report-tile" data-toast-action="Hayvan Tedavi Geçmişi" role="button" tabindex="0">
+            <div class="card-icon-tile is-accent"><i class="bi bi-clock-history"></i></div>
+            <h3 class="text-card-title">Hayvan Tedavi Geçmişi</h3>
+            <p class="report-tile-desc">Seçilen bir hayvanın tedavi geçmişini inceleyin.</p>
+            <div class="report-tile-footer">
+                <span class="text-tiny text-muted-light">Hayvan Seç</span>
+                <i class="bi bi-arrow-right text-muted"></i>
+            </div>
+        </div>
+    </div>
+</section>

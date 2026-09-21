@@ -1,0 +1,41 @@
+﻿@model ManagerDashboardFinancialOverviewDto
+
+<section class="dashboard-financial card-ui financial-card" id="dashboard-financial" aria-label="Finansal Genel Bakış">
+    <div class="card-header-row" style="margin-bottom:0;">
+        <div>
+            <h2 class="text-card-title">Finansal Genel Bakış</h2>
+            <span class="financial-period">@Model.StartDate.ToString("MMM dd") – @Model.EndDate.ToString("MMM dd"), @Model.EndDate.ToString("yyyy")</span>
+        </div>
+        <div class="card-icon-tile is-success"><i class="bi bi-wallet2"></i></div>
+    </div>
+
+    <div class="financial-figures">
+        <div class="financial-figure">
+            <div class="financial-figure-label">Toplam Maliyet</div>
+            <div class="financial-figure-value">₺@Model.TotalTreatmentCost.ToString("N0")</div>
+        </div>
+        <div class="financial-figure">
+            <div class="financial-figure-label">Toplam Ödenen</div>
+            <div class="financial-figure-value is-success">₺@Model.TotalPaid.ToString("N0")</div>
+        </div>
+        <div class="financial-figure">
+            <div class="financial-figure-label">Borç</div>
+            <div class="financial-figure-value is-danger">₺@Model.TotalDebt.ToString("N0")</div>
+        </div>
+    </div>
+
+    <div class="financial-bar-wrap">
+        <div class="financial-bar-track">
+            <div class="financial-bar-segment is-paid" style="width: @Model.PaidPercentage.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
+            <div class="financial-bar-segment is-debt" style="width: @Model.DebtPercentage.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
+        </div>
+        <div class="financial-legend">
+            <span class="financial-legend-item"><span class="financial-legend-dot is-paid"></span> Ödenmiş (@Model.PaidPercentage.ToString("0.0")%)</span>
+            <span class="financial-legend-item"><span class="financial-legend-dot is-debt"></span> Ödenmemiş (@Model.DebtPercentage.ToString("0.0")%)</span>
+        </div>
+    </div>
+
+    <a href="#" class="btn-ui btn-ui--outline btn-ui--sm" style="align-self:flex-start;">
+        <i class="bi bi-graph-up-arrow"></i> Finansal Raporu Görüntüle
+    </a>
+</section>

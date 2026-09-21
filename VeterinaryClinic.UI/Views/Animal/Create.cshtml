@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@await Component.InvokeAsync("_AnimalCreateStyleComponentPartial")
+<div class="animal-page animal-create-page">
+    @await Component.InvokeAsync("_AnimalCreateHeaderComponentPartial")
+    <div class="animal-create-grid">
+        @await Component.InvokeAsync("_AnimalCreateFormComponentPartial")
+        @await Component.InvokeAsync("_AnimalCreateLivePreviewComponentPartial")
+    </div>
+    @await Component.InvokeAsync("_AnimalCreateInformationCardComponentPartial")
+</div>
+@await Component.InvokeAsync("_AnimalCreateScriptsComponentPartial")

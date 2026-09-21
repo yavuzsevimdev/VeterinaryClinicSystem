@@ -1,0 +1,118 @@
+﻿<aside class="sidebar" aria-label="Primary navigation">
+
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-mark" aria-hidden="true"><i class="bi bi-heart-pulse-fill"></i></div>
+            <div class="sidebar-brand-text">
+                <span class="sidebar-brand-name">VetCare OS</span>
+                <span class="sidebar-brand-tag">Clinic Management</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div>
+                <div class="sidebar-group-label">Main</div>
+                <ul class="sidebar-list">
+                    <li>
+                        <a href="#" class="sidebar-link is-active" data-sidebar-link data-label="Dashboard">
+                            <span class="sidebar-link-icon"><i class="bi bi-grid-1x2-fill"></i></span>
+                            <span class="sidebar-link-text">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="sidebar-group-label">Clinic Management</div>
+                <ul class="sidebar-list">
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Animals">
+                            <span class="sidebar-link-icon"><i class="bi bi-clipboard2-pulse"></i></span>
+                            <span class="sidebar-link-text">Animals</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Appointments">
+                            <span class="sidebar-link-icon"><i class="bi bi-calendar2-week"></i></span>
+                            <span class="sidebar-link-text">Appointments</span>
+                            <span class="sidebar-link-badge">@ViewBag.TodayAppointments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Treatments">
+                            <span class="sidebar-link-icon"><i class="bi bi-capsule"></i></span>
+                            <span class="sidebar-link-text">Treatments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Payments">
+                            <span class="sidebar-link-icon"><i class="bi bi-credit-card-2-back"></i></span>
+                            <span class="sidebar-link-text">Payments</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="sidebar-group-label">Reports</div>
+                <ul class="sidebar-list">
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Daily Reports">
+                            <span class="sidebar-link-icon"><i class="bi bi-calendar-check"></i></span>
+                            <span class="sidebar-link-text">Daily Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Monthly Reports">
+                            <span class="sidebar-link-icon"><i class="bi bi-bar-chart-line"></i></span>
+                            <span class="sidebar-link-text">Monthly Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Financial Reports">
+                            <span class="sidebar-link-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                            <span class="sidebar-link-text">Financial Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Treatment History">
+                            <span class="sidebar-link-icon"><i class="bi bi-clock-history"></i></span>
+                            <span class="sidebar-link-text">Treatment History</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="sidebar-group-label">Account</div>
+                <ul class="sidebar-list">
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Weather">
+                            <span class="sidebar-link-icon"><i class="bi bi-cloud-sun"></i></span>
+                            <span class="sidebar-link-text">Weather</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-sidebar-link data-label="Settings">
+                            <span class="sidebar-link-icon"><i class="bi bi-gear"></i></span>
+                            <span class="sidebar-link-text">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <ul class="sidebar-list" style="margin-bottom: 8px;">
+                <li>
+                    <a href="/Account/Logout" class="sidebar-link" data-label="Logout">
+                        <span class="sidebar-link-icon"><i class="bi bi-box-arrow-left"></i></span>
+                        <span class="sidebar-link-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+            <button type="button" class="sidebar-toggle-inline" data-sidebar-collapse-toggle aria-label="Collapse sidebar">
+                <i class="bi bi-layout-sidebar-inset"></i>
+                <span>Collapse</span>
+            </button>
+        </div>
+    </aside>

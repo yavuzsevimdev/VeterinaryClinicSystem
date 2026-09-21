@@ -1,0 +1,92 @@
+﻿@model List<UpcomingAppointmentDto>
+
+<section aria-label="Yaklaşan randevular">
+    <div class="appointment-section-title-row" style="margin-bottom: 1rem;">
+        <div class="appointment-section-title">
+            <div class="card-icon-tile is-info"><i class="bi bi-clock-history"></i></div>
+            <h2 class="text-section-title">Yaklaşan Randevular</h2>
+        </div>
+    </div>
+
+    <div class="appointment-upcoming-list" id="upcomingAppointmentList">
+        @foreach(var item in Model)
+        {
+            <article class="card-ui appointment-card" data-name="@item.AnimalName" data-status="@item.Status" data-date="@item.Date.ToString("yyyy-MM-dd")">
+                <div class="appointment-card-date">
+                    <span class="appointment-card-date-day">@item.Date.ToString("dd")</span>
+                    <span class="appointment-card-date-month">@item.Date.ToString("MMM yyyy")</span>
+                    <span class="appointment-card-date-weekday">@item.Date.ToString("dddd")</span>
+                    <span class="appointment-card-time-chip"><i class="bi bi-clock"></i> @item.Time.ToString(@"hh\:mm")</span>
+                </div>
+
+                <div class="appointment-card-media">
+                    <img src="@item.ImageUrl" alt="@item.AnimalName" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <i class="bi bi-image appointment-card-media-fallback" aria-hidden="true"></i>
+                </div>
+
+                <div class="appointment-card-body">
+                    <div class="appointment-card-animal">
+                        <span class="appointment-card-animal-name">@item.AnimalName</span>
+                        <span class="appointment-card-animal-breed">@item.Species</span>
+                    </div>
+                    <div class="appointment-card-notes">
+                        <i class="bi bi-clipboard2-pulse"></i>
+                        <span>@item.Notes</span>
+                    </div>
+                </div>
+
+                <div class="appointment-card-status">
+                    @if (item.Status == "Scheduled")
+                    {
+                        <span class="badge-ui badge-ui--info">
+                            <i class="bi bi-calendar2-check"></i> Planlandı
+                        </span>
+                    }
+                    else if (item.Status == "Completed")
+                    {
+                        <span class="badge-ui badge-ui--success">
+                            <i class="bi bi-check-circle"></i> Tamamlandı
+                        </span>
+                    }
+                    else if (item.Status == "Cancelled")
+                    {
+                        <span class="badge-ui badge-ui--danger">
+                            <i class="bi bi-x-circle"></i> İptal Edildi
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge-ui badge-ui--info">
+                            @item.Status
+                        </span>
+                    }
+                </div>
+
+                <div class="appointment-card-location">
+                    <i class="bi bi-geo-alt"></i>
+                    <div>
+                        <div class="appointment-card-location-name">VetCare Veteriner Kliniği</div>
+                        <div class="appointment-card-location-room">Muayene Odası 1</div>
+                    </div>
+                </div>
+
+                <div class="appointment-card-actions">
+                    <a href="/appointment/detail/@item.AppointmentId" class="btn-ui btn-ui--ghost btn-ui--sm"><i class="bi bi-eye"></i> Detay</a>
+                    <a href="/appointment/update/@item.AppointmentId" class="btn-ui btn-ui--ghost btn-ui--sm"><i class="bi bi-pencil"></i> Düzenle</a>
+                    <a href="/appointment/cancel/@item.AppointmentId" class="btn-ui btn-ui--danger-ghost btn-ui--sm" data-cancel-appointment="1">
+                        <i class="bi bi-x-circle"></i> İptal Et
+                    </a>
+                </div>
+            </article>
+        }
+
+    </div>
+
+    <!-- Model boşsa yukarıdaki liste yerine bu blok gösterilmeli (class="is-visible" ekle) -->
+    <div class="card-ui appointment-empty-state" id="upcomingEmptyState">
+        <i class="bi bi-calendar2-week"></i>
+        <h3 class="text-card-title">Yaklaşan randevunuz bulunmuyor</h3>
+        <p class="text-small text-muted">Evcil dostunuz için yeni bir randevu oluşturarak başlayabilirsiniz.</p>
+        <a href="#" class="btn-ui btn-ui--primary" style="margin-top: 0.5rem;"><i class="bi bi-plus-lg"></i> Yeni Randevu Oluştur</a>
+    </div>
+</section>

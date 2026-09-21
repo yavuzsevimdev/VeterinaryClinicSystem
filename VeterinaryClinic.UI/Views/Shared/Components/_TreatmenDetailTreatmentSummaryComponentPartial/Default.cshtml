@@ -1,0 +1,89 @@
+﻿  @model TreatmentDto
+        
+  <section class="card">
+
+                <div class="head">
+
+                    <div class="head-left">
+
+                        <div class="icon">
+                            <i class="bi bi-prescription2"></i>
+                        </div>
+
+                        <h2>Tedavi Özeti</h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="rows">
+
+                    <div class="row">
+                        <i class="bi bi-virus"></i>
+
+                        <span class="label">
+                            Tedavi Türü
+                        </span>
+
+                        <span class="badge bp">
+                            @Model.TreatmentType
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-calendar3"></i>
+
+                        <span class="label">
+                            Tedavi Tarihi
+                        </span>
+
+                        <span class="value">
+                            @Model.Date.Value.ToString("dd.MM.yyyy")
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-cash-stack"></i>
+
+                        <span class="label">
+                            Maliyet
+                        </span>
+
+                        <span class="value price">
+                            ₺@Model.Cost.ToString("F2")
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-check2-circle"></i>
+
+                        <span class="label">
+                            Durum
+                        </span>
+
+                        <span class="badge bs">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Tamamlandı
+                        </span>
+                    </div>
+
+
+                    <div class="row">
+                        <i class="bi bi-person"></i>
+
+                        <span class="label">
+                            Uygulayan Veteriner
+                        </span>
+
+                        <span class="value">
+                            Doç. Dr. Yavuz Bahadır SEVİM
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>

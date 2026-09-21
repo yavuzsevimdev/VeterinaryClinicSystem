@@ -1,0 +1,91 @@
+/* ==========================================================================
+   VetCare OS — Typography
+   ========================================================================== */
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+}
+
+.text-page-title {
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+}
+
+.text-section-title {
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.text-card-title {
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+}
+
+.text-body {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+}
+
+.text-small {
+  font-size: var(--font-size-small);
+}
+
+.text-tiny {
+  font-size: var(--font-size-tiny);
+}
+
+.text-muted {
+  color: var(--color-muted) !important;
+}
+
+.text-muted-light {
+  color: var(--color-muted-light) !important;
+}
+
+.text-primary-brand {
+  color: var(--color-primary) !important;
+}
+
+.fw-medium {
+  font-weight: var(--font-weight-medium) !important;
+}
+
+.fw-semibold {
+  font-weight: var(--font-weight-semibold) !important;
+}
+
+.fw-bold {
+  font-weight: var(--font-weight-bold) !important;
+}
+
+p {
+  margin: 0 0 var(--space-3) 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive title scaling */
+@media (max-width: 767.98px) {
+  .text-page-title {
+    font-size: 1.75rem;
+  }
+
+  .text-section-title {
+    font-size: 1.125rem;
+  }
+}

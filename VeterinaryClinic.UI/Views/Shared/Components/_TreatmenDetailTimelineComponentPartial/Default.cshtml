@@ -1,0 +1,100 @@
+﻿@model List<TreatmentDto>
+
+<section class="card">
+
+    <div class="head">
+
+        <div class="head-left">
+
+            <div class="icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <h2>Tedavi Süreci</h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="timeline">
+
+        <div class="item">
+
+            <div class="dot"></div>
+
+            <div class="date">
+                <strong>@ViewBag.StartDate</strong>
+                @ViewBag.StartTime 
+            </div>
+
+            <div class="ticon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+
+            <div class="content">
+                <strong>Kliniğe Geliş</strong>
+
+                <span>
+                    Randevu saatinde kliniğe giriş yapıldı.
+                </span>
+            </div>
+
+        </div>
+
+
+        @foreach (var item in Model)
+        {
+            var isCurrent = item.Id == (int)ViewBag.CurrentTreatmentId;
+
+            <div class="item @(isCurrent ? "is-current" : "")">
+
+                <div class="dot"></div>
+
+                <div class="date">
+                    <strong>@item.Date.Value.ToString("dd.MM.yyyy")</strong>
+                    @item.Date.Value.ToString("HH:mm")
+                </div>
+
+                <div class="ticon">
+                    <i class="bi bi-clipboard2-pulse"></i>
+                </div>
+
+                <div class="content">
+                    <strong>@item.TreatmentType</strong>
+
+                    <span>
+                        @item.Notes
+                    </span>
+                </div>
+            </div>
+
+        }
+
+        <div class="item">
+
+            <div class="dot"></div>
+
+            <div class="date">
+                <strong>@ViewBag.EndDate</strong>
+                @ViewBag.EndTime
+            </div>
+
+            <div class="ticon">
+                <i class="bi bi-house-heart"></i>
+            </div>
+
+            <div class="content">
+                <strong>Taburcu</strong>
+
+                <span>
+                    Evde dikkat edilmesi gerekenler hakkında bilgi verildi.
+                </span>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>

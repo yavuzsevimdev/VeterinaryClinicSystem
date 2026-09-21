@@ -1,0 +1,94 @@
+﻿@model List<PastAppointmentDto>
+
+<section aria-label="Geçmiş randevular">
+    <div class="appointment-section-title-row" style="margin-bottom: 1rem;">
+        <div class="appointment-section-title">
+            <div class="card-icon-tile is-secondary"><i class="bi bi-file-earmark-text"></i></div>
+            <h2 class="text-section-title">Geçmiş Randevular</h2>
+        </div>
+    </div>
+
+    <div class="card-ui appointment-history-card">
+        <div class="appointment-history-header">
+            <span>Tarih / Saat</span>
+            <span>Hayvan</span>
+            <span>Randevu Türü</span>
+            <span>Durum</span>
+            <span>İşlemler</span>
+        </div>
+        <div id="pastAppointmentList">
+
+            @foreach(var item in Model)
+            {
+                <div class="appointment-history-row" data-name="@item.AnimalName" data-status="@item.Status" data-date="@item.Date.ToString("yyyy-MM-dd")">
+                    <div>
+                        <span class="appointment-history-cell-label">Tarih / Saat</span>
+                        <div class="appointment-history-date-day">@item.Date.ToString("dd MM yyyy")</div>
+                        <div class="appointment-history-date-time">@item.Date.ToString("dddd") @item.Time.ToString(@"hh\:mm")</div>
+                    </div>
+                    <div>
+                        <span class="appointment-history-cell-label">Hayvan</span>
+                        <div class="appointment-history-animal">
+                            <div class="appointment-history-avatar">
+                                <img src="@item.ImageUrl"
+                                     alt="@item.AnimalName"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                                <i class="bi bi-image appointment-history-avatar-fallback"
+                                   aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <div class="appointment-history-animal-name">@item.AnimalName</div>
+                                <div class="appointment-history-animal-breed">@item.Breed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="appointment-history-cell-label">Randevu Türü</span>
+                        <div class="appointment-history-type"><i class="bi bi-clipboard2-pulse"></i> @item.Notes</div>
+                    </div>
+                    <div class="appointment-history-status">
+                        <span class="appointment-history-cell-label">Durum</span>
+
+                        @if (item.Status == "Scheduled")
+                        {
+                            <span class="badge-ui badge-ui--info">
+                                <i class="bi bi-calendar2-check"></i> Planlandı
+                            </span>
+                        }
+                        else if (item.Status == "Completed")
+                        {
+                            <span class="badge-ui badge-ui--success">
+                                <i class="bi bi-check-circle"></i> Tamamlandı
+                            </span>
+                        }
+                        else if (item.Status == "Cancelled")
+                        {
+                            <span class="badge-ui badge-ui--danger">
+                                <i class="bi bi-x-circle"></i> İptal Edildi
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge-ui badge-ui--info">
+                                @item.Status
+                            </span>
+                        }
+                    </div>
+                    <div class="appointment-history-actions">
+                        <span class="appointment-history-cell-label">İşlemler</span>
+                        <a href="/appointment/detail/@item.AppointmentId" class="btn-ui btn-ui--ghost btn-ui--sm"><i class="bi bi-eye"></i> Detay</a>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+
+    <div class="card-ui appointment-empty-state" id="pastEmptyState">
+        <i class="bi bi-file-earmark-text"></i>
+        <h3 class="text-card-title">Henüz geçmiş randevunuz yok</h3>
+        <p class="text-small text-muted">Tamamlanan ve iptal edilen randevularınız burada listelenecek.</p>
+    </div>
+</section>

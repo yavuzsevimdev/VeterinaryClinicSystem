@@ -1,0 +1,74 @@
+﻿<script>
+
+    (function () {
+        'use strict';
+
+        var grid = document.getElementById('animalGrid');
+        if (!grid) return;
+
+        var cards = Array.prototype.slice.call(grid.querySelectorAll('.animal-card'));
+        var searchInput = document.getElementById('animalSearchInput');
+        var speciesFilter = document.getElementById('animalSpeciesFilter');
+        var sortSelect = document.getElementById('animalSortSelect');
+        var noResults = document.getElementById('animalNoResults');
+
+        /* ---- Graceful image fallback: remove a broken img so the icon behind it shows ---- */
+        grid.querySelectorAll('.animal-card-media img').forEach(function (img) {
+            img.addEventListener('error', function () {
+                img.remove();
+            }, { once: true });
+        });
+
+        function normalize(value) {
+            return (value || '').toLocaleLowerCase('tr-TR').trim();
+        }
+
+        function applyFilters() {
+            var query = normalize(searchInput.value);
+            var species = speciesFilter.value;
+            var visibleCount = 0;
+
+            cards.forEach(function (card) {
+                var matchesQuery = !query || normalize(card.dataset.name).indexOf(query) !== -1;
+                var matchesSpecies = species === 'all' || card.dataset.species === species;
+                var show = matchesQuery && matchesSpecies;
+                card.hidden = !show;
+                if (show) visibleCount++;
+            });
+
+            noResults.hidden = visibleCount !== 0;
+        }
+
+        function applySort() {
+            var mode = sortSelect.value;
+            var sorted = cards.slice().sort(function (a, b) {
+                if (mode === 'az') return a.dataset.name.localeCompare(b.dataset.name, 'tr');
+                if (mode === 'new') return Number(b.dataset.created) - Number(a.dataset.created);
+                if (mode === 'age') return Number(a.dataset.age) - Number(b.dataset.age);
+                return 0;
+            });
+            sorted.forEach(function (card) { grid.appendChild(card); });
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        speciesFilter.addEventListener('change', applyFilters);
+        sortSelect.addEventListener('change', applySort);
+
+        /* ---- Prototype-only feedback for actions with no backend yet ---- */
+        function notify(message) {
+            if (window.VetCareToast && typeof window.VetCareToast.showToast === 'function') {
+                window.VetCareToast.showToast('info', message);
+            }
+        }
+
+        var addButtons = [document.getElementById('addAnimalBtn'), document.getElementById('addAnimalBtnEmpty')];
+        addButtons.forEach(function (btn) {
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                notify('Hayvan ekleme formu bu prototipte pasif durumdadır.');
+            });
+        });
+
+
+    })();
+</script>
