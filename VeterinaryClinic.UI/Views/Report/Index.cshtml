@@ -1,0 +1,706 @@
+﻿@{
+    ViewData["Title"] = "Raporlar";
+}
+
+<div class="manager-report-page">
+
+    <div class="manager-report-header">
+
+        <div class="manager-report-header-left">
+
+            <div class="manager-report-title-icon">
+                <i class="fa-solid fa-chart-column"></i>
+            </div>
+
+            <div>
+                <h1 class="manager-report-title">
+                    Raporlar
+                </h1>
+
+                <p class="manager-report-description">
+                    Klinik performansını, finansal verileri ve tedavi kayıtlarını inceleyin.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="manager-report-grid">
+    @await Component.InvokeAsync("_ManagerReportDailyReportComponentPartial")
+
+    @await Component.InvokeAsync("_ManagerReportMonthlyReportComponentPartial")
+
+    @await Component.InvokeAsync("_ManagerReportFinancialReportComponentPartial")
+
+    @await Component.InvokeAsync("_ManagerReportAnimalTreatmentReportComponentPartial")
+
+
+</div>
+
+
+<style>
+
+    /* =====================================================
+               REPORT PAGE
+            ====================================================== */
+
+    .manager-report-page {
+        width: 100%;
+    }
+
+
+    /* =====================================================
+               HEADER
+            ====================================================== */
+
+    .manager-report-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .manager-report-header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .manager-report-title-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+        font-size: 1.35rem;
+        flex-shrink: 0;
+    }
+
+    .manager-report-title {
+        margin: 0;
+        color: var(--color-text);
+        font-size: 1.65rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .manager-report-description {
+        margin: 0.35rem 0 0;
+        color: var(--color-muted);
+        font-size: 0.88rem;
+    }
+
+    .manager-report-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding-top: 0.75rem;
+        color: var(--color-muted);
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+        .manager-report-breadcrumb i {
+            color: var(--color-primary);
+        }
+
+
+    /* =====================================================
+               GRID
+            ====================================================== */
+
+    .manager-report-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+    }
+
+
+    /* =====================================================
+               CARD
+            ====================================================== */
+
+    .manager-report-card {
+        position: relative;
+        overflow: hidden;
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 1.35rem;
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+        .manager-report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+
+    /* =====================================================
+               CARD COLOR TOP BORDER
+            ====================================================== */
+
+    .manager-report-card--daily {
+        border-top: 3px solid var(--color-primary);
+    }
+
+    .manager-report-card--monthly {
+        border-top: 3px solid var(--color-success);
+    }
+
+    .manager-report-card--financial {
+        border-top: 3px solid var(--color-warning);
+    }
+
+    .manager-report-card--animal {
+        border-top: 3px solid #8064D9;
+    }
+
+
+    /* =====================================================
+               CARD HEADER
+            ====================================================== */
+
+    .manager-report-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .manager-report-card-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        min-width: 0;
+    }
+
+    .manager-report-card-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+        font-size: 1.3rem;
+    }
+
+    .manager-report-card--monthly .manager-report-card-icon {
+        background-color: #E9F8EF;
+        color: var(--color-success);
+    }
+
+    .manager-report-card--financial .manager-report-card-icon {
+        background-color: #FFF4D9;
+        color: #E99A08;
+    }
+
+    .manager-report-card--animal .manager-report-card-icon {
+        background-color: #F0EAFE;
+        color: #8064D9;
+    }
+
+    .manager-report-card-heading h2 {
+        margin: 0;
+        color: var(--color-text);
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .manager-report-card-heading p {
+        margin: 0.3rem 0 0;
+        color: var(--color-muted);
+        font-size: 0.76rem;
+        line-height: 1.45;
+    }
+
+    .manager-report-date-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-shrink: 0;
+        padding: 0.45rem 0.7rem;
+        border-radius: var(--radius-sm);
+        background-color: var(--color-primary-light);
+        color: var(--color-primary-dark);
+        font-size: 0.72rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .manager-report-card--monthly .manager-report-date-badge {
+        background-color: #EAF8EE;
+        color: #3F9A61;
+    }
+
+    .manager-report-card--financial .manager-report-date-badge {
+        background-color: #FFF4DE;
+        color: #D98A00;
+    }
+
+    .manager-report-card--animal .manager-report-date-badge {
+        background-color: #F0EAFE;
+        color: #7253D1;
+    }
+
+
+    /* =====================================================
+               STATISTICS
+            ====================================================== */
+
+    .manager-report-stat-grid {
+        display: grid;
+        background-color: var(--color-surface-alt);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .manager-report-stat-grid--four {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .manager-report-stat-grid--three {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .manager-report-stat {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.85rem 0.7rem;
+        border-right: 1px solid var(--color-border);
+    }
+
+        .manager-report-stat:last-child {
+            border-right: none;
+        }
+
+    .manager-report-stat-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+        font-size: 0.8rem;
+    }
+
+    .manager-report-stat-icon--success {
+        background-color: #EAF7EF;
+        color: var(--color-success);
+    }
+
+    .manager-report-stat-icon--warning {
+        background-color: #FFF4D9;
+        color: #D99108;
+    }
+
+    .manager-report-stat-icon--danger {
+        background-color: #FFF0F2;
+        color: var(--color-danger);
+    }
+
+    .manager-report-stat-icon--animal {
+        background-color: #F0EAFE;
+        color: #8064D9;
+    }
+
+    .manager-report-stat-label {
+        display: block;
+        margin-bottom: 0.2rem;
+        color: var(--color-muted);
+        font-size: 0.66rem;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .manager-report-stat strong {
+        display: block;
+        color: var(--color-text);
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .manager-report-stat-value--success {
+        color: var(--color-success) !important;
+        font-size: 0.84rem !important;
+    }
+
+    .manager-report-stat-value--warning {
+        color: #D99108 !important;
+        font-size: 0.84rem !important;
+    }
+
+    .manager-report-stat-value--danger {
+        color: var(--color-danger) !important;
+        font-size: 0.84rem !important;
+    }
+
+    .manager-report-stat-value--animal {
+        color: #8064D9 !important;
+        font-size: 0.84rem !important;
+    }
+
+
+    /* =====================================================
+               REPORT CONTENT
+            ====================================================== */
+
+    .manager-report-content {
+        padding: 0.15rem 0 1rem;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .manager-report-content-title {
+        display: block;
+        margin-bottom: 0.65rem;
+        color: var(--color-text);
+        font-size: 0.76rem;
+        font-weight: 700;
+    }
+
+    .manager-report-check-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem 1.5rem;
+    }
+
+        .manager-report-check-grid span {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-width: 0;
+            color: var(--color-muted);
+            font-size: 0.73rem;
+        }
+
+        .manager-report-check-grid i {
+            color: var(--color-primary);
+            font-size: 0.72rem;
+            flex-shrink: 0;
+        }
+
+    .manager-report-card--monthly
+    .manager-report-check-grid i {
+        color: var(--color-success);
+    }
+
+    .manager-report-card--financial
+    .manager-report-check-grid i {
+        color: #E99A08;
+    }
+
+    .manager-report-card--animal
+    .manager-report-check-grid i {
+        color: #8064D9;
+    }
+
+
+    /* =====================================================
+               ACTIONS
+            ====================================================== */
+
+    .manager-report-actions {
+        display: grid;
+        grid-template-columns: 1.1fr 0.85fr 1.1fr;
+        gap: 0.6rem;
+        padding-top: 1rem;
+    }
+
+
+    .manager-report-action {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        border-radius: var(--radius-sm);
+        padding: 0.65rem 0.7rem;
+        font-size: 0.73rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+    .manager-report-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+        border: none;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .manager-report-print-btn {
+    border: 1px solid var(--color-border-strong);
+    background-color: transparent;
+    color: var(--color-text);
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
+        .manager-report-action:active {
+            transform: scale(0.98);
+        }
+
+    .manager-report-action--primary {
+        background-color: var(--color-primary);
+        border: 1px solid var(--color-primary);
+        color: #fff;
+    }
+
+        .manager-report-action--primary:hover {
+            background-color: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+            color: #fff;
+        }
+
+    .manager-report-action--outline {
+        background-color: transparent;
+        border: 1px solid var(--color-border-strong);
+        color: var(--color-text);
+    }
+
+        .manager-report-action--outline:hover {
+            background-color: var(--color-primary-light);
+            border-color: var(--color-primary);
+            color: var(--color-primary-dark);
+        }
+
+    .manager-report-action--soft {
+        background-color: var(--color-primary-light);
+        border: 1px solid transparent;
+        color: var(--color-primary-dark);
+    }
+
+        .manager-report-action--soft:hover {
+            background-color: var(--color-primary);
+            color: #fff;
+        }
+
+
+    /* =====================================================
+               MONTHLY ACTIONS
+            ====================================================== */
+
+    .manager-report-action--monthly {
+        background-color: var(--color-success);
+        border: 1px solid var(--color-success);
+        color: #fff;
+    }
+
+        .manager-report-action--monthly:hover {
+            background-color: #5D9E76;
+            color: #fff;
+        }
+
+    .manager-report-action--outline-monthly {
+        background-color: transparent;
+        border: 1px solid var(--color-success);
+        color: #4D9667;
+    }
+
+        .manager-report-action--outline-monthly:hover {
+            background-color: #EAF7EF;
+        }
+
+    .manager-report-action--soft-monthly {
+        background-color: #EAF7EF;
+        border: 1px solid transparent;
+        color: #4D9667;
+    }
+
+        .manager-report-action--soft-monthly:hover {
+            background-color: var(--color-success);
+            color: #fff;
+        }
+
+
+    /* =====================================================
+               FINANCIAL ACTIONS
+            ====================================================== */
+
+    .manager-report-action--financial {
+        background-color: #E99A08;
+        border: 1px solid #E99A08;
+        color: #fff;
+    }
+
+        .manager-report-action--financial:hover {
+            background-color: #D58600;
+            color: #fff;
+        }
+
+    .manager-report-action--outline-financial {
+        background-color: transparent;
+        border: 1px solid #E99A08;
+        color: #D58600;
+    }
+
+        .manager-report-action--outline-financial:hover {
+            background-color: #FFF4DE;
+        }
+
+    .manager-report-action--soft-financial {
+        background-color: #FFF4DE;
+        border: 1px solid transparent;
+        color: #D58600;
+    }
+
+        .manager-report-action--soft-financial:hover {
+            background-color: #E99A08;
+            color: #fff;
+        }
+
+
+    /* =====================================================
+               ANIMAL ACTIONS
+            ====================================================== */
+
+    .manager-report-action--animal {
+        background-color: #8064D9;
+        border: 1px solid #8064D9;
+        color: #fff;
+    }
+
+        .manager-report-action--animal:hover {
+            background-color: #6D52C5;
+            color: #fff;
+        }
+
+    .manager-report-action--outline-animal {
+        background-color: transparent;
+        border: 1px solid #8064D9;
+        color: #7253D1;
+    }
+
+        .manager-report-action--outline-animal:hover {
+            background-color: #F0EAFE;
+        }
+
+    .manager-report-action--soft-animal {
+        background-color: #F0EAFE;
+        border: 1px solid transparent;
+        color: #7253D1;
+    }
+
+        .manager-report-action--soft-animal:hover {
+            background-color: #8064D9;
+            color: #fff;
+        }
+
+
+    /* =====================================================
+               RESPONSIVE
+            ====================================================== */
+
+    @@media (max-width: 1200px) {
+
+        .manager-report-stat-grid--four {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .manager-report-stat:nth-child(2) {
+            border-right: none;
+        }
+
+        .manager-report-stat:nth-child(-n + 2) {
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .manager-report-stat-grid--three .manager-report-stat {
+            padding: 0.75rem 0.6rem;
+        }
+    }
+
+
+    @@media (max-width: 900px) {
+
+        .manager-report-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .manager-report-header {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .manager-report-breadcrumb {
+            padding-top: 0;
+        }
+    }
+
+
+    @@media (max-width: 600px) {
+
+        .manager-report-card {
+            padding: 1rem;
+        }
+
+        .manager-report-card-header {
+            flex-direction: column;
+        }
+
+        .manager-report-date-badge {
+            align-self: flex-start;
+        }
+
+        .manager-report-stat-grid--four,
+        .manager-report-stat-grid--three {
+            grid-template-columns: 1fr;
+        }
+
+        .manager-report-stat {
+            border-right: none !important;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+            .manager-report-stat:last-child {
+                border-bottom: none;
+            }
+
+        .manager-report-check-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .manager-report-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .manager-report-action {
+            width: 100%;
+        }
+
+        .manager-report-title {
+            font-size: 1.4rem;
+        }
+
+        .manager-report-description {
+            font-size: 0.8rem;
+        }
+    }
+
+</style>

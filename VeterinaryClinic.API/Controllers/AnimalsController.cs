@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using System.Security.Claims;
 using VeterinaryClinic.Business.Dtos.AnimalDtos;
 using VeterinaryClinic.Business.Services;

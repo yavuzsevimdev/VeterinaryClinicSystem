@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,6 +19,10 @@ namespace VeterinaryClinic.UI.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Dashboard", "Home");
+            }
             return View();
         }
 
@@ -28,16 +31,16 @@ namespace VeterinaryClinic.UI.Controllers
         {
             var result = await _accountService.LoginAsync(dto);
             if (result == null)
-                return View();
+            {
+                ViewBag.LoginError = "Email veya şifre hatalı!";
+                return View(dto);
+            }
 
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(result);
-            var role = jwtToken.Claims
-                .FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
-            var fullName = jwtToken.Claims
-                .FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
-            var email = jwtToken.Claims
-                .FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            var role = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+            var fullName = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
+            var email = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
 
             var claims = new List<Claim>
             {

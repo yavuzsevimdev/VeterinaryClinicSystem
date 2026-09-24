@@ -1,0 +1,43 @@
+﻿<div class="payment-pay-summary">
+
+
+    <div class="payment-pay-summary-item total">
+
+        <span class="payment-pay-summary-item-label">
+            Toplam Tedavi Tutarı
+        </span>
+
+        <strong class="payment-pay-summary-item-value">
+            ₺<span id="totalTreatmentAmount">@ViewBag.TotalCost</span>
+        </strong>
+
+    </div>
+
+
+    <div class="payment-pay-summary-item paid">
+
+        <span class="payment-pay-summary-item-label">
+            Ödenen Tutar
+        </span>
+
+        <strong class="payment-pay-summary-item-value">
+            ₺<span id="alreadyPaidAmount">@ViewBag.AmountPaid</span>
+        </strong>
+
+    </div>
+
+
+    <div class="payment-pay-summary-item remaining">
+
+        <span class="payment-pay-summary-item-label">
+            Kalan Tutar
+        </span>
+
+        <strong id="remainingAmount"
+                class="payment-pay-summary-item-value">
+            ₺@ViewBag.RemaningAmount
+        </strong>
+
+    </div>
+
+</div>

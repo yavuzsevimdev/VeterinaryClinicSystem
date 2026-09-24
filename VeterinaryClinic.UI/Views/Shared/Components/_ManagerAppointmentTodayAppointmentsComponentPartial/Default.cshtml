@@ -1,0 +1,139 @@
+﻿@model List<AppointmentManagerDto>
+
+<section class="manager-appointment-section">
+
+
+    <div class="manager-appointment-section-header">
+
+        <div>
+
+            <h2 class="manager-appointment-section-title">
+                Bugünün Randevuları
+            </h2>
+
+            <p class="manager-appointment-section-description">
+                Bugün klinikte gerçekleşecek tüm randevular.
+            </p>
+
+        </div>
+
+
+        <span class="badge-ui badge-ui--primary">
+            @Model.Count() Randevu
+        </span>
+
+    </div>
+
+
+    <div class="manager-today-wrapper">
+
+        @foreach (var item in Model)
+        {
+            <div class="manager-today-row">
+
+
+                <div class="manager-today-time">
+
+                    <strong>
+                        @item.Time.ToString(@"hh\:mm")
+                    </strong>
+
+                    <span>Bugün</span>
+                </div>
+
+
+                <div class="manager-today-animal">
+
+                    <div class="manager-today-avatar">
+
+                        @if (!string.IsNullOrEmpty(item.Animal.ImageUrl))
+                        {
+                            <img src="@item.Animal.ImageUrl"
+                                 alt="@item.Animal.Name">
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-paw"></i>
+                        }
+
+                    </div>
+
+
+                    <div class="manager-today-animal-info">
+
+                        <span class="manager-today-animal-name">
+                            @item.Animal.Name
+                        </span>
+
+                        <span class="manager-today-animal-meta">
+                            @item.Animal.Species · @item.Animal.Breed
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="manager-today-owner">
+
+                    <span class="manager-today-owner-label">
+                        Sahibi
+                    </span>
+
+                    <span class="manager-today-owner-name">
+                        @item.Owner.FullName
+                    </span>
+
+                </div>
+
+
+                <span class="manager-today-type">
+                    @item.AppointmentType
+                </span>
+
+
+                <div class="manager-today-status">
+
+                    @if (item.Status == "Scheduled")
+                    {
+                        <span class="badge-ui badge-ui--info">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            Planlandı
+                        </span>
+                    }
+                    @if (item.Status == "Completed")
+                    {
+                        <span class="badge-ui badge-ui--success">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Tamamlandı
+                        </span>
+                    }
+                    @if (item.Status == "Cancelled")
+                    {
+                        <span class="badge-ui badge-ui--danger">
+                            <i class="fa-solid fa-calendar-xmark"></i>
+                            İptal Edildi
+                        </span>
+                    }
+
+                </div>
+
+
+                <div class="manager-today-action">
+
+                    <a href="/Appointment/Detail/@item.Id"
+                       class="manager-today-view"
+                       title="Randevu Detayı">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        }
+    </div>
+
+</section>

@@ -1,12 +1,5 @@
 ﻿@model List<LatestTreatmentDto>
 
-
-<!-- ==========================================================
-         TEDAVİ LİSTESİ
-         Şimdilik örnek veri.
-         Daha sonra API'den gelen Model ile dinamik hale getireceğiz.
-         ========================================================== -->
-
 <div class="animal-treatment-list">
 
     @foreach (var item in Model)
@@ -75,11 +68,6 @@
 
 </div>
 
-
-<!-- ==========================================================
-         TIBBİ NOT
-         ============================================================== -->
-
 <div class="animal-medical-history-box"
      style="margin-top: 1.5rem;">
 
@@ -111,10 +99,18 @@
 
         <p class="animal-medical-history-text"
            style="margin-top: 4px;">
-
-            @if (!string.IsNullOrWhiteSpace(Model[0].Notes))
+            @if(Model.Count > 0)
             {
-                @Model[0].Notes;
+                if (!string.IsNullOrWhiteSpace(Model[0].Notes))
+                {
+                    @Model[0].Notes
+                }
+                else
+                {
+                    <span class="is-empty">
+                        Henüz tıbbi geçmiş bilgisi eklenmemiş.
+                    </span>
+                }
             }
             else
             {
@@ -122,6 +118,7 @@
                     Henüz tıbbi geçmiş bilgisi eklenmemiş.
                 </span>
             }
+            
 
         </p>
 

@@ -1,0 +1,93 @@
+﻿@{
+    var owner = (UserDto)ViewBag.Owner;
+
+    var statusText = Model.Status switch
+    {
+        "Scheduled" => "Planlandı",
+        "Completed" => "Tamamlandı",
+        "Cancelled" => "İptal Edildi",
+        _ => Model.Status
+    };
+
+    var statusClass = Model.Status switch
+    {
+        "Scheduled" => "badge-ui--info",
+        "Completed" => "badge-ui--success",
+        "Cancelled" => "badge-ui--danger",
+        _ => "badge-ui--neutral"
+    };
+
+    var statusIcon = Model.Status switch
+    {
+        "Scheduled" => "fa-calendar-check",
+        "Completed" => "fa-circle-check",
+        "Cancelled" => "fa-calendar-xmark",
+        _ => "fa-calendar"
+    };
+}
+
+<section class="card-ui manager-appointment-detail-card">
+
+    <div class="section-header">
+
+        <div class="section-header-text">
+
+            <div class="section-header-title-row">
+
+                <div class="card-icon-tile is-primary">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-card-title">
+                        Sahip Bilgileri
+                    </h2>
+
+                    <p class="section-header-desc">
+                        Hayvan sahibine ait iletişim bilgileri
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="manager-appointment-detail-owner">
+
+        <div class="manager-appointment-detail-owner-avatar">
+
+            <i class="fa-solid fa-user"></i>
+
+        </div>
+
+        <div class="manager-appointment-detail-owner-info">
+
+            <strong>
+                @(owner?.FullName ?? "-")
+            </strong>
+
+            <div>
+
+                <span>
+                    <i class="fa-regular fa-envelope"></i>
+                    @(owner?.Email ?? "-")
+                </span>
+
+                @if (!string.IsNullOrEmpty(owner?.PhoneNumber))
+                {
+                    <span>
+                        <i class="fa-solid fa-phone"></i>
+                        @owner.PhoneNumber
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

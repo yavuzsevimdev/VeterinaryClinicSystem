@@ -1,0 +1,152 @@
+﻿@{
+    var animal = (AnimalDto)ViewBag.Animal;
+    var statusText = Model.Status switch
+    {
+        "Scheduled" => "Planlandı",
+        "Completed" => "Tamamlandı",
+        "Cancelled" => "İptal Edildi",
+        _ => Model.Status
+    };
+
+    var statusClass = Model.Status switch
+    {
+        "Scheduled" => "badge-ui--info",
+        "Completed" => "badge-ui--success",
+        "Cancelled" => "badge-ui--danger",
+        _ => "badge-ui--neutral"
+    };
+
+    var statusIcon = Model.Status switch
+    {
+        "Scheduled" => "fa-calendar-check",
+        "Completed" => "fa-circle-check",
+        "Cancelled" => "fa-calendar-xmark",
+        _ => "fa-calendar"
+    };
+}
+
+<section class="card-ui manager-appointment-detail-card">
+
+    <div class="section-header">
+
+        <div class="section-header-text">
+
+            <div class="section-header-title-row">
+
+                <div class="card-icon-tile is-secondary">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-card-title">
+                        Hayvan Bilgileri
+                    </h2>
+
+                    <p class="section-header-desc">
+                        Hastaya ait temel bilgiler
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="manager-appointment-detail-animal-info">
+
+        <div class="manager-appointment-detail-animal-photo">
+
+            @if (!string.IsNullOrEmpty(animal?.ImageUrl))
+            {
+                <img src="@animal.ImageUrl"
+                     alt="@animal.Name">
+            }
+            else
+            {
+                <i class="fa-solid fa-paw"></i>
+            }
+
+        </div>
+
+
+        <div class="manager-appointment-detail-animal-details">
+
+            <div class="manager-appointment-detail-name-row">
+
+                <h3>
+                    @(animal?.Name ?? "-")
+                </h3>
+
+                <span class="badge-ui badge-ui--primary">
+                    @(animal?.Species ?? "-")
+                </span>
+
+            </div>
+
+
+            <div class="manager-appointment-detail-info-grid">
+
+                <div class="manager-appointment-detail-info-item">
+
+                    <span>
+                        <i class="fa-solid fa-dna"></i>
+                        Irk
+                    </span>
+
+                    <strong>
+                        @(animal?.Breed ?? "-")
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-appointment-detail-info-item">
+
+                    <span>
+                        <i class="fa-solid fa-cake-candles"></i>
+                        Yaş
+                    </span>
+
+                    <strong>
+                        @(animal != null ? $"{animal.Age} yaş" : "-")
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-appointment-detail-info-item">
+
+                    <span>
+                        <i class="fa-solid fa-weight-scale"></i>
+                        Ağırlık
+                    </span>
+
+                    <strong>
+                        @(animal != null ? $"{animal.Weight} kg" : "-")
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-appointment-detail-info-item">
+
+                    <span>
+                        <i class="fa-solid fa-ruler-vertical"></i>
+                        Boy
+                    </span>
+
+                    <strong>
+                        @(animal != null ? $"{animal.Height} cm" : "-")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,830 +1,2453 @@
-﻿    <style>
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-      /* ==========================================================================
-         APPOINTMENT / CREATE (Customer) — yalnızca bu sayfaya özel stiller.
-         Global UI Foundation'ın sağladığı sınıflar kullanılır: .card-ui, .btn-ui*,
-         .badge-ui*, .card-icon-tile, .form-grid-2, .form-group-ui, .form-label-ui,
-         .form-control-ui, .input-icon-wrap*, .form-feedback, .form-actions,
-         .breadcrumb-ui, .section-header*, tipografi yardımcıları ve window.VetCareToast.
-         ========================================================================== */
+@if (User.IsInRole("Manager"))
+{
+   <style>
 
-      .appointment-create-page {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
+        .manager-appointment-create-page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 4px 0 32px;
+            color: var(--color-text);
+        }
 
-      .appointment-create-topline {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
+        .manager-appointment-create-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
 
-      .appointment-create-card { padding: 0; overflow: hidden; }
+        .manager-appointment-create-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
 
-      /* ---- Numaralı bölümler ---- */
+        .manager-appointment-create-header-icon {
+            width: 54px;
+            height: 54px;
+            min-width: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 1.2rem;
+        }
 
-      .appointment-create-section {
-        padding: 1.75rem 2rem;
-        border-bottom: 1px solid var(--color-border);
-      }
+        .manager-appointment-create-title {
+            margin: 0;
+            font-size: 1.65rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-text);
+        }
 
-      .appointment-create-section:last-child { border-bottom: none; background-color: var(--color-surface-alt); }
+        .manager-appointment-create-subtitle {
+            margin: 6px 0 0;
+            font-size: 0.84rem;
+            line-height: 1.5;
+            color: var(--color-muted);
+        }
 
-      .appointment-create-section-head {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        margin-bottom: 1.5rem;
-      }
 
-      .appointment-create-step {
-        flex: 0 0 auto;
-        width: 36px; height: 36px;
-        border-radius: 50%;
-        background: var(--gradient-primary);
-        color: #fff;
-        font-weight: 700; font-size: 0.9rem;
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: var(--shadow-primary-glow);
-      }
+        .manager-appointment-create-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+            gap: 20px;
+            align-items: start;
+        }
 
-      .appointment-create-section-title { font-size: 1.1rem; font-weight: 600; }
-      .appointment-create-section-desc { font-size: 0.8125rem; color: var(--color-muted); margin-top: 1px; }
 
-      /* Global .form-feedback metni kalıcı gösterir; burada yalnızca grup geçersizken görünür. */
-      .appointment-create-page .form-feedback { display: none; }
-      .appointment-create-page .form-group-ui.is-invalid .form-feedback { display: flex; }
+        .manager-appointment-create-form-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
 
-      .appointment-create-hint { font-size: 0.75rem; color: var(--color-muted-light); }
+        .manager-appointment-create-form-header {
+            padding: 20px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
 
-      /* ---- Bölüm 1: hayvan + bilgi paneli ---- */
+        .manager-appointment-create-form-header-icon {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.9rem;
+        }
 
-      .appointment-create-pet-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-        gap: 1.5rem;
-        align-items: start;
-      }
+        .manager-appointment-create-form-header h2 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
 
-      .appointment-create-select-lg { height: 54px; font-size: 0.95rem; font-weight: 500; }
+        .manager-appointment-create-form-header p {
+            margin: 3px 0 0;
+            font-size: 0.7rem;
+            color: var(--color-muted);
+        }
 
-      .appointment-create-pet-preview {
-        display: none;
-        align-items: center;
-        gap: 0.85rem;
-        margin-top: 0.85rem;
-        padding: 0.8rem 1rem;
-        border-radius: var(--radius-md);
-        background-color: var(--color-secondary-light);
-      }
+        .manager-appointment-create-form-body {
+            padding: 22px;
+        }
 
-      .appointment-create-pet-preview.is-visible { display: flex; }
 
-      .appointment-create-pet-avatar {
-        flex: 0 0 auto;
-        width: 44px; height: 44px; border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.8);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.4rem;
-      }
+        .manager-appointment-create-form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
-      .appointment-create-pet-name { font-weight: 700; font-size: 0.9rem; }
-      .appointment-create-pet-breed { font-size: 0.78rem; color: var(--color-muted); }
+            .manager-appointment-create-form-section +
+            .manager-appointment-create-form-section {
+                margin-top: 26px;
+                padding-top: 24px;
+                border-top: 1px solid var(--color-border);
+            }
 
-      .appointment-create-help {
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        padding: 1.15rem 1.25rem;
-        border-radius: var(--radius-lg);
-        background-color: var(--color-primary-light);
-        border: 1px solid var(--color-border);
-      }
+        .manager-appointment-create-section-heading {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
 
-      .appointment-create-help-title { font-size: 0.9rem; font-weight: 700; color: var(--color-primary-dark); }
-      .appointment-create-help-text { font-size: 0.8125rem; color: var(--color-muted); }
-      .appointment-create-help .btn-ui { align-self: flex-start; margin-top: 0.25rem; }
+            .manager-appointment-create-section-heading i {
+                color: var(--color-primary);
+                font-size: 0.82rem;
+            }
 
-      /* ---- Bölüm 2: randevu bilgileri ---- */
+            .manager-appointment-create-section-heading h3 {
+                margin: 0;
+                font-size: 0.82rem;
+                font-weight: 700;
+                color: var(--color-text);
+            }
 
-      .appointment-create-details-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 2rem;
-        align-items: start;
-      }
 
-      .appointment-create-col { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
+        /* =========================================================
+                                   FORM GRID
+                                   ========================================================= */
 
-      .appointment-create-date-shortcuts { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .manager-appointment-create-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
 
-      .appointment-create-chip {
-        padding: 0.35rem 0.8rem;
-        border-radius: var(--radius-pill);
-        border: 1px solid var(--color-border-strong);
-        background-color: var(--color-surface);
-        font-size: 0.75rem; font-weight: 500; color: var(--color-muted);
-        transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
-      }
+        .manager-appointment-create-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
 
-      .appointment-create-chip:hover { border-color: var(--color-primary); color: var(--color-primary-dark); background-color: var(--color-primary-light); }
+            .manager-appointment-create-form-group.full {
+                grid-column: 1 / -1;
+            }
 
-      /* Saat seçimi: radyo tabanlı slot düğmeleri (name="Time") */
-      .appointment-create-slots {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.5rem;
-      }
+        .manager-appointment-create-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
 
-      .appointment-create-slot { position: relative; }
-      .appointment-create-slot input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+            .manager-appointment-create-label span {
+                color: var(--color-danger);
+            }
 
-      .appointment-create-slot span {
-        display: block;
-        text-align: center;
-        padding: 0.55rem 0;
-        border-radius: var(--radius-sm);
-        border: 1.5px solid var(--color-border);
-        background-color: var(--color-surface-alt);
-        font-size: 0.8125rem; font-weight: 500; color: var(--color-text);
-        transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
-      }
 
-      .appointment-create-slot:hover span { border-color: var(--color-border-strong); background-color: var(--color-primary-light); }
-      .appointment-create-slot input:checked + span { background: var(--gradient-primary); border-color: transparent; color: #fff; font-weight: 600; }
-      .appointment-create-slot input:focus-visible + span { box-shadow: 0 0 0 4px rgba(108, 99, 168, 0.25); }
-      .appointment-create-slot input:disabled { cursor: not-allowed; }
-      .appointment-create-slot input:disabled + span { opacity: 0.4; text-decoration: line-through; background-color: var(--color-border); }
+        /* =========================================================
+                                   INPUT / SELECT
+                                   ========================================================= */
 
-      /* Randevu türü: görsel olarak öne çıkan seçici + açıklama kartı */
-      .appointment-create-type-card {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.9rem;
-        padding: 1rem 1.1rem;
-        border-radius: var(--radius-md);
-        background-color: var(--color-accent-light);
-        border: 1px dashed rgba(201, 107, 79, 0.35);
-        margin-top: 0.85rem;
-      }
+        .manager-appointment-create-input,
+        .manager-appointment-create-select,
+        .manager-appointment-create-textarea {
+            width: 100%;
+            border: 1px solid var(--color-border-strong);
+            border-radius: 10px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-family: inherit;
+            font-size: 0.75rem;
+            outline: none;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+        }
 
-      .appointment-create-type-card.is-empty { background-color: var(--color-surface-alt); border-color: var(--color-border-strong); }
+        .manager-appointment-create-input,
+        .manager-appointment-create-select {
+            height: 42px;
+            padding: 0 12px;
+        }
 
-      .appointment-create-type-icon {
-        flex: 0 0 auto;
-        width: 44px; height: 44px; border-radius: var(--radius-md);
-        background-color: rgba(255, 255, 255, 0.85); color: #c96b4f;
-        display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
-      }
+        .manager-appointment-create-textarea {
+            min-height: 105px;
+            padding: 12px;
+            resize: vertical;
+        }
 
-      .appointment-create-type-card.is-empty .appointment-create-type-icon { color: var(--color-muted-light); }
-      .appointment-create-type-name { font-weight: 700; font-size: 0.9rem; }
-      .appointment-create-type-text { font-size: 0.78rem; color: var(--color-muted); margin-top: 1px; }
+            .manager-appointment-create-input:focus,
+            .manager-appointment-create-select:focus,
+            .manager-appointment-create-textarea:focus {
+                border-color: var(--color-primary);
+                box-shadow: 0 0 0 3px rgba(108, 99, 168, 0.10);
+            }
 
-      .appointment-create-status {
-        display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-        padding: 0.8rem 1rem; border-radius: var(--radius-md);
-        background-color: var(--color-surface-alt); border: 1px solid var(--color-border);
-        font-size: 0.8125rem; color: var(--color-muted);
-      }
+            .manager-appointment-create-input::placeholder,
+            .manager-appointment-create-textarea::placeholder {
+                color: var(--color-muted);
+            }
 
-      .appointment-create-notes { margin-top: 1.5rem; }
 
-      /* ---- Bölüm 3: onay ---- */
+        /* =========================================================
+                                   CUSTOMER INFO
+                                   ========================================================= */
 
-      .appointment-create-info {
-        display: flex; align-items: flex-start; gap: 0.85rem;
-        padding: 1rem 1.15rem; border-radius: var(--radius-md);
-        background-color: var(--color-info-light); border: 1px solid rgba(127, 175, 208, 0.3);
-      }
+        .manager-appointment-create-selected-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            background: var(--color-surface-alt);
+        }
 
-      .appointment-create-info .card-icon-tile { background-color: rgba(255, 255, 255, 0.8); color: var(--color-info); width: 38px; height: 38px; }
-      .appointment-create-info-title { font-size: 0.875rem; font-weight: 700; }
-      .appointment-create-info-text { font-size: 0.8125rem; color: var(--color-muted); margin-top: 1px; }
+        .manager-appointment-create-user-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.85rem;
+        }
 
-      .appointment-create-summary {
-        display: flex; flex-wrap: wrap; gap: 0.5rem;
-        margin-top: 1rem;
-      }
+        .manager-appointment-create-user-info {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
 
-      .appointment-create-summary-item {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 0.4rem 0.85rem; border-radius: var(--radius-pill);
-        background-color: var(--color-surface); border: 1px solid var(--color-border);
-        font-size: 0.78rem; font-weight: 500; color: var(--color-text);
-      }
+        .manager-appointment-create-user-name {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
 
-      .appointment-create-summary-item i { color: var(--color-primary); }
-      .appointment-create-summary-item.is-empty { color: var(--color-muted-light); }
-      .appointment-create-summary-item.is-empty i { color: var(--color-muted-light); }
+        .manager-appointment-create-user-email {
+            font-size: 0.64rem;
+            color: var(--color-muted);
+        }
 
-      .appointment-create-actions { margin-top: 1.5rem; padding-top: 1.25rem; }
-      .appointment-create-actions .btn-ui--primary { min-width: 200px; padding-top: 0.85rem; padding-bottom: 0.85rem; }
 
-      /* ---- Responsive ---- */
+        /* =========================================================
+                                   ANIMAL INFO
+                                   ========================================================= */
 
-      @@media (max-width: 991.98px) {
-        .appointment-create-details-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-        .appointment-create-pet-grid { grid-template-columns: 1fr; }
-      }
+        .manager-appointment-create-selected-animal {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            background: var(--color-surface-alt);
+        }
 
-      @@media (max-width: 767.98px) {
-        .appointment-create-topline { flex-direction: column; align-items: stretch; }
-        .appointment-create-topline .btn-ui { width: 100%; }
-        .appointment-create-section { padding: 1.25rem; }
-        .appointment-create-slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      }
+        .manager-appointment-create-animal-image {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 50%;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
 
-      @@media (max-width: 419.98px) {
-        .appointment-create-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .appointment-create-actions .btn-ui--primary { min-width: 0; }
-      }
+            .manager-appointment-create-animal-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
 
+        .manager-appointment-create-animal-info {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .manager-appointment-create-animal-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .manager-appointment-create-animal-meta {
+            font-size: 0.65rem;
+            color: var(--color-muted);
+        }
+
+
+        /* =========================================================
+                                   SUMMARY CARD
+                                   ========================================================= */
+
+        .manager-appointment-create-summary-card {
+            position: sticky;
+            top: 92px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .manager-appointment-create-summary-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .manager-appointment-create-summary-icon {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.9rem;
+        }
+
+        .manager-appointment-create-summary-header h2 {
+            margin: 0;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .manager-appointment-create-summary-header p {
+            margin: 3px 0 0;
+            font-size: 0.66rem;
+            color: var(--color-muted);
+        }
+
+        .manager-appointment-create-summary-body {
+            padding: 20px;
+        }
+
+
+        /* =========================================================
+                                   EMPTY SUMMARY
+                                   ========================================================= */
+
+        .manager-appointment-create-summary-empty {
+            min-height: 270px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .manager-appointment-create-summary-empty-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            border-radius: 18px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 1.4rem;
+        }
+
+        .manager-appointment-create-summary-empty h3 {
+            margin: 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .manager-appointment-create-summary-empty p {
+            max-width: 240px;
+            margin: 7px 0 0;
+            font-size: 0.68rem;
+            line-height: 1.6;
+            color: var(--color-muted);
+        }
+
+
+        /* =========================================================
+                                   SUMMARY ACTIVE
+                                   ========================================================= */
+
+        .manager-appointment-create-summary-active {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .manager-appointment-create-summary-animal {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .manager-appointment-create-summary-animal-image {
+            width: 54px;
+            height: 54px;
+            min-width: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 14px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+            .manager-appointment-create-summary-animal-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .manager-appointment-create-summary-animal-name {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .manager-appointment-create-summary-animal-type {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.66rem;
+            color: var(--color-muted);
+        }
+
+
+        /* =========================================================
+                                   SUMMARY INFO
+                                   ========================================================= */
+
+        .manager-appointment-create-summary-list {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .manager-appointment-create-summary-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .manager-appointment-create-summary-item-icon {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--color-surface-alt);
+            color: var(--color-primary);
+            font-size: 0.72rem;
+        }
+
+        .manager-appointment-create-summary-item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .manager-appointment-create-summary-item-label {
+            font-size: 0.61rem;
+            color: var(--color-muted);
+        }
+
+        .manager-appointment-create-summary-item-value {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+
+        /* =========================================================
+                                   STATUS
+                                   ========================================================= */
+
+        .manager-appointment-create-summary-status {
+            margin-top: 2px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .manager-appointment-create-summary-status-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.62rem;
+            color: var(--color-muted);
+        }
+
+        .manager-appointment-create-summary-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #eef8f1;
+            color: var(--color-success);
+            font-size: 0.67rem;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+                                   FORM ACTIONS
+                                   ========================================================= */
+
+        .manager-appointment-create-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-border);
+        }
+
+
+        /* =========================================================
+                                   RESPONSIVE
+                                   ========================================================= */
+
+        @@media (max-width: 1100px) {
+
+            .manager-appointment-create-content {
+                grid-template-columns: 1fr;
+            }
+
+            .manager-appointment-create-summary-card {
+                position: static;
+            }
+        }
+
+
+        @@media (max-width: 768px) {
+
+            .manager-appointment-create-page {
+                gap: 20px;
+            }
+
+            .manager-appointment-create-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+                .manager-appointment-create-header .btn-ui {
+                    width: 100%;
+                }
+
+            .manager-appointment-create-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .manager-appointment-create-form-group.full {
+                grid-column: auto;
+            }
+
+            .manager-appointment-create-actions {
+                flex-direction: column-reverse;
+            }
+
+                .manager-appointment-create-actions
+                .btn-ui {
+                    width: 100%;
+                }
+        }
     </style>
 
-<div class="appointment-create-page">
+    <div class="manager-appointment-create-page">
 
-  <!-- ==================================================================
-       ÜST BÖLÜM: breadcrumb + başlık + geri dönüş
-       ================================================================== -->
-  <nav class="breadcrumb-ui" aria-label="Breadcrumb">
-    <span class="breadcrumb-ui-item"><a href="#">Randevular</a></span>
-    <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
-    <span class="breadcrumb-ui-item is-current">Yeni Randevu</span>
-  </nav>
 
-  <div class="appointment-create-topline">
-    <div>
-      <h1 class="text-page-title">Yeni Randevu</h1>
-      <p class="section-header-desc">Evcil hayvanınız için yeni bir randevu oluşturun</p>
+        <!-- =========================================================
+         PAGE HEADER
+         ========================================================= -->
+
+        <div class="manager-appointment-create-header">
+
+            <div class="manager-appointment-create-header-left">
+
+                <div class="manager-appointment-create-header-icon">
+
+                    <i class="fa-solid fa-calendar-plus"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h1 class="manager-appointment-create-title">
+                        Yeni Randevu Oluştur
+                    </h1>
+
+                    <p class="manager-appointment-create-subtitle">
+                        Hasta ve randevu bilgilerini girerek yeni bir randevu oluşturun.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <a href="/Appointment/Index"
+               class="btn-ui btn-ui--outline">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Randevulara Dön
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =========================================================
+         CONTENT
+         ========================================================= -->
+
+        <div class="manager-appointment-create-content">
+
+
+            <!-- =====================================================
+             LEFT FORM
+             ===================================================== -->
+            @await Component.InvokeAsync("_ManagerAppointmentUpdateFormComponentPartial", new { id = Model.Id })
+
+
+            <!-- =====================================================
+             RIGHT SUMMARY
+             ===================================================== -->
+
+            <aside class="manager-appointment-create-summary-card">
+
+
+                <div class="manager-appointment-create-summary-header">
+
+                    <div class="manager-appointment-create-summary-icon">
+
+                        <i class="fa-solid fa-clipboard-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Randevu Özeti
+                        </h2>
+
+                        <p>
+                            Seçtiğiniz bilgiler burada görüntülenir.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="manager-appointment-create-summary-body">
+
+
+                    <!-- EMPTY STATE -->
+
+                    <div class="manager-appointment-create-summary-empty"
+                         id="summaryEmpty">
+
+                        <div class="manager-appointment-create-summary-empty-icon">
+
+                            <i class="fa-solid fa-paw"></i>
+
+                        </div>
+
+                        <h3>
+                            Henüz randevu bilgisi yok
+                        </h3>
+
+                        <p>
+                            Randevu oluşturmak için önce müşteri ve hayvan seçimi yapın.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- ACTIVE SUMMARY -->
+
+                    <div class="manager-appointment-create-summary-active"
+                         id="summaryActive"
+                         style="display: none;">
+
+
+                        <!-- ANIMAL -->
+
+                        <div class="manager-appointment-create-summary-animal">
+
+                            <div class="manager-appointment-create-summary-animal-image">
+
+                                <img id="summaryAnimalImage"
+                                     src=""
+                                     alt="Hayvan">
+
+                            </div>
+
+
+                            <div>
+
+                                <span class="manager-appointment-create-summary-animal-name"
+                                      id="summaryAnimalName">
+
+                                    Boncuk
+
+                                </span>
+
+                                <span class="manager-appointment-create-summary-animal-type"
+                                      id="summaryAnimalType">
+
+                                    Golden Retriever
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- INFORMATION -->
+
+                        <div class="manager-appointment-create-summary-list">
+
+
+                            <!-- OWNER -->
+
+                            <div class="manager-appointment-create-summary-item">
+
+                                <div class="manager-appointment-create-summary-item-icon">
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                </div>
+
+
+                                <div class="manager-appointment-create-summary-item-content">
+
+                                    <span class="manager-appointment-create-summary-item-label">
+                                        Müşteri
+                                    </span>
+
+                                    <span class="manager-appointment-create-summary-item-value"
+                                          id="summaryCustomer">
+
+                                        -
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- TYPE -->
+
+                            <div class="manager-appointment-create-summary-item">
+
+                                <div class="manager-appointment-create-summary-item-icon">
+
+                                    <i class="fa-solid fa-stethoscope"></i>
+
+                                </div>
+
+
+                                <div class="manager-appointment-create-summary-item-content">
+
+                                    <span class="manager-appointment-create-summary-item-label">
+                                        Randevu Türü
+                                    </span>
+
+                                    <span class="manager-appointment-create-summary-item-value"
+                                          id="summaryType">
+
+                                        -
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- DATE -->
+
+                            <div class="manager-appointment-create-summary-item">
+
+                                <div class="manager-appointment-create-summary-item-icon">
+
+                                    <i class="fa-solid fa-calendar-days"></i>
+
+                                </div>
+
+
+                                <div class="manager-appointment-create-summary-item-content">
+
+                                    <span class="manager-appointment-create-summary-item-label">
+                                        Tarih
+                                    </span>
+
+                                    <span class="manager-appointment-create-summary-item-value"
+                                          id="summaryDate">
+
+                                        -
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- TIME -->
+
+                            <div class="manager-appointment-create-summary-item">
+
+                                <div class="manager-appointment-create-summary-item-icon">
+
+                                    <i class="fa-solid fa-clock"></i>
+
+                                </div>
+
+
+                                <div class="manager-appointment-create-summary-item-content">
+
+                                    <span class="manager-appointment-create-summary-item-label">
+                                        Saat
+                                    </span>
+
+                                    <span class="manager-appointment-create-summary-item-value"
+                                          id="summaryTime">
+
+                                        -
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- STATUS -->
+
+                        <div class="manager-appointment-create-summary-status">
+
+                            <span class="manager-appointment-create-summary-status-label">
+                                Randevu Durumu
+                            </span>
+
+
+                            <span class="manager-appointment-create-summary-status-badge">
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Planlandı
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+
+        </div>
+
     </div>
-    <a href="#" class="btn-ui btn-ui--ghost" id="appointmentBackBtn"><i class="bi bi-arrow-left"></i> Randevulara Dön</a>
-  </div>
 
-  <!-- ==================================================================
-       FORM — Appointment: AnimalId, Date, Time, AppointmentType, Notes, Status
-       (Id, Animal, Treatments, Payments formda yer almaz)
-       ================================================================== -->
-       @await Component.InvokeAsync("_AppointmentUpdateFormComponentPartial")
 
-</div>
 
 <script>
-  /* ==========================================================================
-     APPOINTMENT / CREATE — yalnızca sayfaya özel JavaScript.
-     API çağrısı / gönderim yoktur; doğrulama ve önizleme prototip amaçlıdır.
-     Global toast varsa (window.VetCareToast) onu kullanır.
-     ========================================================================== */
 
-  (function () {
-    'use strict';
+    // =========================================================
+    // ELEMENTS
+    // =========================================================
 
-    var form = document.getElementById('appointmentCreateForm');
-    if (!form) return;
+    const customerSelect =
+        document.getElementById("customerSelect");
 
-    var animalSelect = document.getElementById('AnimalId');
-    var dateInput = document.getElementById('Date');
-    var typeSelect = document.getElementById('AppointmentType');
-    var slotsWrap = document.getElementById('timeSlots');
+    const animalSelect =
+        document.getElementById("animalSelect");
 
-    var groups = {
-      animal: document.getElementById('animalGroup'),
-      date: document.getElementById('dateGroup'),
-      time: document.getElementById('timeGroup'),
-      type: document.getElementById('typeGroup')
-    };
+    const selectedCustomerBox =
+        document.getElementById("selectedCustomerBox");
 
-    function notify(message) {
-      if (window.VetCareToast && typeof window.VetCareToast.showToast === 'function') {
-        window.VetCareToast.showToast('info', message);
-      }
-    }
+    const selectedCustomerName =
+        document.getElementById("selectedCustomerName");
 
-    function pad(n) { return n < 10 ? '0' + n : String(n); }
+    const selectedCustomerEmail =
+        document.getElementById("selectedCustomerEmail");
 
-    function toIsoDate(d) {
-      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-    }
+    const selectedAnimalBox =
+        document.getElementById("selectedAnimalBox");
 
-    /* ---- Geçmiş tarihleri engelle ---- */
-    var today = new Date();
-    dateInput.min = toIsoDate(today);
+    const selectedAnimalImage =
+        document.getElementById("selectedAnimalImage");
 
-    /* ---- Saat slotları (09:00 – 17:30, 30 dk) ---- */
-    var SLOT_TIMES = [];
-    for (var h = 9; h <= 17; h++) {
-      SLOT_TIMES.push(pad(h) + ':00');
-      SLOT_TIMES.push(pad(h) + ':30');
-    }
+    const selectedAnimalName =
+        document.getElementById("selectedAnimalName");
 
-    slotsWrap.innerHTML = SLOT_TIMES.map(function (t) {
-      return '<label class="appointment-create-slot"><input type="radio" name="Time" value="' + t + '"><span>' + t + '</span></label>';
-    }).join('');
-
-    function refreshSlotAvailability() {
-      var isToday = dateInput.value === toIsoDate(new Date());
-      var now = new Date();
-      var nowMinutes = now.getHours() * 60 + now.getMinutes();
-
-      slotsWrap.querySelectorAll('input').forEach(function (input) {
-        var parts = input.value.split(':');
-        var minutes = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-        var disabled = isToday && minutes <= nowMinutes;
-        input.disabled = disabled;
-        if (disabled && input.checked) input.checked = false;
-      });
-    }
-
-    /* ---- Doğrulama yardımcıları ---- */
-    function setInvalid(group, invalid) { group.classList.toggle('is-invalid', invalid); }
-
-    function validateAnimal() { var ok = animalSelect.value !== ''; setInvalid(groups.animal, !ok); return ok; }
-    function validateType() { var ok = typeSelect.value !== ''; setInvalid(groups.type, !ok); return ok; }
-    function validateTime() { var ok = !!slotsWrap.querySelector('input:checked'); setInvalid(groups.time, !ok); return ok; }
-
-    function validateDate() {
-      var feedback = document.querySelector('#dateFeedback span');
-      var value = dateInput.value;
-      var ok = true;
-      if (!value) { ok = false; feedback.textContent = 'Lütfen bir tarih seçin.'; }
-      else if (value < dateInput.min) { ok = false; feedback.textContent = 'Geçmiş bir tarih seçemezsiniz.'; }
-      setInvalid(groups.date, !ok);
-      return ok;
-    }
-
-    /* ---- Önizlemeler ---- */
-    var petPreview = document.getElementById('petPreview');
-
-    function updateAnimal() {
-      var opt = animalSelect.options[animalSelect.selectedIndex];
-      if (animalSelect.value) {
-        document.getElementById('petPreviewIcon').textContent = opt.dataset.icon || '🐾';
-        document.getElementById('petPreviewName').textContent = opt.dataset.name;
-        document.getElementById('petPreviewBreed').textContent = opt.dataset.breed;
-        petPreview.classList.add('is-visible');
-      } else {
-        petPreview.classList.remove('is-visible');
-      }
-    }
-
-    function updateType() {
-      var opt = typeSelect.options[typeSelect.selectedIndex];
-      var card = document.getElementById('typeCard');
-      var hasValue = typeSelect.value !== '';
-      card.classList.toggle('is-empty', !hasValue);
-      document.getElementById('typeCardIcon').className = 'bi ' + (hasValue ? opt.dataset.icon : 'bi-clipboard2-pulse');
-      document.getElementById('typeCardName').textContent = hasValue ? opt.value : 'Randevu türü seçilmedi';
-      document.getElementById('typeCardText').textContent = hasValue ? opt.dataset.text : 'Seçtiğiniz türe göre kısa bir açıklama burada görünür.';
-    }
-
-    function setSummary(key, text, filled) {
-      var el = document.querySelector('[data-summary="' + key + '"]');
-      var icon = el.querySelector('i').outerHTML;
-      el.innerHTML = icon + ' ' + text;
-      el.classList.toggle('is-empty', !filled);
-    }
-
-    function updateSummary() {
-      var animalOpt = animalSelect.options[animalSelect.selectedIndex];
-      setSummary('animal', animalSelect.value ? animalOpt.dataset.name : 'Hayvan seçilmedi', !!animalSelect.value);
-
-      if (dateInput.value) {
-        var d = new Date(dateInput.value + 'T00:00:00');
-        setSummary('date', d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }), true);
-      } else {
-        setSummary('date', 'Tarih seçilmedi', false);
-      }
-
-      var checked = slotsWrap.querySelector('input:checked');
-      setSummary('time', checked ? checked.value : 'Saat seçilmedi', !!checked);
-      setSummary('type', typeSelect.value || 'Tür seçilmedi', !!typeSelect.value);
-    }
-
-    /* ---- Olaylar ---- */
-    animalSelect.addEventListener('change', function () { updateAnimal(); updateSummary(); if (groups.animal.classList.contains('is-invalid')) validateAnimal(); });
-    typeSelect.addEventListener('change', function () { updateType(); updateSummary(); if (groups.type.classList.contains('is-invalid')) validateType(); });
-    dateInput.addEventListener('change', function () { refreshSlotAvailability(); updateSummary(); if (groups.date.classList.contains('is-invalid')) validateDate(); if (groups.time.classList.contains('is-invalid')) validateTime(); });
-    slotsWrap.addEventListener('change', function () { updateSummary(); if (groups.time.classList.contains('is-invalid')) validateTime(); });
-
-    document.querySelectorAll('[data-date-offset]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var d = new Date();
-        d.setDate(d.getDate() + parseInt(btn.getAttribute('data-date-offset'), 10));
-        dateInput.value = toIsoDate(d);
-        dateInput.dispatchEvent(new Event('change'));
-      });
-    });
+    const selectedAnimalMeta =
+        document.getElementById("selectedAnimalMeta");
 
 
+    // =========================================================
+    // APPOINTMENT SUMMARY ELEMENTS
+    // =========================================================
 
-    document.getElementById('appointmentCancelBtn').addEventListener('click', function () {
-      form.reset();
-      refreshSlotAvailability();
-      updateAnimal();
-      updateType();
-      updateSummary();
-      Object.keys(groups).forEach(function (k) { setInvalid(groups[k], false); });
-    });
+    const summaryEmpty =
+        document.getElementById("summaryEmpty");
 
-    ['appointmentBackBtn', 'addAnimalBtn'].forEach(function (id) {
-      document.getElementById(id).addEventListener('click', function (e) { e.preventDefault(); });
-    });
+    const summaryActive =
+        document.getElementById("summaryActive");
 
-    refreshSlotAvailability();
-  })();
-</script>
-<script>
+    const summaryAnimalImage =
+        document.getElementById("summaryAnimalImage");
 
-    document.addEventListener("DOMContentLoaded", function () {
+    const summaryAnimalName =
+        document.getElementById("summaryAnimalName");
 
-        /* =========================================================
-           ELEMENTLER
-        ========================================================= */
+    const summaryAnimalType =
+        document.getElementById("summaryAnimalType");
 
-        const dateInput = document.getElementById("Date");
-        const timeInput = document.getElementById("Time");
-        const timeSlots = document.getElementById("timeSlots");
+    const summaryCustomer =
+        document.getElementById("summaryCustomer");
 
-        const appointmentType =
-            document.getElementById("AppointmentType");
+    const summaryType =
+        document.getElementById("summaryType");
 
-        const typeCard =
-            document.getElementById("typeCard");
+    const summaryDate =
+        document.getElementById("summaryDate");
 
-        const typeCardIcon =
-            document.getElementById("typeCardIcon");
+    const summaryTime =
+        document.getElementById("summaryTime");
 
-        const typeCardName =
-            document.getElementById("typeCardName");
+    const appointmentType =
+        document.getElementById("appointmentType");
 
-        const typeCardText =
-            document.getElementById("typeCardText");
+    const appointmentDate =
+        document.getElementById("appointmentDate");
+
+    const appointmentTime =
+        document.getElementById("appointmentTime");
 
 
-        /* =========================================================
-           MEVCUT RANDEVU SAATİ
-        ========================================================= */
+    // =========================================================
+    // TÜM HAYVANLARI SAKLA
+    // =========================================================
 
-        const currentTime = "@Model.Time.ToString(@"hh\:mm")";
-
-
-        /* =========================================================
-           RANDEVU TÜRLERİ
-        ========================================================= */
-
-        function updateAppointmentTypePreview() {
-
-            const selectedOption =
-                appointmentType.options[
-                    appointmentType.selectedIndex
-                ];
+    const allAnimalOptions =
+        Array.from(
+            animalSelect.querySelectorAll(
+                "option[data-owner-id]"
+            )
+        );
 
 
-            if (!selectedOption || !selectedOption.value) {
+    // =========================================================
+    // CUSTOMER CHANGE
+    // =========================================================
 
-                typeCard.classList.add("is-empty");
+    customerSelect.addEventListener(
+        "change",
+        function () {
 
-                typeCardIcon.className =
-                    "bi bi-clipboard2-pulse";
+            const selectedCustomerId =
+                this.value;
 
-                typeCardName.textContent =
-                    "Randevu türü seçilmedi";
 
-                typeCardText.textContent =
-                    "Seçtiğiniz türe göre kısa bir açıklama burada görünür.";
+            // -------------------------------------------------
+            // CUSTOMER SEÇİLMEDİ
+            // -------------------------------------------------
+
+            if (!selectedCustomerId) {
+
+                selectedCustomerBox.style.display =
+                    "none";
+
+                animalSelect.disabled =
+                    true;
+
+                animalSelect.innerHTML = `
+                    <option value="">
+                        Önce müşteri seçiniz
+                    </option>
+                `;
+
+                selectedAnimalBox.style.display =
+                    "none";
+
+                updateSummary();
 
                 return;
             }
 
 
-            const icon =
-                selectedOption.dataset.icon ||
-                "bi-clipboard2-pulse";
+            // -------------------------------------------------
+            // SEÇİLEN CUSTOMER
+            // -------------------------------------------------
+
+            const selectedCustomerOption =
+                this.options[this.selectedIndex];
 
 
-            const text =
-                selectedOption.dataset.text ||
-                "Seçilen randevu türü.";
+            const customerName =
+                selectedCustomerOption.textContent.trim();
 
 
-            typeCard.classList.remove("is-empty");
+            const customerEmail =
+                selectedCustomerOption.dataset.email;
 
 
-            typeCardIcon.className =
-                "bi " + icon;
+            // -------------------------------------------------
+            // CUSTOMER BİLGİLERİNİ GÖSTER
+            // -------------------------------------------------
+
+            selectedCustomerName.textContent =
+                customerName;
+
+            selectedCustomerEmail.textContent =
+                customerEmail || "E-posta bilgisi bulunmuyor";
 
 
-            typeCardName.textContent =
-                selectedOption.textContent.trim();
+            selectedCustomerBox.style.display =
+                "block";
 
 
-            typeCardText.textContent =
-                text;
+            // -------------------------------------------------
+            // HAYVANLARI FİLTRELE
+            // -------------------------------------------------
+
+            filterAnimals(selectedCustomerId);
+
         }
+    );
 
 
-        /*
-         * Randevu türü değiştiğinde preview güncelle
-         */
-        appointmentType.addEventListener(
-            "change",
-            function () {
+    // =========================================================
+    // FILTER ANIMALS
+    // =========================================================
 
-                updateAppointmentTypePreview();
-                updateSummary();
+    function filterAnimals(customerId) {
+
+        animalSelect.innerHTML = `
+            <option value="">
+                Hayvan seçiniz
+            </option>
+        `;
+
+
+        let animalCount = 0;
+
+
+        allAnimalOptions.forEach(
+            function (originalOption) {
+
+                const ownerId =
+                    originalOption.dataset.ownerId;
+
+
+                if (ownerId === customerId) {
+
+                    const option =
+                        originalOption.cloneNode(true);
+
+                    animalSelect.appendChild(option);
+
+                    animalCount++;
+
+                }
 
             }
         );
 
 
-        /*
-         * UPDATE SAYFASI AÇILDIĞINDA
-         * mevcut türün preview'ını göster
-         */
-        updateAppointmentTypePreview();
+        // -----------------------------------------------------
+        // HAYVAN YOK
+        // -----------------------------------------------------
+
+        if (animalCount === 0) {
+
+            animalSelect.innerHTML = `
+                <option value="">
+                    Bu müşteriye ait hayvan bulunamadı
+                </option>
+            `;
+
+            animalSelect.disabled =
+                true;
+
+            selectedAnimalBox.style.display =
+                "none";
+
+            updateSummary();
+
+            return;
+        }
 
 
-        /* =========================================================
-           SAATLER
-        ========================================================= */
+        // -----------------------------------------------------
+        // HAYVAN VAR
+        // -----------------------------------------------------
 
-        /*
-         * Buradaki saatleri Create sayfasındaki
-         * saat listen ile aynı tut.
-         */
+        animalSelect.disabled =
+            false;
 
-        const appointmentTimes = [
-            "09:00",
-            "09:30",
-            "10:00",
-            "10:30",
-            "11:00",
-            "11:30",
-            "12:00",
-            "12:30",
-            "13:30",
-            "14:00",
-            "14:30",
-            "15:00",
-            "15:30",
-            "16:00",
-            "16:30",
-            "17:00"
-        ];
+    }
 
 
-        function createTimeSlots() {
+    // =========================================================
+    // ANIMAL CHANGE
+    // =========================================================
 
-            /*
-             * Önce mevcut slotları temizle
-             */
-            timeSlots.innerHTML = "";
+    animalSelect.addEventListener(
+        "change",
+        function () {
 
-
-            appointmentTimes.forEach(function (time) {
-
-                /*
-                 * Ana slot container
-                 */
-                const slot =
-                    document.createElement("div");
-
-                slot.className =
-                    "appointment-create-slot";
+            const selectedOption =
+                this.options[this.selectedIndex];
 
 
-                /*
-                 * Radio input
-                 */
-                const radio =
-                    document.createElement("input");
+            if (!this.value) {
 
-                radio.type = "radio";
+                selectedAnimalBox.style.display =
+                    "none";
 
-                /*
-                 * Hidden Time input ile
-                 * çakışmaması için farklı name kullanıyoruz.
-                 */
-                radio.name = "TimeSlot";
+                updateSummary();
 
-                radio.value = time;
-
-                radio.id =
-                    "time_" + time.replace(":", "_");
+                return;
+            }
 
 
-                /*
-                 * Mevcut randevunun saati ise
-                 * otomatik seç.
-                 */
-                if (time === currentTime) {
+            const animalName =
+                selectedOption.dataset.name;
 
-                    radio.checked = true;
+            const species =
+                selectedOption.dataset.species;
 
-                    timeInput.value = time;
-                }
+            const breed =
+                selectedOption.dataset.breed;
 
+            const age =
+                selectedOption.dataset.age;
 
-                /*
-                 * Radio label/span
-                 */
-                const label =
-                    document.createElement("span");
+            const weight =
+                selectedOption.dataset.weight;
 
-                label.textContent =
-                    time;
+            const image =
+                selectedOption.dataset.image;
 
 
-                /*
-                 * Radio değiştiğinde
-                 * gerçek Time input'unu güncelle.
-                 */
-                radio.addEventListener(
-                    "change",
-                    function () {
+            // -------------------------------------------------
+            // HAYVAN BİLGİLERİ
+            // -------------------------------------------------
 
-                        if (radio.checked) {
-
-                            timeInput.value =
-                                radio.value;
-
-                            updateSummary();
-                        }
-
-                    }
-                );
+            selectedAnimalName.textContent =
+                animalName;
 
 
-                /*
-                 * Slot içine ekle
-                 */
-                slot.appendChild(radio);
-                slot.appendChild(label);
+            selectedAnimalMeta.textContent =
+                `${species} · ${breed} · ${age} yaş · ${weight} kg`;
 
-                timeSlots.appendChild(slot);
 
-            });
+            // -------------------------------------------------
+            // HAYVAN RESMİ
+            // -------------------------------------------------
+
+            if (image) {
+
+                selectedAnimalImage.src =
+                    image;
+
+                selectedAnimalImage.style.display =
+                    "block";
+
+            }
+            else {
+
+                selectedAnimalImage.src =
+                    "";
+
+            }
+
+
+            selectedAnimalImage.alt =
+                animalName;
+
+
+            selectedAnimalBox.style.display =
+                "block";
+
+
+            updateSummary();
+
+        }
+    );
+
+
+    // =========================================================
+    // SUMMARY
+    // =========================================================
+
+    function updateSummary() {
+
+        if (
+            !summaryEmpty ||
+            !summaryActive
+        ) {
+            return;
+        }
+
+
+        const selectedCustomerOption =
+            customerSelect.options[
+                customerSelect.selectedIndex
+            ];
+
+
+        const selectedAnimalOption =
+            animalSelect.options[
+                animalSelect.selectedIndex
+            ];
+
+
+        if (
+            !customerSelect.value ||
+            !animalSelect.value ||
+            !selectedAnimalOption
+        ) {
+
+            summaryEmpty.style.display =
+                "flex";
+
+            summaryActive.style.display =
+                "none";
+
+            return;
+        }
+
+
+        summaryEmpty.style.display =
+            "none";
+
+        summaryActive.style.display =
+            "flex";
+
+
+        // -----------------------------------------------------
+        // CUSTOMER
+        // -----------------------------------------------------
+
+        summaryCustomer.textContent =
+            selectedCustomerOption.textContent.trim();
+
+
+        // -----------------------------------------------------
+        // ANIMAL
+        // -----------------------------------------------------
+
+        const animalName =
+            selectedAnimalOption.dataset.name;
+
+        const species =
+            selectedAnimalOption.dataset.species;
+
+        const breed =
+            selectedAnimalOption.dataset.breed;
+
+        const image =
+            selectedAnimalOption.dataset.image;
+
+
+        summaryAnimalName.textContent =
+            animalName;
+
+
+        summaryAnimalType.textContent =
+            `${species} · ${breed}`;
+
+
+        if (image) {
+
+            summaryAnimalImage.src =
+                image;
 
         }
 
 
-        /*
-         * Sayfa açıldığında saatleri oluştur
-         */
-        createTimeSlots();
+        summaryAnimalImage.alt =
+            animalName;
 
 
-        /* =========================================================
-           TARİH KISA YOLLARI
-        ========================================================= */
+        // -----------------------------------------------------
+        // APPOINTMENT TYPE
+        // -----------------------------------------------------
 
-        document
-            .querySelectorAll("[data-date-offset]")
-            .forEach(function (button) {
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        const offset =
-                            parseInt(
-                                button.dataset.dateOffset
-                            );
+        summaryType.textContent =
+            appointmentType?.value || "-";
 
 
-                        const date =
-                            new Date();
+        // -----------------------------------------------------
+        // DATE
+        // -----------------------------------------------------
 
+        if (appointmentDate?.value) {
 
-                        date.setDate(
-                            date.getDate() + offset
-                        );
-
-
-                        const year =
-                            date.getFullYear();
-
-
-                        const month =
-                            String(
-                                date.getMonth() + 1
-                            ).padStart(2, "0");
-
-
-                        const day =
-                            String(
-                                date.getDate()
-                            ).padStart(2, "0");
-
-
-                        dateInput.value =
-                            `${year}-${month}-${day}`;
-
-
-                        updateSummary();
-
+            summaryDate.textContent =
+                new Date(
+                    appointmentDate.value + "T00:00:00"
+                ).toLocaleDateString(
+                    "tr-TR",
+                    {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
                     }
                 );
 
-            });
+        }
+        else {
 
-
-        /* =========================================================
-           ÖZET
-        ========================================================= */
-
-        function updateSummary() {
-
-            const summaryDate =
-                document.querySelector(
-                    '[data-summary="date"]'
-                );
-
-
-            const summaryTime =
-                document.querySelector(
-                    '[data-summary="time"]'
-                );
-
-
-            const summaryType =
-                document.querySelector(
-                    '[data-summary="type"]'
-                );
-
-
-            /* -------------------------
-               TARİH
-            ------------------------- */
-
-            if (dateInput.value) {
-
-                const date =
-                    new Date(
-                        dateInput.value + "T00:00:00"
-                    );
-
-
-                summaryDate.innerHTML =
-                    `<i class="bi bi-calendar3"></i>
-                     ${date.toLocaleDateString("tr-TR")}`;
-
-            }
-
-
-            /* -------------------------
-               SAAT
-            ------------------------- */
-
-            if (timeInput.value) {
-
-                summaryTime.innerHTML =
-                    `<i class="bi bi-clock"></i>
-                     ${timeInput.value}`;
-
-            }
-
-
-            /* -------------------------
-               RANDEVU TÜRÜ
-            ------------------------- */
-
-            if (appointmentType.value) {
-
-                const selectedOption =
-                    appointmentType.options[
-                        appointmentType.selectedIndex
-                    ];
-
-
-                summaryType.innerHTML =
-                    `<i class="bi bi-clipboard2-pulse"></i>
-                     ${selectedOption.textContent.trim()}`;
-
-            }
+            summaryDate.textContent =
+                "-";
 
         }
 
 
-        /* =========================================================
-           TARİH DEĞİŞİNCE
-        ========================================================= */
+        // -----------------------------------------------------
+        // TIME
+        // -----------------------------------------------------
 
-        dateInput.addEventListener(
+        summaryTime.textContent =
+            appointmentTime?.value || "-";
+
+    }
+
+
+    // =========================================================
+    // APPOINTMENT INPUT CHANGES
+    // =========================================================
+
+    if (appointmentType) {
+
+        appointmentType.addEventListener(
             "change",
             updateSummary
         );
 
+    }
 
-        /* =========================================================
-           İLK AÇILIŞTA ÖZET
-        ========================================================= */
 
-        updateSummary();
+    if (appointmentDate) {
 
-    });
+        appointmentDate.addEventListener(
+            "change",
+            updateSummary
+        );
 
-</script>
+    }
+
+
+    if (appointmentTime) {
+
+        appointmentTime.addEventListener(
+            "change",
+            updateSummary
+        );
+
+    }
+
+</script> 
+}
+
+
+@if (User.IsInRole("Customer"))
+{
+    <style>
+
+        /* ==========================================================================
+                 APPOINTMENT / CREATE (Customer) — yalnızca bu sayfaya özel stiller.
+                 Global UI Foundation'ın sağladığı sınıflar kullanılır: .card-ui, .btn-ui*,
+                 .badge-ui*, .card-icon-tile, .form-grid-2, .form-group-ui, .form-label-ui,
+                 .form-control-ui, .input-icon-wrap*, .form-feedback, .form-actions,
+                 .breadcrumb-ui, .section-header*, tipografi yardımcıları ve window.VetCareToast.
+                 ========================================================================== */
+
+        .appointment-create-page {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .appointment-create-topline {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .appointment-create-card {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* ---- Numaralı bölümler ---- */
+
+        .appointment-create-section {
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+            .appointment-create-section:last-child {
+                border-bottom: none;
+                background-color: var(--color-surface-alt);
+            }
+
+        .appointment-create-section-head {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .appointment-create-step {
+            flex: 0 0 auto;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-primary-glow);
+        }
+
+        .appointment-create-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .appointment-create-section-desc {
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+            margin-top: 1px;
+        }
+
+        /* Global .form-feedback metni kalıcı gösterir; burada yalnızca grup geçersizken görünür. */
+        .appointment-create-page .form-feedback {
+            display: none;
+        }
+
+        .appointment-create-page .form-group-ui.is-invalid .form-feedback {
+            display: flex;
+        }
+
+        .appointment-create-hint {
+            font-size: 0.75rem;
+            color: var(--color-muted-light);
+        }
+
+        /* ---- Bölüm 1: hayvan + bilgi paneli ---- */
+
+        .appointment-create-pet-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .appointment-create-select-lg {
+            height: 54px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .appointment-create-pet-preview {
+            display: none;
+            align-items: center;
+            gap: 0.85rem;
+            margin-top: 0.85rem;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            background-color: var(--color-secondary-light);
+        }
+
+            .appointment-create-pet-preview.is-visible {
+                display: flex;
+            }
+
+        .appointment-create-pet-avatar {
+            flex: 0 0 auto;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .appointment-create-pet-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .appointment-create-pet-breed {
+            font-size: 0.78rem;
+            color: var(--color-muted);
+        }
+
+        .appointment-create-help {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            padding: 1.15rem 1.25rem;
+            border-radius: var(--radius-lg);
+            background-color: var(--color-primary-light);
+            border: 1px solid var(--color-border);
+        }
+
+        .appointment-create-help-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-primary-dark);
+        }
+
+        .appointment-create-help-text {
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+        }
+
+        .appointment-create-help .btn-ui {
+            align-self: flex-start;
+            margin-top: 0.25rem;
+        }
+
+        /* ---- Bölüm 2: randevu bilgileri ---- */
+
+        .appointment-create-details-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .appointment-create-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            min-width: 0;
+        }
+
+        .appointment-create-date-shortcuts {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .appointment-create-chip {
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--color-border-strong);
+            background-color: var(--color-surface);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--color-muted);
+            transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+        }
+
+            .appointment-create-chip:hover {
+                border-color: var(--color-primary);
+                color: var(--color-primary-dark);
+                background-color: var(--color-primary-light);
+            }
+
+        /* Saat seçimi: radyo tabanlı slot düğmeleri (name="Time") */
+        .appointment-create-slots {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .appointment-create-slot {
+            position: relative;
+        }
+
+            .appointment-create-slot input {
+                position: absolute;
+                opacity: 0;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                cursor: pointer;
+            }
+
+            .appointment-create-slot span {
+                display: block;
+                text-align: center;
+                padding: 0.55rem 0;
+                border-radius: var(--radius-sm);
+                border: 1.5px solid var(--color-border);
+                background-color: var(--color-surface-alt);
+                font-size: 0.8125rem;
+                font-weight: 500;
+                color: var(--color-text);
+                transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+            }
+
+            .appointment-create-slot:hover span {
+                border-color: var(--color-border-strong);
+                background-color: var(--color-primary-light);
+            }
+
+            .appointment-create-slot input:checked + span {
+                background: var(--gradient-primary);
+                border-color: transparent;
+                color: #fff;
+                font-weight: 600;
+            }
+
+            .appointment-create-slot input:focus-visible + span {
+                box-shadow: 0 0 0 4px rgba(108, 99, 168, 0.25);
+            }
+
+            .appointment-create-slot input:disabled {
+                cursor: not-allowed;
+            }
+
+                .appointment-create-slot input:disabled + span {
+                    opacity: 0.4;
+                    text-decoration: line-through;
+                    background-color: var(--color-border);
+                }
+
+        /* Randevu türü: görsel olarak öne çıkan seçici + açıklama kartı */
+        .appointment-create-type-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.9rem;
+            padding: 1rem 1.1rem;
+            border-radius: var(--radius-md);
+            background-color: var(--color-accent-light);
+            border: 1px dashed rgba(201, 107, 79, 0.35);
+            margin-top: 0.85rem;
+        }
+
+            .appointment-create-type-card.is-empty {
+                background-color: var(--color-surface-alt);
+                border-color: var(--color-border-strong);
+            }
+
+        .appointment-create-type-icon {
+            flex: 0 0 auto;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #c96b4f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .appointment-create-type-card.is-empty .appointment-create-type-icon {
+            color: var(--color-muted-light);
+        }
+
+        .appointment-create-type-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .appointment-create-type-text {
+            font-size: 0.78rem;
+            color: var(--color-muted);
+            margin-top: 1px;
+        }
+
+        .appointment-create-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            background-color: var(--color-surface-alt);
+            border: 1px solid var(--color-border);
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+        }
+
+        .appointment-create-notes {
+            margin-top: 1.5rem;
+        }
+
+        /* ---- Bölüm 3: onay ---- */
+
+        .appointment-create-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            padding: 1rem 1.15rem;
+            border-radius: var(--radius-md);
+            background-color: var(--color-info-light);
+            border: 1px solid rgba(127, 175, 208, 0.3);
+        }
+
+            .appointment-create-info .card-icon-tile {
+                background-color: rgba(255, 255, 255, 0.8);
+                color: var(--color-info);
+                width: 38px;
+                height: 38px;
+            }
+
+        .appointment-create-info-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .appointment-create-info-text {
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+            margin-top: 1px;
+        }
+
+        .appointment-create-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .appointment-create-summary-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.4rem 0.85rem;
+            border-radius: var(--radius-pill);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+            .appointment-create-summary-item i {
+                color: var(--color-primary);
+            }
+
+            .appointment-create-summary-item.is-empty {
+                color: var(--color-muted-light);
+            }
+
+                .appointment-create-summary-item.is-empty i {
+                    color: var(--color-muted-light);
+                }
+
+        .appointment-create-actions {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+        }
+
+            .appointment-create-actions .btn-ui--primary {
+                min-width: 200px;
+                padding-top: 0.85rem;
+                padding-bottom: 0.85rem;
+            }
+
+        /* ---- Responsive ---- */
+
+        @@media (max-width: 991.98px) {
+            .appointment-create-details-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .appointment-create-pet-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @@media (max-width: 767.98px) {
+            .appointment-create-topline {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+                .appointment-create-topline .btn-ui {
+                    width: 100%;
+                }
+
+            .appointment-create-section {
+                padding: 1.25rem;
+            }
+
+            .appointment-create-slots {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @@media (max-width: 419.98px) {
+            .appointment-create-slots {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .appointment-create-actions .btn-ui--primary {
+                min-width: 0;
+            }
+        }
+
+    </style>
+
+    <div class="appointment-create-page">
+
+        <!-- ==================================================================
+       ÜST BÖLÜM: breadcrumb + başlık + geri dönüş
+       ================================================================== -->
+        <nav class="breadcrumb-ui" aria-label="Breadcrumb">
+            <span class="breadcrumb-ui-item"><a href="#">Randevular</a></span>
+            <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
+            <span class="breadcrumb-ui-item is-current">Randevu Güncelle</span>
+        </nav>
+
+        <div class="appointment-create-topline">
+            <div>
+                <h1 class="text-page-title">Randevu Güncelle</h1>
+                <p class="section-header-desc">Evcil hayvanınız için aktif randevunuzu düzenleyin.</p>
+            </div>
+            <a href="#" class="btn-ui btn-ui--ghost" id="appointmentBackBtn"><i class="bi bi-arrow-left"></i> Randevulara Dön</a>
+        </div>
+
+        <!-- ==================================================================
+       FORM — Appointment: AnimalId, Date, Time, AppointmentType, Notes, Status
+       (Id, Animal, Treatments, Payments formda yer almaz)
+       ================================================================== -->
+        @await Component.InvokeAsync("_AppointmentUpdateFormComponentPartial")
+
+    </div>
+
+    <script>
+        /* ==========================================================================
+           APPOINTMENT / CREATE — yalnızca sayfaya özel JavaScript.
+           API çağrısı / gönderim yoktur; doğrulama ve önizleme prototip amaçlıdır.
+           Global toast varsa (window.VetCareToast) onu kullanır.
+           ========================================================================== */
+
+        (function () {
+          'use strict';
+
+          var form = document.getElementById('appointmentCreateForm');
+          if (!form) return;
+
+          var animalSelect = document.getElementById('AnimalId');
+          var dateInput = document.getElementById('Date');
+          var typeSelect = document.getElementById('AppointmentType');
+          var slotsWrap = document.getElementById('timeSlots');
+
+          var groups = {
+            animal: document.getElementById('animalGroup'),
+            date: document.getElementById('dateGroup'),
+            time: document.getElementById('timeGroup'),
+            type: document.getElementById('typeGroup')
+          };
+
+          function notify(message) {
+            if (window.VetCareToast && typeof window.VetCareToast.showToast === 'function') {
+              window.VetCareToast.showToast('info', message);
+            }
+          }
+
+          function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+          function toIsoDate(d) {
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+          }
+
+          /* ---- Geçmiş tarihleri engelle ---- */
+          var today = new Date();
+          dateInput.min = toIsoDate(today);
+
+          /* ---- Saat slotları (09:00 – 17:30, 30 dk) ---- */
+          var SLOT_TIMES = [];
+          for (var h = 9; h <= 17; h++) {
+            SLOT_TIMES.push(pad(h) + ':00');
+            SLOT_TIMES.push(pad(h) + ':30');
+          }
+
+          slotsWrap.innerHTML = SLOT_TIMES.map(function (t) {
+            return '<label class="appointment-create-slot"><input type="radio" name="Time" value="' + t + '"><span>' + t + '</span></label>';
+          }).join('');
+
+          function refreshSlotAvailability() {
+            var isToday = dateInput.value === toIsoDate(new Date());
+            var now = new Date();
+            var nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+            slotsWrap.querySelectorAll('input').forEach(function (input) {
+              var parts = input.value.split(':');
+              var minutes = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+              var disabled = isToday && minutes <= nowMinutes;
+              input.disabled = disabled;
+              if (disabled && input.checked) input.checked = false;
+            });
+          }
+
+          /* ---- Doğrulama yardımcıları ---- */
+          function setInvalid(group, invalid) { group.classList.toggle('is-invalid', invalid); }
+
+          function validateAnimal() { var ok = animalSelect.value !== ''; setInvalid(groups.animal, !ok); return ok; }
+          function validateType() { var ok = typeSelect.value !== ''; setInvalid(groups.type, !ok); return ok; }
+          function validateTime() { var ok = !!slotsWrap.querySelector('input:checked'); setInvalid(groups.time, !ok); return ok; }
+
+          function validateDate() {
+            var feedback = document.querySelector('#dateFeedback span');
+            var value = dateInput.value;
+            var ok = true;
+            if (!value) { ok = false; feedback.textContent = 'Lütfen bir tarih seçin.'; }
+            else if (value < dateInput.min) { ok = false; feedback.textContent = 'Geçmiş bir tarih seçemezsiniz.'; }
+            setInvalid(groups.date, !ok);
+            return ok;
+          }
+
+          /* ---- Önizlemeler ---- */
+          var petPreview = document.getElementById('petPreview');
+
+          function updateAnimal() {
+            var opt = animalSelect.options[animalSelect.selectedIndex];
+            if (animalSelect.value) {
+              document.getElementById('petPreviewIcon').textContent = opt.dataset.icon || '🐾';
+              document.getElementById('petPreviewName').textContent = opt.dataset.name;
+              document.getElementById('petPreviewBreed').textContent = opt.dataset.breed;
+              petPreview.classList.add('is-visible');
+            } else {
+              petPreview.classList.remove('is-visible');
+            }
+          }
+
+          function updateType() {
+            var opt = typeSelect.options[typeSelect.selectedIndex];
+            var card = document.getElementById('typeCard');
+            var hasValue = typeSelect.value !== '';
+            card.classList.toggle('is-empty', !hasValue);
+            document.getElementById('typeCardIcon').className = 'bi ' + (hasValue ? opt.dataset.icon : 'bi-clipboard2-pulse');
+            document.getElementById('typeCardName').textContent = hasValue ? opt.value : 'Randevu türü seçilmedi';
+            document.getElementById('typeCardText').textContent = hasValue ? opt.dataset.text : 'Seçtiğiniz türe göre kısa bir açıklama burada görünür.';
+          }
+
+          function setSummary(key, text, filled) {
+            var el = document.querySelector('[data-summary="' + key + '"]');
+            var icon = el.querySelector('i').outerHTML;
+            el.innerHTML = icon + ' ' + text;
+            el.classList.toggle('is-empty', !filled);
+          }
+
+          function updateSummary() {
+            var animalOpt = animalSelect.options[animalSelect.selectedIndex];
+            setSummary('animal', animalSelect.value ? animalOpt.dataset.name : 'Hayvan seçilmedi', !!animalSelect.value);
+
+            if (dateInput.value) {
+              var d = new Date(dateInput.value + 'T00:00:00');
+              setSummary('date', d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }), true);
+            } else {
+              setSummary('date', 'Tarih seçilmedi', false);
+            }
+
+            var checked = slotsWrap.querySelector('input:checked');
+            setSummary('time', checked ? checked.value : 'Saat seçilmedi', !!checked);
+            setSummary('type', typeSelect.value || 'Tür seçilmedi', !!typeSelect.value);
+          }
+
+          /* ---- Olaylar ---- */
+          animalSelect.addEventListener('change', function () { updateAnimal(); updateSummary(); if (groups.animal.classList.contains('is-invalid')) validateAnimal(); });
+          typeSelect.addEventListener('change', function () { updateType(); updateSummary(); if (groups.type.classList.contains('is-invalid')) validateType(); });
+          dateInput.addEventListener('change', function () { refreshSlotAvailability(); updateSummary(); if (groups.date.classList.contains('is-invalid')) validateDate(); if (groups.time.classList.contains('is-invalid')) validateTime(); });
+          slotsWrap.addEventListener('change', function () { updateSummary(); if (groups.time.classList.contains('is-invalid')) validateTime(); });
+
+          document.querySelectorAll('[data-date-offset]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var d = new Date();
+              d.setDate(d.getDate() + parseInt(btn.getAttribute('data-date-offset'), 10));
+              dateInput.value = toIsoDate(d);
+              dateInput.dispatchEvent(new Event('change'));
+            });
+          });
+
+
+
+          document.getElementById('appointmentCancelBtn').addEventListener('click', function () {
+            form.reset();
+            refreshSlotAvailability();
+            updateAnimal();
+            updateType();
+            updateSummary();
+            Object.keys(groups).forEach(function (k) { setInvalid(groups[k], false); });
+          });
+
+          ['appointmentBackBtn', 'addAnimalBtn'].forEach(function (id) {
+            document.getElementById(id).addEventListener('click', function (e) { e.preventDefault(); });
+          });
+
+          refreshSlotAvailability();
+        })();
+        document.addEventListener("DOMContentLoaded", function () {
+
+              /* =========================================================
+                 ELEMENTLER
+              ========================================================= */
+
+              const dateInput = document.getElementById("Date");
+              const timeInput = document.getElementById("Time");
+              const timeSlots = document.getElementById("timeSlots");
+
+              const appointmentType =
+                  document.getElementById("AppointmentType");
+
+              const typeCard =
+                  document.getElementById("typeCard");
+
+              const typeCardIcon =
+                  document.getElementById("typeCardIcon");
+
+              const typeCardName =
+                  document.getElementById("typeCardName");
+
+              const typeCardText =
+                  document.getElementById("typeCardText");
+
+
+              /* =========================================================
+                 MEVCUT RANDEVU SAATİ
+              ========================================================= */
+
+              const currentTime = "@Model.Time.ToString(@"hh\:mm")";
+
+
+              /* =========================================================
+                 RANDEVU TÜRLERİ
+              ========================================================= */
+
+              function updateAppointmentTypePreview() {
+
+                  const selectedOption =
+                      appointmentType.options[
+                          appointmentType.selectedIndex
+                      ];
+
+
+                  if (!selectedOption || !selectedOption.value) {
+
+                      typeCard.classList.add("is-empty");
+
+                      typeCardIcon.className =
+                          "bi bi-clipboard2-pulse";
+
+                      typeCardName.textContent =
+                          "Randevu türü seçilmedi";
+
+                      typeCardText.textContent =
+                          "Seçtiğiniz türe göre kısa bir açıklama burada görünür.";
+
+                      return;
+                  }
+
+
+                  const icon =
+                      selectedOption.dataset.icon ||
+                      "bi-clipboard2-pulse";
+
+
+                  const text =
+                      selectedOption.dataset.text ||
+                      "Seçilen randevu türü.";
+
+
+                  typeCard.classList.remove("is-empty");
+
+
+                  typeCardIcon.className =
+                      "bi " + icon;
+
+
+                  typeCardName.textContent =
+                      selectedOption.textContent.trim();
+
+
+                  typeCardText.textContent =
+                      text;
+              }
+
+
+              /*
+               * Randevu türü değiştiğinde preview güncelle
+               */
+              appointmentType.addEventListener(
+                  "change",
+                  function () {
+
+                      updateAppointmentTypePreview();
+                      updateSummary();
+
+                  }
+              );
+
+
+              /*
+               * UPDATE SAYFASI AÇILDIĞINDA
+               * mevcut türün preview'ını göster
+               */
+              updateAppointmentTypePreview();
+
+
+              /* =========================================================
+                 SAATLER
+              ========================================================= */
+
+              /*
+               * Buradaki saatleri Create sayfasındaki
+               * saat listen ile aynı tut.
+               */
+
+              const appointmentTimes = [
+                  "09:00",
+                  "09:30",
+                  "10:00",
+                  "10:30",
+                  "11:00",
+                  "11:30",
+                  "12:00",
+                  "12:30",
+                  "13:30",
+                  "14:00",
+                  "14:30",
+                  "15:00",
+                  "15:30",
+                  "16:00",
+                  "16:30",
+                  "17:00"
+              ];
+
+
+              function createTimeSlots() {
+
+                  /*
+                   * Önce mevcut slotları temizle
+                   */
+                  timeSlots.innerHTML = "";
+
+
+                  appointmentTimes.forEach(function (time) {
+
+                      /*
+                       * Ana slot container
+                       */
+                      const slot =
+                          document.createElement("div");
+
+                      slot.className =
+                          "appointment-create-slot";
+
+
+                      /*
+                       * Radio input
+                       */
+                      const radio =
+                          document.createElement("input");
+
+                      radio.type = "radio";
+
+                      /*
+                       * Hidden Time input ile
+                       * çakışmaması için farklı name kullanıyoruz.
+                       */
+                      radio.name = "TimeSlot";
+
+                      radio.value = time;
+
+                      radio.id =
+                          "time_" + time.replace(":", "_");
+
+
+                      /*
+                       * Mevcut randevunun saati ise
+                       * otomatik seç.
+                       */
+                      if (time === currentTime) {
+
+                          radio.checked = true;
+
+                          timeInput.value = time;
+                      }
+
+
+                      /*
+                       * Radio label/span
+                       */
+                      const label =
+                          document.createElement("span");
+
+                      label.textContent =
+                          time;
+
+
+                      /*
+                       * Radio değiştiğinde
+                       * gerçek Time input'unu güncelle.
+                       */
+                      radio.addEventListener(
+                          "change",
+                          function () {
+
+                              if (radio.checked) {
+
+                                  timeInput.value =
+                                      radio.value;
+
+                                  updateSummary();
+                              }
+
+                          }
+                      );
+
+
+                      /*
+                       * Slot içine ekle
+                       */
+                      slot.appendChild(radio);
+                      slot.appendChild(label);
+
+                      timeSlots.appendChild(slot);
+
+                  });
+
+              }
+
+
+              /*
+               * Sayfa açıldığında saatleri oluştur
+               */
+              createTimeSlots();
+
+
+              /* =========================================================
+                 TARİH KISA YOLLARI
+              ========================================================= */
+
+              document
+                  .querySelectorAll("[data-date-offset]")
+                  .forEach(function (button) {
+
+                      button.addEventListener(
+                          "click",
+                          function () {
+
+                              const offset =
+                                  parseInt(
+                                      button.dataset.dateOffset
+                                  );
+
+
+                              const date =
+                                  new Date();
+
+
+                              date.setDate(
+                                  date.getDate() + offset
+                              );
+
+
+                              const year =
+                                  date.getFullYear();
+
+
+                              const month =
+                                  String(
+                                      date.getMonth() + 1
+                                  ).padStart(2, "0");
+
+
+                              const day =
+                                  String(
+                                      date.getDate()
+                                  ).padStart(2, "0");
+
+
+                              dateInput.value =
+                                  `${year}-${month}-${day}`;
+
+
+                              updateSummary();
+
+                          }
+                      );
+
+                  });
+
+
+              /* =========================================================
+                 ÖZET
+              ========================================================= */
+
+              function updateSummary() {
+
+                  const summaryDate =
+                      document.querySelector(
+                          '[data-summary="date"]'
+                      );
+
+
+                  const summaryTime =
+                      document.querySelector(
+                          '[data-summary="time"]'
+                      );
+
+
+                  const summaryType =
+                      document.querySelector(
+                          '[data-summary="type"]'
+                      );
+
+
+                  /* -------------------------
+                     TARİH
+                  ------------------------- */
+
+                  if (dateInput.value) {
+
+                      const date =
+                          new Date(
+                              dateInput.value + "T00:00:00"
+                          );
+
+
+                      summaryDate.innerHTML =
+                          `<i class="bi bi-calendar3"></i>
+                           ${date.toLocaleDateString("tr-TR")}`;
+
+                  }
+
+
+                  /* -------------------------
+                     SAAT
+                  ------------------------- */
+
+                  if (timeInput.value) {
+
+                      summaryTime.innerHTML =
+                          `<i class="bi bi-clock"></i>
+                           ${timeInput.value}`;
+
+                  }
+
+
+                  /* -------------------------
+                     RANDEVU TÜRÜ
+                  ------------------------- */
+
+                  if (appointmentType.value) {
+
+                      const selectedOption =
+                          appointmentType.options[
+                              appointmentType.selectedIndex
+                          ];
+
+
+                      summaryType.innerHTML =
+                          `<i class="bi bi-clipboard2-pulse"></i>
+                           ${selectedOption.textContent.trim()}`;
+
+                  }
+
+              }
+
+
+              /* =========================================================
+                 TARİH DEĞİŞİNCE
+              ========================================================= */
+
+              dateInput.addEventListener(
+                  "change",
+                  updateSummary
+              );
+
+
+              /* =========================================================
+                 İLK AÇILIŞTA ÖZET
+              ========================================================= */
+
+              updateSummary();
+
+          });
+    </script>
+
+}

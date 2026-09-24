@@ -1,0 +1,201 @@
+﻿@{
+    decimal generalCheck = Math.Round(ViewBag.GeneralCheck);
+    decimal followUpExamination = Math.Round(ViewBag.FollowUpExamination);
+    decimal vaccineAdministration = Math.Round(ViewBag.VaccineAdministration);
+    decimal skinExamination = Math.Round(ViewBag.SkinExamination);
+    decimal dentalExamination = Math.Round(ViewBag.DentalExamination);
+    decimal other = Math.Round(ViewBag.Other);
+}
+
+<div class="payment-card">
+
+    <div class="payment-card-header">
+
+        <div>
+
+            <h2 class="payment-card-title">
+                Randevu Türüne Göre Gelir
+            </h2>
+
+            <p class="payment-card-description">
+                Randevu türlerinden elde edilen tahsilat tutarları
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-revenue-list">
+
+
+        <div class="payment-revenue-item">
+
+            <div class="payment-revenue-label">
+
+                <span class="payment-revenue-icon">
+                    <i class="fa-solid fa-stethoscope"></i>
+                </span>
+
+                Genel Kontrol
+
+            </div>
+
+            <div class="payment-progress">
+
+                <div class="payment-progress-bar"
+                     style="width:@ViewBag.GeneralCheckRate%; background:#8D78E8;">
+                </div>
+
+            </div>
+
+            <div class="payment-revenue-value">
+                ₺ @generalCheck.ToString("0,0")
+            </div>
+
+        </div>
+
+
+        <div class="payment-revenue-item">
+
+            <div class="payment-revenue-label">
+
+                <span class="payment-revenue-icon"
+                      style="background:#EAF8F2;color:#2CA879;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                </span>
+
+                Kontrol Muayenesi
+
+            </div>
+
+            <div class="payment-progress">
+
+                <div class="payment-progress-bar"
+                     style="width:@ViewBag.FollowUpExaminationRate%; background:#2CA879;">
+                </div>
+
+            </div>
+
+            <div class="payment-revenue-value">
+                ₺ @followUpExamination.ToString("0,0")
+            </div>
+
+        </div>
+
+
+        <div class="payment-revenue-item">
+
+            <div class="payment-revenue-label">
+
+                <span class="payment-revenue-icon"
+                      style="background:#EDF6FC;color:#428BD5;">
+                    <i class="fa-solid fa-syringe"></i>
+                </span>
+
+                Aşı Uygulaması
+
+            </div>
+
+            <div class="payment-progress">
+
+                <div class="payment-progress-bar"
+                     style="width:@ViewBag.VaccineAdministrationRate%; background:#5D9BEF;">
+                </div>
+
+            </div>
+
+            <div class="payment-revenue-value">
+                ₺ @vaccineAdministration.ToString("0,0")
+            </div>
+
+        </div>
+
+
+        <div class="payment-revenue-item">
+
+            <div class="payment-revenue-label">
+
+                <span class="payment-revenue-icon"
+                      style="background:#FFF0EC;color:#D6816B;">
+                    <i class="fa-solid fa-scissors"></i>
+                </span>
+
+                Deri Muayenesi
+
+            </div>
+
+            <div class="payment-progress">
+
+                <div class="payment-progress-bar"
+                     style="width:@ViewBag.SkinExaminationRate%; background:#F08A46;">
+                </div>
+
+            </div>
+
+            <div class="payment-revenue-value">
+                ₺ @skinExamination.ToString("0,0")
+            </div>
+
+        </div>
+
+        <div class="payment-revenue-item">
+
+            <div class="payment-revenue-label">
+
+                <span class="payment-revenue-icon"
+                      style="background:#FFF0EC;color:#D6816B;">
+                    <i class="fa-solid fa-tooth"></i>
+                </span>
+
+                Diş Muayenesi
+
+            </div>
+
+            <div class="payment-progress">
+
+                <div class="payment-progress-bar"
+                     style="width:@ViewBag.DentalExaminationRate%; background:#F08A46;">
+                </div>
+
+            </div>
+
+            <div class="payment-revenue-value">
+                ₺ @dentalExamination.ToString("0,0")
+            </div>
+
+        </div>
+
+
+        <div class="payment-revenue-item">
+
+            <div class="payment-revenue-label">
+
+                <span class="payment-revenue-icon"
+                      style="background:#F0F0F5;color:#8990A5;">
+                    <i class="fa-solid fa-receipt"></i>
+                </span>
+
+                Diğer
+
+            </div>
+
+            <div class="payment-progress">
+
+                <div class="payment-progress-bar"
+                     style="width:@ViewBag.OtherRate%; background:#8990A5;">
+                </div>
+
+            </div>
+
+            <div class="payment-revenue-value">
+                ₺ @other.ToString("0,0")
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>

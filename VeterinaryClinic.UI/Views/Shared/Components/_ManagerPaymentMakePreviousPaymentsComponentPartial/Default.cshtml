@@ -1,0 +1,138 @@
+﻿@model List<PaymentDto?>
+@{
+    int count = 0;
+}
+
+<div class="payment-pay-card">
+
+    <div class="payment-pay-card-header">
+
+        <div class="payment-pay-card-icon primary">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+
+        <div>
+
+            <h2 class="payment-pay-card-title">
+                Önceki Ödeme Kayıtları
+            </h2>
+
+            <p class="payment-pay-card-description">
+                Bu randevu için daha önce yapılan ödemeler
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-pay-table-wrapper">
+
+        <table class="payment-pay-history-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Ödeme Tarihi</th>
+
+                    <th>Tutar</th>
+
+                    <th>Yöntem</th>
+
+                    <th>Durum</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+                @if (Model != null)
+                {
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+
+                            <td>
+                                @count;
+                            </td>
+
+                            <td>
+                                @item.PaymentDate.ToString(@"dd.MM.yyyy hh\:mm")
+                            </td>
+
+                            <td class="payment-pay-history-amount">
+                                ₺@item.AmountPaid.ToString("0,0")
+                            </td>
+
+                            <td>
+                                @if (item.PaymentMethod == "Kredi Kartı")
+                                {
+                                    <span class="payment-pay-method card">
+                                        <i class="fa-solid fa-credit-card"></i>
+                                        Kredi Kartı
+                                    </span>
+                                }
+                                else if (item.PaymentMethod == "Nakit")
+                                {
+                                    <span class="payment-pay-method cash">
+                                        <i class="fa-solid fa-money-bill-wave"></i>
+                                        Nakit
+                                    </span>
+                                }
+                                else if (item.PaymentMethod == "Havale/EFT")
+                                {
+                                    <span class="payment-pay-method transfer">
+                                        <i class="fa-solid fa-building-columns"></i>
+                                        Havele/EFT
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="payment-pay-method other">
+                                        <i class="fa-solid fa-wallet"></i>
+                                        Diğer
+                                    </span>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                <span class="payment-pay-status">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Tamamlandı
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    }
+
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="5">
+                            <p class="payment-pay-card-description">
+                                Bu randevu için daha önce ödeme yapılmamıştır.
+                            </p>
+                        </td>
+                    </tr>
+                }
+
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

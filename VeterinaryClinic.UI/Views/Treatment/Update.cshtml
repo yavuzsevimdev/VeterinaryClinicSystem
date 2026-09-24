@@ -1,0 +1,1915 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (User.IsInRole("Manager"))
+{
+    @model TreatmentDto
+
+    ViewData["Title"] = "Yeni Tedavi Kaydı";
+
+    <style>
+
+        /* =========================================================
+           PAGE
+           ========================================================= */
+
+        .manager-treatment-create-page {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .manager-treatment-create-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 1.5rem;
+
+            margin-bottom: 1.5rem;
+        }
+
+
+        .manager-treatment-create-title-wrapper {
+            display: flex;
+            align-items: center;
+
+            gap: 1rem;
+        }
+
+
+        .manager-treatment-back-button {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+
+            background: var(--color-surface);
+
+            color: var(--color-text);
+
+            text-decoration: none;
+
+            font-size: 1rem;
+
+            transition:
+                background-color var(--transition-fast),
+                border-color var(--transition-fast),
+                color var(--transition-fast);
+        }
+
+
+        .manager-treatment-back-button:hover {
+            background: var(--color-primary-light);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+
+        .manager-treatment-create-breadcrumb {
+            display: flex;
+            align-items: center;
+
+            gap: 0.4rem;
+
+            margin-bottom: 0.25rem;
+
+            color: var(--color-muted-light);
+
+            font-size: 0.65rem;
+        }
+
+
+        .manager-treatment-create-breadcrumb i {
+            font-size: 0.5rem;
+        }
+
+
+        .manager-treatment-create-breadcrumb .active {
+            color: var(--color-primary);
+
+            font-weight: 600;
+        }
+
+
+        .manager-treatment-create-title h1 {
+            margin: 0;
+
+            color: var(--color-text);
+
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+
+        .manager-treatment-create-title p {
+            margin: 0.25rem 0 0;
+
+            color: var(--color-muted);
+
+            font-size: 0.75rem;
+        }
+
+
+        .manager-treatment-create-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 0.6rem;
+        }
+
+
+        /* =========================================================
+           MAIN GRID
+           ========================================================= */
+
+        .manager-treatment-create-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 1rem;
+        }
+
+
+        /* =========================================================
+           CARD
+           ========================================================= */
+
+        .manager-treatment-create-card {
+            padding: 1.25rem;
+        }
+
+
+        .manager-treatment-create-card-header {
+            display: flex;
+            align-items: center;
+
+            gap: 0.75rem;
+
+            padding-bottom: 1rem;
+
+            margin-bottom: 1rem;
+
+            border-bottom: 1px solid var(--color-border);
+        }
+
+
+        .manager-treatment-create-card-icon {
+            width: 42px;
+            height: 42px;
+
+            min-width: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            font-size: 1rem;
+        }
+
+
+        .manager-treatment-create-card-icon.primary {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+
+        .manager-treatment-create-card-icon.secondary {
+            background: var(--color-secondary-light);
+            color: #4d9275;
+        }
+
+
+        .manager-treatment-create-card-icon.accent {
+            background: var(--color-accent-light);
+            color: #c87862;
+        }
+
+
+        .manager-treatment-create-card-icon.info {
+            background: var(--color-info-light);
+            color: var(--color-info);
+        }
+
+
+        .manager-treatment-create-card-header h2 {
+            margin: 0;
+
+            color: var(--color-text);
+
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+
+        .manager-treatment-create-card-header p {
+            margin: 0.2rem 0 0;
+
+            color: var(--color-muted);
+
+            font-size: 0.64rem;
+        }
+
+
+        /* =========================================================
+           FORM
+           ========================================================= */
+
+        .manager-treatment-form-field {
+            margin-bottom: 1rem;
+        }
+
+
+        .manager-treatment-form-field:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .manager-treatment-form-field > label,
+        .manager-treatment-label-row label {
+            display: block;
+
+            margin-bottom: 0.4rem;
+
+            color: var(--color-text);
+
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+
+
+        .manager-treatment-form-field label span {
+            color: var(--color-danger);
+        }
+
+
+        .manager-treatment-form-two-column {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 0.8rem;
+        }
+
+
+        /* =========================================================
+           FORM CONTROLS
+           ========================================================= */
+
+        .manager-treatment-create-card .form-control-ui {
+            display: block;
+
+            width: 100%;
+            height: 42px;
+
+            padding: 0.55rem 0.85rem;
+
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+
+            background: var(--color-surface);
+
+            color: var(--color-text);
+
+            font-family: inherit;
+            font-size: 0.75rem;
+
+            outline: none;
+
+            transition:
+                border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+        }
+
+
+        .manager-treatment-create-card .form-control-ui:focus {
+            border-color: var(--color-primary);
+
+            box-shadow: var(--shadow-focus);
+        }
+
+
+        .manager-treatment-create-card
+        .form-control-ui::placeholder {
+            color: var(--color-muted-light);
+        }
+
+
+        /* SELECT */
+        .manager-treatment-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+            .manager-treatment-select-wrapper > i {
+                position: absolute;
+                left: 0.9rem;
+                top: 50%;
+                z-index: 3;
+                transform: translateY(-50%);
+                color: var(--color-muted-light);
+                font-size: 0.8rem;
+                pointer-events: none;
+            }
+
+            .manager-treatment-select-wrapper select.form-control-ui {
+                width: 100%;
+                padding-left: 2.5rem !important;
+                padding-right: 2.25rem;
+                appearance: auto;
+                -webkit-appearance: auto;
+            }
+
+
+        /* INPUT ICON */
+
+        .manager-treatment-input-icon-wrapper {
+            position: relative;
+        }
+
+
+        .manager-treatment-input-icon-wrapper > i {
+            position: absolute;
+
+            left: 0.85rem;
+            top: 50%;
+
+            z-index: 2;
+
+            transform: translateY(-50%);
+
+            color: var(--color-muted-light);
+
+            pointer-events: none;
+        }
+
+
+        .manager-treatment-input-icon-wrapper input {
+            padding-left: 2.25rem !important;
+        }
+
+
+        /* =========================================================
+           ANIMAL PREVIEW
+           ========================================================= */
+
+        .manager-treatment-animal-preview {
+            display: flex;
+            align-items: center;
+
+            gap: 0.75rem;
+
+            min-height: 72px;
+
+            padding: 0.7rem 0.8rem;
+
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+
+            background: var(--color-surface-alt);
+
+            cursor: default;
+        }
+
+
+        .manager-treatment-animal-preview-icon {
+            width: 48px;
+            height: 48px;
+
+            min-width: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: var(--color-secondary-light);
+
+            color: #4d9275;
+
+            font-size: 1rem;
+        }
+
+
+        .manager-treatment-animal-preview-info {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+
+        .manager-treatment-animal-preview-info strong {
+            display: block;
+
+            color: var(--color-text);
+
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+
+        .manager-treatment-animal-preview-info span {
+            display: block;
+
+            margin-top: 0.2rem;
+
+            color: var(--color-muted);
+
+            font-size: 0.62rem;
+        }
+
+
+        .manager-treatment-animal-arrow {
+            color: var(--color-muted-light);
+
+            font-size: 0.7rem;
+        }
+
+
+        /* =========================================================
+           OWNER
+           ========================================================= */
+
+        .manager-treatment-owner-preview {
+            display: flex;
+            align-items: center;
+
+            gap: 0.7rem;
+
+            padding: 0.8rem;
+
+            border-radius: var(--radius-md);
+
+            background: var(--color-primary-light);
+        }
+
+
+        .manager-treatment-owner-icon {
+            width: 36px;
+            height: 36px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: var(--color-surface);
+
+            color: var(--color-primary);
+
+            font-size: 0.8rem;
+        }
+
+
+        .manager-treatment-owner-preview span {
+            display: block;
+
+            color: var(--color-muted);
+
+            font-size: 0.58rem;
+        }
+
+
+        .manager-treatment-owner-preview strong {
+            display: block;
+
+            margin-top: 0.15rem;
+
+            color: var(--color-text);
+
+            font-size: 0.68rem;
+        }
+
+
+        /* =========================================================
+           NOTES
+           ========================================================= */
+
+        .manager-treatment-notes-field {
+            position: relative;
+        }
+
+
+        .manager-treatment-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+        .manager-treatment-label-row label {
+            margin-bottom: 0.4rem;
+        }
+
+
+        .manager-treatment-label-row > span {
+            color: var(--color-muted-light);
+
+            font-size: 0.58rem;
+        }
+
+
+        .manager-treatment-textarea {
+            height: auto !important;
+
+            min-height: 145px;
+
+            resize: vertical;
+
+            line-height: 1.5;
+        }
+
+
+        .manager-treatment-character-count {
+            display: flex;
+            justify-content: flex-end;
+
+            margin-top: 0.3rem;
+
+            color: var(--color-muted-light);
+
+            font-size: 0.58rem;
+        }
+
+
+        /* =========================================================
+           PAYMENT
+           ========================================================= */
+
+        .manager-treatment-cost-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 1rem;
+
+            padding: 1rem;
+
+            border: 1px solid var(--color-border);
+
+            border-radius: var(--radius-md);
+
+            background: var(--color-surface-alt);
+        }
+
+
+        .manager-treatment-cost-label {
+            display: flex;
+            align-items: center;
+
+            gap: 0.7rem;
+        }
+
+
+        .manager-treatment-cost-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: var(--color-accent-light);
+
+            color: #c87862;
+
+            font-size: 0.9rem;
+        }
+
+
+        .manager-treatment-cost-label strong {
+            display: block;
+
+            color: var(--color-text);
+
+            font-size: 0.72rem;
+        }
+
+
+        .manager-treatment-cost-label span {
+            display: block;
+
+            margin-top: 0.15rem;
+
+            color: var(--color-muted);
+
+            font-size: 0.58rem;
+        }
+
+
+        .manager-treatment-cost-input {
+            position: relative;
+
+            width: 145px;
+        }
+
+
+        .manager-treatment-cost-input input {
+            width: 100%;
+            height: 42px;
+
+            padding: 0.55rem 2rem 0.55rem 0.8rem;
+
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+
+            background: var(--color-surface);
+
+            color: var(--color-text);
+
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+
+            outline: none;
+
+            text-align: right;
+        }
+
+
+        .manager-treatment-cost-input input:focus {
+            border-color: var(--color-primary);
+
+            box-shadow: var(--shadow-focus);
+        }
+
+
+        .manager-treatment-cost-input span {
+            position: absolute;
+
+            right: 0.75rem;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: var(--color-muted);
+
+            font-size: 0.72rem;
+            font-weight: 600;
+
+            pointer-events: none;
+        }
+
+
+        .manager-treatment-payment-info {
+            display: flex;
+
+            gap: 0.7rem;
+
+            margin-top: 1rem;
+
+            padding: 0.8rem;
+
+            border-radius: var(--radius-md);
+
+            background: var(--color-info-light);
+        }
+
+
+        .manager-treatment-payment-info-icon {
+            width: 30px;
+            height: 30px;
+
+            min-width: 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            color: var(--color-info);
+
+            font-size: 0.75rem;
+        }
+
+
+        .manager-treatment-payment-info strong {
+            display: block;
+
+            color: var(--color-text);
+
+            font-size: 0.62rem;
+        }
+
+
+        .manager-treatment-payment-info p {
+            margin: 0.2rem 0 0;
+
+            color: var(--color-muted);
+
+            font-size: 0.58rem;
+
+            line-height: 1.45;
+        }
+
+
+        /* =========================================================
+           SUMMARY
+           ========================================================= */
+
+        .manager-treatment-summary-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .manager-treatment-summary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 1rem;
+
+            padding: 0.7rem 0;
+
+            border-bottom: 1px solid var(--color-border);
+        }
+
+
+        .manager-treatment-summary-item span {
+            color: var(--color-muted);
+
+            font-size: 0.62rem;
+        }
+
+
+        .manager-treatment-summary-item strong {
+            color: var(--color-text);
+
+            font-size: 0.65rem;
+
+            text-align: right;
+        }
+
+
+        .manager-treatment-summary-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-top: 0.8rem;
+
+            padding: 0.9rem;
+
+            border-radius: var(--radius-md);
+
+            background: var(--color-primary-light);
+        }
+
+
+        .manager-treatment-summary-total span {
+            color: var(--color-primary-dark);
+
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+
+        .manager-treatment-summary-total strong {
+            color: var(--color-primary-dark);
+
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @@media (max-width: 1000px) {
+
+            .manager-treatment-create-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @@media (max-width: 768px) {
+
+            .manager-treatment-create-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .manager-treatment-create-actions {
+                width: 100%;
+            }
+
+
+            .manager-treatment-create-actions .btn-ui {
+                flex: 1;
+            }
+
+
+            .manager-treatment-form-two-column {
+                grid-template-columns: 1fr;
+            }
+
+
+            .manager-treatment-cost-box {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .manager-treatment-cost-input {
+                width: 100%;
+            }
+
+        }
+
+
+        @@media (max-width: 480px) {
+
+            .manager-treatment-create-title-wrapper {
+                align-items: flex-start;
+            }
+
+
+            .manager-treatment-back-button {
+                width: 42px;
+                height: 42px;
+            }
+
+
+            .manager-treatment-create-actions {
+                flex-direction: column;
+            }
+
+
+            .manager-treatment-create-actions .btn-ui {
+                width: 100%;
+            }
+
+        }
+        .manager-treatment-selection-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-top: 1.15rem;
+            padding: 0.85rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-surface-alt);
+        }
+
+
+        /* =========================================================
+           ANIMAL SUMMARY
+           ========================================================= */
+
+        .manager-treatment-summary-animal {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+
+        .manager-treatment-summary-animal-image {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--color-secondary-light);
+            color: #4d9275;
+            font-size: 0.95rem;
+        }
+
+
+            .manager-treatment-summary-animal-image img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+            }
+
+
+        .manager-treatment-summary-animal-info {
+            min-width: 0;
+        }
+
+
+            .manager-treatment-summary-animal-info span,
+            .manager-treatment-summary-appointment span,
+            .manager-treatment-summary-owner span {
+                display: block;
+                color: var(--color-muted-light);
+                font-size: 0.55rem;
+            }
+
+
+            .manager-treatment-summary-animal-info strong {
+                display: block;
+                margin-top: 0.1rem;
+                color: var(--color-text);
+                font-size: 0.72rem;
+            }
+
+
+            .manager-treatment-summary-animal-info small {
+                display: block;
+                margin-top: 0.15rem;
+                color: var(--color-muted);
+                font-size: 0.58rem;
+            }
+
+
+        /* =========================================================
+           APPOINTMENT
+           ========================================================= */
+
+        .manager-treatment-summary-appointment {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+
+        .manager-treatment-summary-appointment-icon {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.7rem;
+        }
+
+
+        .manager-treatment-summary-appointment strong {
+            display: block;
+            margin-top: 0.1rem;
+            color: var(--color-text);
+            font-size: 0.64rem;
+        }
+
+
+        /* =========================================================
+           OWNER
+           ========================================================= */
+
+        .manager-treatment-summary-owner {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+
+            .manager-treatment-summary-owner > i {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 9px;
+                background: var(--color-info-light);
+                color: var(--color-info);
+                font-size: 0.7rem;
+            }
+
+
+            .manager-treatment-summary-owner strong {
+                display: block;
+                margin-top: 0.1rem;
+                color: var(--color-text);
+                font-size: 0.64rem;
+            }
+
+
+        /* =========================================================
+           DISABLED SELECT
+           ========================================================= */
+
+        .manager-treatment-create-card
+        select.form-control-ui:disabled {
+            background-color: var(--color-surface-alt);
+            color: var(--color-muted-light);
+            opacity: 1;
+            cursor: not-allowed;
+        }
+    </style>
+
+<div class="manager-treatment-create-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+         ========================================================= -->
+
+    <div class="manager-treatment-create-header">
+
+        <div class="manager-treatment-create-title-wrapper">
+
+            <a href="/Treatment/Index"
+               class="manager-treatment-back-button">
+
+                <i class="bi bi-arrow-left"></i>
+
+            </a>
+
+
+            <div class="manager-treatment-create-title">
+
+                <div class="manager-treatment-create-breadcrumb">
+
+                    <span>Yönetim</span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                    <span>Tedaviler</span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                    <span class="active">
+                        Yeni Tedavi
+                    </span>
+
+                </div>
+
+
+                <h1>
+                    Yeni Tedavi Kaydı
+                </h1>
+
+                <p>
+                    Hayvanın tedavi bilgilerini ve ücret detayını kaydedin.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-treatment-create-actions">
+
+            <a href="/Treatment/Index"
+               class="btn-ui btn-ui--outline">
+
+                <i class="bi bi-x-lg"></i>
+
+                İptal
+
+            </a>
+
+
+            <button type="submit"
+                    form="createTreatmentForm"
+                    class="btn-ui btn-ui--primary">
+
+                <i class="bi bi-check-lg"></i>
+
+                Tedavi Kaydını Güncelle
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         FORM
+         ========================================================= -->
+         @await Component.InvokeAsync("_ManagerTreatmentUpdateFormComponentPartial")
+
+</div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /* =====================================================
+               ELEMENTS
+               ===================================================== */
+
+            const ownerSelect =
+                document.getElementById("ownerSelect");
+
+            const animalSelect =
+                document.getElementById("animalSelect");
+
+            const appointmentSelect =
+                document.getElementById("appointmentSelect");
+
+            const treatmentTypeSelect =
+                document.getElementById("TreatmentType");
+
+            const treatmentDateInput =
+                document.getElementById("Date");
+
+            const costInput =
+                document.getElementById("Cost");
+
+
+            /* =====================================================
+               ORIGINAL OPTIONS
+               ===================================================== */
+
+            const animalOptions =
+                Array.from(
+                    animalSelect.querySelectorAll(
+                        "option[data-owner-id]"
+                    )
+                );
+
+
+            const appointmentOptions =
+                Array.from(
+                    appointmentSelect.querySelectorAll(
+                        "option[data-animal-id]"
+                    )
+                );
+
+
+            /* =====================================================
+               OWNER → ANIMAL
+               ===================================================== */
+
+            ownerSelect.addEventListener("change", function () {
+
+                const ownerId = this.value;
+
+
+                /* Reset Animal */
+
+                animalSelect.innerHTML = "";
+
+
+                const defaultAnimalOption =
+                    document.createElement("option");
+
+                defaultAnimalOption.value = "";
+
+                defaultAnimalOption.textContent =
+                    ownerId
+                        ? "Hayvan seçin..."
+                        : "Önce sahip seçin...";
+
+                animalSelect.appendChild(
+                    defaultAnimalOption
+                );
+
+
+                /* Reset Appointment */
+
+                appointmentSelect.innerHTML = "";
+
+
+                const defaultAppointmentOption =
+                    document.createElement("option");
+
+                defaultAppointmentOption.value = "";
+
+                defaultAppointmentOption.textContent =
+                    "Önce hayvan seçin...";
+
+                appointmentSelect.appendChild(
+                    defaultAppointmentOption
+                );
+
+                appointmentSelect.disabled = true;
+
+
+                /* Owner seçilmediyse */
+
+                if (!ownerId) {
+
+                    animalSelect.disabled = true;
+
+                    resetSelectionSummary();
+
+                    return;
+                }
+
+
+                /* Owner'a ait hayvanları getir */
+
+                animalOptions.forEach(function (option) {
+
+                    if (
+                        option.dataset.ownerId === ownerId
+                    ) {
+
+                        animalSelect.appendChild(
+                            option.cloneNode(true)
+                        );
+
+                    }
+
+                });
+
+
+                animalSelect.disabled =
+                    animalSelect.options.length <= 1;
+
+
+                /* İlk kart özeti */
+
+                updateOwnerSummary();
+
+                resetAnimalSummary();
+
+                resetAppointmentSummary();
+
+
+                /* Alt Tedavi Özeti */
+
+                document.getElementById(
+                    "summaryAppointment"
+                ).textContent = "Seçilmedi";
+
+                document.getElementById(
+                    "summaryAnimal"
+                ).textContent = "Seçilmedi";
+
+            });
+
+
+
+            /* =====================================================
+               ANIMAL → APPOINTMENT
+               ===================================================== */
+
+            animalSelect.addEventListener("change", function () {
+
+                const animalId = this.value;
+
+
+                /* Reset Appointment */
+
+                appointmentSelect.innerHTML = "";
+
+
+                const defaultAppointmentOption =
+                    document.createElement("option");
+
+                defaultAppointmentOption.value = "";
+
+                defaultAppointmentOption.textContent =
+                    animalId
+                        ? "Aktif randevu seçin..."
+                        : "Önce hayvan seçin...";
+
+                appointmentSelect.appendChild(
+                    defaultAppointmentOption
+                );
+
+
+                /* Hayvan seçilmediyse */
+
+                if (!animalId) {
+
+                    appointmentSelect.disabled = true;
+
+                    resetAnimalSummary();
+
+                    resetAppointmentSummary();
+
+                    return;
+                }
+
+
+                /* Hayvana ait aktif randevuları getir */
+
+                appointmentOptions.forEach(function (option) {
+
+                    if (
+                        option.dataset.animalId === animalId
+                    ) {
+
+                        appointmentSelect.appendChild(
+                            option.cloneNode(true)
+                        );
+
+                    }
+
+                });
+
+
+                appointmentSelect.disabled =
+                    appointmentSelect.options.length <= 1;
+
+
+                /* İlk kart */
+
+                updateOwnerSummary();
+
+                updateAnimalSummary();
+
+                resetAppointmentSummary();
+
+
+                /* Alt Tedavi Özeti */
+
+                updateTreatmentAnimalSummary();
+
+            });
+
+
+
+            /* =====================================================
+               APPOINTMENT SELECTED
+               ===================================================== */
+
+            appointmentSelect.addEventListener(
+                "change",
+                function () {
+
+                    /* İlk kart */
+
+                    updateAppointmentSummary();
+
+
+                    /* Alt Tedavi Özeti */
+
+                    updateTreatmentAppointmentSummary();
+
+                }
+            );
+
+
+
+            /* =====================================================
+               TREATMENT TYPE
+               ===================================================== */
+
+            treatmentTypeSelect?.addEventListener(
+                "change",
+                function () {
+
+                    updateTreatmentSummary();
+
+                }
+            );
+
+
+
+            /* =====================================================
+               TREATMENT DATE
+               ===================================================== */
+
+            treatmentDateInput?.addEventListener(
+                "change",
+                function () {
+
+                    updateDateSummary();
+
+                }
+            );
+
+
+
+            /* =====================================================
+               COST
+               ===================================================== */
+
+            costInput?.addEventListener(
+                "input",
+                function () {
+
+                    updateCostSummary();
+
+                }
+            );
+
+
+
+            /* =====================================================
+               FIRST CARD
+               OWNER SUMMARY
+               ===================================================== */
+
+            function updateOwnerSummary() {
+
+                const selectedOption =
+                    ownerSelect.options[
+                        ownerSelect.selectedIndex
+                    ];
+
+
+                if (
+                    !selectedOption ||
+                    !selectedOption.value
+                ) {
+
+                    document.getElementById(
+                        "summaryOwnerName"
+                    ).textContent =
+                        "Henüz seçilmedi";
+
+                    return;
+                }
+
+
+                const ownerText =
+                    selectedOption.textContent.trim();
+
+
+                /*
+                 * Örneğin:
+                 *
+                 * Ayşe Çelik - ayse@gmail.com
+                 *
+                 * Sadece isim kısmını alıyoruz.
+                 */
+
+                const ownerName =
+                    ownerText.split(" - ")[0];
+
+
+                document.getElementById(
+                    "summaryOwnerName"
+                ).textContent =
+                    ownerName;
+
+            }
+
+
+
+            /* =====================================================
+               FIRST CARD
+               ANIMAL SUMMARY
+               ===================================================== */
+
+            function updateAnimalSummary() {
+
+                const selectedOption =
+                    animalSelect.options[
+                        animalSelect.selectedIndex
+                    ];
+
+
+                if (
+                    !selectedOption ||
+                    !selectedOption.value
+                ) {
+
+                    resetAnimalSummary();
+
+                    return;
+                }
+
+
+                const name =
+                    selectedOption.dataset.name;
+
+
+                const species =
+                    selectedOption.dataset.species;
+
+
+                const breed =
+                    selectedOption.dataset.breed;
+
+
+                const imageUrl =
+                    selectedOption.dataset.image;
+
+
+                /* Animal Name */
+
+                document.getElementById(
+                    "summaryAnimalName"
+                ).textContent =
+                    name || "Bilinmiyor";
+
+
+                /* Species + Breed */
+
+                document.getElementById(
+                    "summaryAnimalDetails"
+                ).textContent =
+                    `${species || "-"} · ${breed || "-"}`;
+
+
+                /* Image */
+
+                const image =
+                    document.getElementById(
+                        "summaryAnimalImage"
+                    );
+
+
+                const icon =
+                    document.getElementById(
+                        "summaryAnimalIcon"
+                    );
+
+
+                if (imageUrl) {
+
+                    image.src =
+                        imageUrl;
+
+                    image.style.display =
+                        "block";
+
+                    icon.style.display =
+                        "none";
+
+                }
+                else {
+
+                    image.src = "";
+
+                    image.style.display =
+                        "none";
+
+                    icon.style.display =
+                        "block";
+
+                }
+
+            }
+
+
+
+            /* =====================================================
+               FIRST CARD
+               APPOINTMENT SUMMARY
+               ===================================================== */
+
+            function updateAppointmentSummary() {
+
+                const selectedOption =
+                    appointmentSelect.options[
+                        appointmentSelect.selectedIndex
+                    ];
+
+
+                if (
+                    !selectedOption ||
+                    !selectedOption.value
+                ) {
+
+                    resetAppointmentSummary();
+
+                    return;
+                }
+
+
+                const date =
+                    selectedOption.dataset.date;
+
+
+                const time =
+                    selectedOption.dataset.time;
+
+
+                document.getElementById(
+                    "summaryAppointmentInfo"
+                ).textContent =
+                    `#AP-${selectedOption.value} · ${date} · ${time}`;
+
+            }
+
+
+
+            /* =====================================================
+               TREATMENT SUMMARY
+               ANIMAL
+               ===================================================== */
+
+            function updateTreatmentAnimalSummary() {
+
+                const selectedOption =
+                    animalSelect.options[
+                        animalSelect.selectedIndex
+                    ];
+
+
+                if (
+                    !selectedOption ||
+                    !selectedOption.value
+                ) {
+
+                    document.getElementById(
+                        "summaryAnimal"
+                    ).textContent =
+                        "Seçilmedi";
+
+                    return;
+                }
+
+
+                const name =
+                    selectedOption.dataset.name;
+
+
+                const species =
+                    selectedOption.dataset.species;
+
+
+                const breed =
+                    selectedOption.dataset.breed;
+
+
+                let text =
+                    name || "Bilinmiyor";
+
+
+                if (species || breed) {
+
+                    text +=
+                        ` (${species || "-"} · ${breed || "-"})`;
+
+                }
+
+
+                document.getElementById(
+                    "summaryAnimal"
+                ).textContent =
+                    text;
+
+            }
+
+
+
+            /* =====================================================
+               TREATMENT SUMMARY
+               APPOINTMENT
+               ===================================================== */
+
+            function updateTreatmentAppointmentSummary() {
+
+                const selectedOption =
+                    appointmentSelect.options[
+                        appointmentSelect.selectedIndex
+                    ];
+
+
+                if (
+                    !selectedOption ||
+                    !selectedOption.value
+                ) {
+
+                    document.getElementById(
+                        "summaryAppointment"
+                    ).textContent =
+                        "Seçilmedi";
+
+                    return;
+                }
+
+
+                const date =
+                    selectedOption.dataset.date;
+
+
+                const time =
+                    selectedOption.dataset.time;
+
+
+                document.getElementById(
+                    "summaryAppointment"
+                ).textContent =
+                    `#AP-${selectedOption.value} · ${date} · ${time}`;
+
+            }
+
+
+
+            /* =====================================================
+               TREATMENT SUMMARY
+               TREATMENT TYPE
+               ===================================================== */
+
+            function updateTreatmentSummary() {
+
+                const selectedOption =
+                    treatmentTypeSelect.options[
+                        treatmentTypeSelect.selectedIndex
+                    ];
+
+
+                if (
+                    !selectedOption ||
+                    !selectedOption.value
+                ) {
+
+                    document.getElementById(
+                        "summaryTreatment"
+                    ).textContent =
+                        "Girilmedi";
+
+                    return;
+                }
+
+
+                document.getElementById(
+                    "summaryTreatment"
+                ).textContent =
+                    selectedOption.textContent.trim();
+
+            }
+
+
+
+            /* =====================================================
+               TREATMENT SUMMARY
+               DATE + TIME
+               ===================================================== */
+
+            function updateDateSummary() {
+
+                const value =
+                    treatmentDateInput.value;
+
+
+                if (!value) {
+
+                    document.getElementById(
+                        "summaryDate"
+                    ).textContent =
+                        "-";
+
+                    return;
+                }
+
+
+                /*
+                 * datetime-local:
+                 *
+                 * 2026-09-24T14:30
+                 */
+
+                const parts =
+                    value.split("T");
+
+
+                const dateParts =
+                    parts[0].split("-");
+
+
+                const date =
+                    `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}`;
+
+
+                const time =
+                    parts[1] || "";
+
+
+                document.getElementById(
+                    "summaryDate"
+                ).textContent =
+                    `${date} ${time}`;
+
+            }
+
+
+
+            /* =====================================================
+               TREATMENT SUMMARY
+               COST
+               ===================================================== */
+
+            function updateCostSummary() {
+
+                const value =
+                    parseFloat(
+                        costInput.value.replace(",", ".")
+                    ) || 0;
+
+
+                document.getElementById(
+                    "summaryCost"
+                ).textContent =
+                    value.toLocaleString(
+                        "tr-TR",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    ) + " ₺";
+
+            }
+
+
+
+            /* =====================================================
+               RESET FIRST CARD - ANIMAL
+               ===================================================== */
+
+            function resetAnimalSummary() {
+
+                document.getElementById(
+                    "summaryAnimalName"
+                ).textContent =
+                    "Randevu seçildiğinde hayvan bilgisi görünecek";
+
+
+                document.getElementById(
+                    "summaryAnimalDetails"
+                ).textContent =
+                    "Hayvan bilgileri burada görüntülenecek";
+
+
+                const image =
+                    document.getElementById(
+                        "summaryAnimalImage"
+                    );
+
+
+                const icon =
+                    document.getElementById(
+                        "summaryAnimalIcon"
+                    );
+
+
+                image.src = "";
+
+                image.style.display =
+                    "none";
+
+                icon.style.display =
+                    "block";
+
+            }
+
+
+
+            /* =====================================================
+               RESET FIRST CARD - APPOINTMENT
+               ===================================================== */
+
+            function resetAppointmentSummary() {
+
+                document.getElementById(
+                    "summaryAppointmentInfo"
+                ).textContent =
+                    "Henüz seçilmedi";
+
+            }
+
+
+
+            /* =====================================================
+               RESET EVERYTHING
+               ===================================================== */
+
+            function resetSelectionSummary() {
+
+                resetAnimalSummary();
+
+                resetAppointmentSummary();
+
+
+                document.getElementById(
+                    "summaryOwnerName"
+                ).textContent =
+                    "Randevu seçildiğinde gösterilecek";
+
+            }
+
+
+
+            /* =====================================================
+               INITIAL STATE
+               ===================================================== */
+
+            updateTreatmentSummary();
+
+            updateDateSummary();
+
+            updateCostSummary();
+
+        });
+
+    </script>
+}

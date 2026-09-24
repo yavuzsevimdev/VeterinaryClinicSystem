@@ -2,13 +2,977 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@await Component.InvokeAsync("_AnimalIndexStyleComponentPartial")
-<div class="animal-page">
-    @await Component.InvokeAsync("_AnimalIndexHeaderComponentPartial")
-    @await Component.InvokeAsync("_AnimalIndexStatisticsComponentPartial")
-    @await Component.InvokeAsync("_AnimalIndexSearchAndFilterComponentPartial")
-    @await Component.InvokeAsync("_AnimalIndexAnimalListComponentPartial")
-    @await Component.InvokeAsync("_AnimalIndexUpcomingAppointmentsComponentPartial")
-    @await Component.InvokeAsync("_AnimalIndexReminderComponentPartial")
-</div>
-@await Component.InvokeAsync("_AnimalIndexScriptsComponentPartial")
+@if (User.IsInRole("Manager"))
+{
+    <!DOCTYPE html>
+    <html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Hayvan Yönetimi</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect"
+              href="https://fonts.gstatic.com"
+              crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+              rel="stylesheet">
+
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+        <style>
+
+                /* =========================================================
+                           MANAGER ANIMAL INDEX
+                           Sidebar + Topbar are provided by Layout
+                           ========================================================= */
+
+                .manager-animal-page {
+                    --ma-primary: #6C63A8;
+                    --ma-primary-dark: #554C91;
+                    --ma-primary-light: #EDEBF7;
+                    --ma-background: #F8F7FC;
+                    --ma-surface: #FFFFFF;
+                    --ma-surface-alt: #F7F6FB;
+                    --ma-text: #303044;
+                    --ma-muted: #7B7B90;
+                    --ma-border: #E7E4F2;
+                    --ma-border-strong: #D8D4E8;
+                    --ma-success: #71B58A;
+                    --ma-success-bg: #E7F5EC;
+                    --ma-warning: #E8B86A;
+                    --ma-warning-bg: #FFF5E3;
+                    --ma-danger: #DF7C89;
+                    --ma-danger-bg: #FDECEF;
+                    width: 100%;
+                    color: var(--ma-text);
+                    font-family: 'Poppins', sans-serif;
+                }
+
+
+                    /* =========================================================
+                           BREADCRUMB
+                           ========================================================= */
+
+                    .manager-animal-page .animal-breadcrumb {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        margin-bottom: 20px;
+                        font-size: 13px;
+                        color: var(--ma-muted);
+                    }
+
+                        .manager-animal-page .animal-breadcrumb a {
+                            color: var(--ma-muted);
+                            text-decoration: none;
+                            transition: color .2s ease;
+                        }
+
+                            .manager-animal-page .animal-breadcrumb a:hover {
+                                color: var(--ma-primary);
+                            }
+
+                        .manager-animal-page .animal-breadcrumb i {
+                            font-size: 11px;
+                        }
+
+                        .manager-animal-page .animal-breadcrumb .current {
+                            color: var(--ma-text);
+                            font-weight: 500;
+                        }
+
+
+                    /* =========================================================
+                           PAGE HEADER
+                           ========================================================= */
+
+                    .manager-animal-page .animal-page-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 20px;
+                        margin-bottom: 24px;
+                    }
+
+                    .manager-animal-page .animal-page-header-left {
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                    }
+
+                    .manager-animal-page .animal-page-icon {
+                        width: 58px;
+                        height: 58px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 16px;
+                        background: var(--ma-primary-light);
+                        color: var(--ma-primary);
+                        font-size: 27px;
+                        flex-shrink: 0;
+                    }
+
+                    .manager-animal-page .animal-page-title h1 {
+                        margin: 0 0 4px;
+                        color: var(--ma-text);
+                        font-size: 28px;
+                        line-height: 1.2;
+                        font-weight: 700;
+                    }
+
+                    .manager-animal-page .animal-page-title p {
+                        margin: 0;
+                        color: var(--ma-muted);
+                        font-size: 13px;
+                    }
+
+
+                    /* =========================================================
+                           ADD BUTTON
+                           ========================================================= */
+
+                    .manager-animal-page .animal-add-button {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                        min-height: 42px;
+                        padding: 0 17px;
+                        border: 1px solid transparent;
+                        border-radius: 10px;
+                        background: var(--ma-primary);
+                        color: #FFFFFF;
+                        font-family: inherit;
+                        font-size: 12px;
+                        font-weight: 600;
+                        text-decoration: none;
+                        transition: background-color .2s ease, transform .2s ease, box-shadow .2s ease;
+                    }
+
+                        .manager-animal-page .animal-add-button:hover {
+                            background: var(--ma-primary-dark);
+                            color: #FFFFFF;
+                            transform: translateY(-1px);
+                            box-shadow: 0 6px 14px rgba(108, 99, 168, .18);
+                        }
+
+
+                    /* =========================================================
+                           STATISTICS
+                           ========================================================= */
+
+                    .manager-animal-page .animal-stats {
+                        display: grid;
+                        grid-template-columns: repeat(4, minmax(0, 1fr));
+                        gap: 16px;
+                        margin-bottom: 20px;
+                    }
+
+                    .manager-animal-page .animal-stat-card {
+                        min-height: 120px;
+                        display: flex;
+                        align-items: center;
+                        gap: 14px;
+                        padding: 18px;
+                        border: 1px solid var(--ma-border);
+                        border-radius: 16px;
+                        background: var(--ma-surface);
+                        box-shadow: 0 3px 14px rgba(48, 48, 68, .035);
+                    }
+
+                    .manager-animal-page .animal-stat-icon {
+                        width: 52px;
+                        height: 52px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 15px;
+                        font-size: 23px;
+                        flex-shrink: 0;
+                    }
+
+                        .manager-animal-page .animal-stat-icon.primary {
+                            color: var(--ma-primary);
+                            background: #EEEAFB;
+                        }
+
+                        .manager-animal-page .animal-stat-icon.green {
+                            color: #4D9E69;
+                            background: #E5F5EA;
+                        }
+
+                        .manager-animal-page .animal-stat-icon.blue {
+                            color: #6097C5;
+                            background: #E9F3FB;
+                        }
+
+                        .manager-animal-page .animal-stat-icon.orange {
+                            color: #D79545;
+                            background: #FFF1DF;
+                        }
+
+                    .manager-animal-page .animal-stat-label {
+                        margin: 0 0 4px;
+                        color: var(--ma-muted);
+                        font-size: 11px;
+                        font-weight: 500;
+                    }
+
+                    .manager-animal-page .animal-stat-value {
+                        margin: 0 0 3px;
+                        color: var(--ma-text);
+                        font-size: 22px;
+                        line-height: 1.2;
+                        font-weight: 700;
+                    }
+
+                    .manager-animal-page .animal-stat-description {
+                        margin: 0;
+                        color: #9997A8;
+                        font-size: 10px;
+                    }
+
+
+                    /* =========================================================
+                           FILTER CARD
+                           ========================================================= */
+
+                    .manager-animal-page .animal-filter-card {
+                        display: grid;
+                        grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(150px, .8fr) auto auto;
+                        align-items: end;
+                        gap: 12px;
+                        padding: 18px;
+                        margin-bottom: 20px;
+                        border: 1px solid var(--ma-border);
+                        border-radius: 16px;
+                        background: var(--ma-surface);
+                        box-shadow: 0 3px 14px rgba(48, 48, 68, .035);
+                    }
+
+                    .manager-animal-page .animal-filter-group {
+                        min-width: 0;
+                    }
+
+                    .manager-animal-page .animal-filter-label {
+                        display: block;
+                        margin-bottom: 6px;
+                        color: #55556F;
+                        font-size: 11px;
+                        font-weight: 600;
+                    }
+
+                    .manager-animal-page .animal-search {
+                        position: relative;
+                    }
+
+                        .manager-animal-page .animal-search i {
+                            position: absolute;
+                            left: 13px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            color: var(--ma-muted);
+                            font-size: 15px;
+                            pointer-events: none;
+                        }
+
+                    .manager-animal-page .animal-filter-input,
+                    .manager-animal-page .animal-filter-select {
+                        width: 100%;
+                        height: 40px;
+                        padding: 0 12px;
+                        border: 1px solid var(--ma-border-strong);
+                        border-radius: 9px;
+                        outline: none;
+                        background: #FFFFFF;
+                        color: #55556F;
+                        font-family: inherit;
+                        font-size: 11px;
+                        transition: border-color .2s ease, box-shadow .2s ease;
+                    }
+
+                    .manager-animal-page .animal-search .animal-filter-input {
+                        padding-left: 36px;
+                    }
+
+                    .manager-animal-page .animal-filter-input:focus,
+                    .manager-animal-page .animal-filter-select:focus {
+                        border-color: var(--ma-primary);
+                        box-shadow: 0 0 0 3px rgba(108, 99, 168, .08);
+                    }
+
+
+                    /* =========================================================
+                           FILTER BUTTONS
+                           ========================================================= */
+
+                    .manager-animal-page .animal-filter-button {
+                        height: 40px;
+                        padding: 0 15px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 7px;
+                        border: 1px solid var(--ma-primary);
+                        border-radius: 9px;
+                        background: var(--ma-primary);
+                        color: #FFFFFF;
+                        font-family: inherit;
+                        font-size: 11px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all .2s ease;
+                    }
+
+                        .manager-animal-page .animal-filter-button:hover {
+                            background: var(--ma-primary-dark);
+                            border-color: var(--ma-primary-dark);
+                        }
+
+                    .manager-animal-page .animal-clear-button {
+                        height: 40px;
+                        padding: 0 14px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 7px;
+                        border: 1px solid var(--ma-border-strong);
+                        border-radius: 9px;
+                        background: #FFFFFF;
+                        color: var(--ma-muted);
+                        font-family: inherit;
+                        font-size: 11px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all .2s ease;
+                    }
+
+                        .manager-animal-page .animal-clear-button:hover {
+                            color: var(--ma-primary);
+                            border-color: var(--ma-primary);
+                            background: var(--ma-primary-light);
+                        }
+
+
+                    /* =========================================================
+                           TABLE CARD
+                           ========================================================= */
+
+                    .manager-animal-page .animal-table-card {
+                        overflow: hidden;
+                        border: 1px solid var(--ma-border);
+                        border-radius: 16px;
+                        background: var(--ma-surface);
+                        box-shadow: 0 3px 14px rgba(48, 48, 68, .035);
+                    }
+
+                    .manager-animal-page .animal-table-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 15px;
+                        padding: 18px 20px;
+                        border-bottom: 1px solid #EEEAF4;
+                    }
+
+                    .manager-animal-page .animal-table-title {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .manager-animal-page .animal-table-title-icon {
+                        width: 34px;
+                        height: 34px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 9px;
+                        background: var(--ma-primary-light);
+                        color: var(--ma-primary);
+                        font-size: 15px;
+                    }
+
+                    .manager-animal-page .animal-table-title h2 {
+                        margin: 0;
+                        color: var(--ma-text);
+                        font-size: 15px;
+                        font-weight: 700;
+                    }
+
+                    .manager-animal-page .animal-table-title span {
+                        color: var(--ma-muted);
+                        font-weight: 500;
+                    }
+
+                    .manager-animal-page .animal-table-wrapper {
+                        width: 100%;
+                        overflow-x: auto;
+                    }
+
+                    .manager-animal-page .animal-table {
+                        width: 100%;
+                        min-width: 1050px;
+                        border-collapse: collapse;
+                    }
+
+                        .manager-animal-page .animal-table thead {
+                            background: #F7F6FB;
+                        }
+
+                        .manager-animal-page .animal-table th {
+                            padding: 13px 14px;
+                            color: #5B5A72;
+                            font-size: 10px;
+                            font-weight: 700;
+                            text-align: left;
+                            white-space: nowrap;
+                        }
+
+                            .manager-animal-page .animal-table th:first-child {
+                                padding-left: 20px;
+                            }
+
+                        .manager-animal-page .animal-table td {
+                            padding: 12px 14px;
+                            border-top: 1px solid #F0EEF5;
+                            color: #55556D;
+                            font-size: 11px;
+                            vertical-align: middle;
+                        }
+
+                            .manager-animal-page .animal-table td:first-child {
+                                padding-left: 20px;
+                            }
+
+                        .manager-animal-page .animal-table tbody tr {
+                            transition: background-color .2s ease;
+                        }
+
+                            .manager-animal-page .animal-table tbody tr:hover {
+                                background: #FCFBFE;
+                            }
+
+
+                    /* =========================================================
+                           ANIMAL CELL
+                           ========================================================= */
+
+                    .manager-animal-page .animal-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        min-width: 155px;
+                    }
+
+                    .manager-animal-page .animal-image {
+                        width: 40px;
+                        height: 40px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                        border: 2px solid #F0EDF8;
+                        flex-shrink: 0;
+                    }
+
+                    .manager-animal-page .animal-name {
+                        margin: 0 0 2px;
+                        color: #303044;
+                        font-size: 12px;
+                        font-weight: 600;
+                    }
+
+                    .manager-animal-page .animal-id {
+                        margin: 0;
+                        color: #9997A8;
+                        font-size: 9px;
+                    }
+
+
+                    /* =========================================================
+                           OWNER
+                           ========================================================= */
+
+                    .manager-animal-page .animal-owner {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        white-space: nowrap;
+                    }
+
+                    .manager-animal-page .animal-owner-icon {
+                        width: 27px;
+                        height: 27px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 8px;
+                        background: #F1EFFA;
+                        color: var(--ma-primary);
+                        font-size: 12px;
+                    }
+
+                    .manager-animal-page .animal-owner-name {
+                        color: #55556D;
+                        font-size: 11px;
+                        font-weight: 500;
+                    }
+
+
+                    /* =========================================================
+                           SPECIES / BREED
+                           ========================================================= */
+
+                    .manager-animal-page .animal-species {
+                        color: #4E4D66;
+                        font-weight: 500;
+                    }
+
+                    .manager-animal-page .animal-breed {
+                        color: #77768B;
+                        white-space: nowrap;
+                    }
+
+
+                    /* =========================================================
+                           AGE
+                           ========================================================= */
+
+                    .manager-animal-page .animal-age {
+                        color: #5B5A70;
+                        white-space: nowrap;
+                    }
+
+
+                    /* =========================================================
+                           STATUS
+                           ========================================================= */
+
+                    .manager-animal-page .animal-status {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        padding: 5px 9px;
+                        border-radius: 20px;
+                        font-size: 9px;
+                        font-weight: 600;
+                        white-space: nowrap;
+                    }
+
+                        .manager-animal-page .animal-status.active {
+                            color: #4D9E69;
+                            background: var(--ma-success-bg);
+                        }
+
+                        .manager-animal-page .animal-status.treatment {
+                            color: #C88A35;
+                            background: var(--ma-warning-bg);
+                        }
+
+                        .manager-animal-page .animal-status.inactive {
+                            color: #D16C7A;
+                            background: var(--ma-danger-bg);
+                        }
+
+
+                    /* =========================================================
+                           LAST VISIT
+                           ========================================================= */
+
+                    .manager-animal-page .animal-last-visit {
+                        white-space: nowrap;
+                    }
+
+                    .manager-animal-page .animal-last-visit-date {
+                        display: block;
+                        color: #4F4E66;
+                        font-size: 11px;
+                        font-weight: 500;
+                    }
+
+                    .manager-animal-page .animal-last-visit-label {
+                        display: block;
+                        margin-top: 2px;
+                        color: #A09EAE;
+                        font-size: 9px;
+                    }
+
+
+                    /* =========================================================
+                           ACTIONS
+                           ========================================================= */
+
+                    .manager-animal-page .animal-actions {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        white-space: nowrap;
+                    }
+
+                    .manager-animal-page .animal-action {
+                        width: 34px;
+                        height: 34px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                        border: 1px solid var(--ma-border-strong);
+                        border-radius: 9px;
+                        background: #FFFFFF;
+                        color: var(--ma-primary);
+                        text-decoration: none;
+                        font-size: 13px;
+                        transition: all .2s ease;
+                    }
+
+                        .manager-animal-page .animal-action:hover {
+                            background: var(--ma-primary-light);
+                            border-color: #D3CDE8;
+                            color: var(--ma-primary-dark);
+                            transform: translateY(-1px);
+                            box-shadow: 0 4px 10px rgba(108, 99, 168, .08);
+                        }
+
+                        .manager-animal-page .animal-action.danger {
+                            color: var(--ma-danger);
+                        }
+
+                            .manager-animal-page .animal-action.danger:hover {
+                                background: var(--ma-danger-bg);
+                                border-color: #F0C6CD;
+                                color: #C95F6D;
+                            }
+
+
+                    /* =========================================================
+                           TABLE FOOTER
+                           ========================================================= */
+
+                    .manager-animal-page .animal-table-footer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 20px;
+                        padding: 16px 20px;
+                        border-top: 1px solid #EEEAF4;
+                    }
+
+                    .manager-animal-page .animal-result-count {
+                        margin: 0;
+                        color: var(--ma-muted);
+                        font-size: 11px;
+                    }
+
+                    .manager-animal-page .animal-pagination {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                    }
+
+                    .manager-animal-page .animal-page-button {
+                        width: 32px;
+                        height: 32px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 1px solid var(--ma-border);
+                        border-radius: 8px;
+                        background: #FFFFFF;
+                        color: var(--ma-primary);
+                        font-family: inherit;
+                        font-size: 11px;
+                        cursor: pointer;
+                        transition: all .2s ease;
+                    }
+
+                        .manager-animal-page .animal-page-button:hover {
+                            background: var(--ma-primary-light);
+                            border-color: #D5D0E8;
+                        }
+
+                        .manager-animal-page .animal-page-button.active {
+                            background: var(--ma-primary);
+                            border-color: var(--ma-primary);
+                            color: #FFFFFF;
+                        }
+
+                        .manager-animal-page .animal-page-button:disabled {
+                            color: #B8B5C3;
+                            background: #FAF9FC;
+                            cursor: not-allowed;
+                        }
+
+
+                /* =========================================================
+                           RESPONSIVE
+                           ========================================================= */
+
+                @@media (max-width: 1200px) {
+
+                    .manager-animal-page .animal-stats {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+
+                    .manager-animal-page .animal-filter-card {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                }
+
+
+                @@media (max-width: 700px) {
+
+                    .manager-animal-page .animal-page-header {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
+                    .manager-animal-page .animal-add-button {
+                        width: 100%;
+                    }
+
+                    .manager-animal-page .animal-stats {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .manager-animal-page .animal-filter-card {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .manager-animal-page .animal-table-footer {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
+                    .manager-animal-page .animal-pagination {
+                        align-self: flex-end;
+                    }
+                }
+
+        </style>
+    </head>
+
+
+    <body>
+
+        <main class="manager-animal-page">
+
+            <nav class="animal-breadcrumb"
+                 aria-label="Breadcrumb">
+
+                <a href="/Home/Dashboard">
+                    Ana Sayfa
+                </a>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <span class="current">
+                    Hayvan Yönetimi
+                </span>
+
+            </nav>
+
+            <header class="animal-page-header">
+
+                <div class="animal-page-header-left">
+
+                    <div class="animal-page-icon">
+
+                        <i class="fa-solid fa-paw"></i>
+
+                    </div>
+
+                    <div class="animal-page-title">
+
+                        <h1>
+                            Hayvan Yönetimi
+                        </h1>
+
+                        <p>
+                            Klinikte kayıtlı hayvanları görüntüleyin ve yönetin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href="/Animal/Create"
+                   class="animal-add-button">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    Yeni Hayvan Ekle
+
+                </a>
+
+            </header>
+            @await Component.InvokeAsync("_ManagerAnimalIndexStatisticsComponentPartial")
+            @await Component.InvokeAsync("_ManagerAnimalIndexFilterComponentPartial")
+            @await Component.InvokeAsync("_ManagerAnimalAnimalListComponentPartial")
+
+        </main>
+
+
+        <script>
+
+                document.addEventListener("DOMContentLoaded", function () {
+
+                    const searchInput =
+                        document.querySelector(".animal-search input");
+
+                    const speciesSelect =
+                        document.querySelectorAll(".animal-filter-select")[0];
+
+                    const statusSelect =
+                        document.querySelectorAll(".animal-filter-select")[1];
+
+                    const rows =
+                        document.querySelectorAll(".animal-table tbody tr");
+
+                    const filterButton =
+                        document.querySelector(".animal-filter-button");
+
+                    const clearButton =
+                        document.querySelector(".animal-clear-button");
+
+
+                    function filterAnimals() {
+
+                        const searchValue =
+                            searchInput.value
+                                .toLowerCase()
+                                .trim();
+
+                        const speciesValue =
+                            speciesSelect.value
+                                .toLowerCase()
+                                .trim();
+
+                        const statusValue =
+                            statusSelect.value
+                                .toLowerCase()
+                                .trim();
+
+
+                        rows.forEach(row => {
+
+                            const rowText =
+                                row.innerText.toLowerCase();
+
+                            const species =
+                                row.querySelector(".animal-species")
+                                    ?.innerText
+                                    .toLowerCase()
+                                    .trim() || "";
+
+                            const status =
+                                row.querySelector(".animal-status")
+                                    ?.innerText
+                                    .toLowerCase()
+                                    .trim() || "";
+
+
+                            const searchMatch =
+                                !searchValue ||
+                                rowText.includes(searchValue);
+
+
+                            const speciesMatch =
+                                !speciesValue ||
+                                species === speciesValue;
+
+
+                            let statusMatch = true;
+
+
+                            if (statusValue === "taburcu") {
+
+                                statusMatch =
+                                    status.includes("taburcu");
+                            }
+
+                            else if (statusValue === "tedavi sürecinde") {
+
+                                statusMatch =
+                                    status.includes("tedavi");
+                            }
+
+                            else if (statusValue === "pasif") {
+
+                                statusMatch =
+                                    status.includes("pasif");
+                            }
+
+
+                            row.style.display =
+                                searchMatch &&
+                                speciesMatch &&
+                                statusMatch
+                                    ? ""
+                                    : "none";
+
+                        });
+
+                    }
+
+
+                    filterButton.addEventListener(
+                        "click",
+                        filterAnimals
+                    );
+
+
+                    searchInput.addEventListener(
+                        "input",
+                        filterAnimals
+                    );
+
+
+                    clearButton.addEventListener(
+                        "click",
+                        function () {
+
+                            searchInput.value = "";
+
+                            speciesSelect.value = "";
+
+                            statusSelect.value = "";
+
+
+                            rows.forEach(row => {
+
+                                row.style.display = "";
+
+                            });
+
+                        }
+                    );
+
+                });
+
+        </script>
+
+    </body>
+</html>
+}
+@if(User.IsInRole("Customer"))
+{
+    @await Component.InvokeAsync("_AnimalIndexStyleComponentPartial")
+    <div class="animal-page">
+        @await Component.InvokeAsync("_AnimalIndexHeaderComponentPartial")
+        @await Component.InvokeAsync("_AnimalIndexStatisticsComponentPartial")
+        @await Component.InvokeAsync("_AnimalIndexSearchAndFilterComponentPartial")
+        @await Component.InvokeAsync("_AnimalIndexAnimalListComponentPartial")
+        @await Component.InvokeAsync("_AnimalIndexUpcomingAppointmentsComponentPartial")
+        @await Component.InvokeAsync("_AnimalIndexReminderComponentPartial")
+    </div>
+
+    @await Component.InvokeAsync("_AnimalIndexScriptsComponentPartial")
+}
+
+

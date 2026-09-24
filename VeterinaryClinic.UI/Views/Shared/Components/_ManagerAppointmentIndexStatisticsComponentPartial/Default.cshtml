@@ -1,0 +1,131 @@
+﻿<section class="manager-appointment-stat-grid">
+
+    <article class="manager-appointment-stat-card">
+
+        <div class="manager-appointment-stat-top">
+
+            <div>
+
+                <span class="manager-appointment-stat-label">
+                    Bugünün Randevuları
+                </span>
+
+                <strong class="manager-appointment-stat-value">
+                    @ViewBag.TodayAppointmentCount
+                </strong>
+
+            </div>
+
+
+            <div class="manager-appointment-stat-icon primary">
+
+                <i class="fa-solid fa-calendar-day"></i>
+
+            </div>
+
+        </div>
+
+
+        <span class="manager-appointment-stat-description">
+            Bugün planlanan randevular
+        </span>
+
+    </article>
+
+    <article class="manager-appointment-stat-card">
+
+        <div class="manager-appointment-stat-top">
+
+            <div>
+
+                <span class="manager-appointment-stat-label">
+                    Yaklaşan Randevular
+                </span>
+
+                <strong class="manager-appointment-stat-value">
+                    @ViewBag.UpcomingAppointmentCount
+                </strong>
+
+            </div>
+
+
+            <div class="manager-appointment-stat-icon info">
+
+                <i class="fa-solid fa-clock"></i>
+
+            </div>
+
+        </div>
+
+
+        <span class="manager-appointment-stat-description">
+            Önümüzdeki 7 gün
+        </span>
+
+    </article>
+
+    <article class="manager-appointment-stat-card">
+
+        <div class="manager-appointment-stat-top">
+
+            <div>
+
+                <span class="manager-appointment-stat-label">
+                    Tamamlanan
+                </span>
+
+                <strong class="manager-appointment-stat-value">
+                    @ViewBag.CompletedAppointmentCount
+                </strong>
+
+            </div>
+
+
+            <div class="manager-appointment-stat-icon success">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+        </div>
+
+
+        <span class="manager-appointment-stat-description">
+            Bu ay tamamlanan randevular
+        </span>
+
+    </article>
+
+    <article class="manager-appointment-stat-card">
+
+        <div class="manager-appointment-stat-top">
+
+            <div>
+
+                <span class="manager-appointment-stat-label">
+                    İptal Edilen
+                </span>
+
+                <strong class="manager-appointment-stat-value">
+                    @ViewBag.CancelledAppointmentCount
+                </strong>
+
+            </div>
+
+
+            <div class="manager-appointment-stat-icon danger">
+
+                <i class="fa-solid fa-circle-xmark"></i>
+
+            </div>
+
+        </div>
+
+
+        <span class="manager-appointment-stat-description">
+            Bu ay iptal edilen randevular
+        </span>
+
+    </article>
+
+</section>

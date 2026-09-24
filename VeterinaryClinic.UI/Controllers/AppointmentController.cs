@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VeterinaryClinic.Entities;
 using VeterinaryClinic.UI.Dtos.Appointment;
 using VeterinaryClinic.UI.Services.Animal;
 using VeterinaryClinic.UI.Services.Appointment;
@@ -29,7 +28,7 @@ namespace VeterinaryClinic.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AppointmentDto dto)
+        public async Task<IActionResult> Create(CreateAppointmentDto dto)
         {
             await _appointmentService.CreateAppointmentAsync(dto);
             return RedirectToAction("Index");
@@ -42,7 +41,14 @@ namespace VeterinaryClinic.UI.Controllers
             if (appointment == null)
                 return NotFound();
 
-            ViewBag.Animals = await _animalService.GetMyAnimalsAsync();
+            if(User.IsInRole("Customer"))
+            {
+                ViewBag.Animals = await _animalService.GetMyAnimalsAsync();
+            }
+            if (User.IsInRole("Manager"))
+            {
+                ViewBag.AppointmentId = id;
+            }
             return View(appointment);
         }
 
@@ -56,13 +62,14 @@ namespace VeterinaryClinic.UI.Controllers
                 return View(dto);
             }
 
-            return RedirectToAction("Detail", new { id = dto.Id });
+            return RedirectToAction("Index");
         }
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
             ViewBag.AppointmentId = id;
-            return View();
+            var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
+            return View(appointment);
         }
 
         public async Task<IActionResult> Pdf(int id)

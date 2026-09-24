@@ -6,5 +6,7 @@ namespace VeterinaryClinic.UI.Services.Payment
     {
         Task<List<PaymentDto>> GetMyPaymentsAsync();
         Task<decimal> GetTotalDebtAsync();
+        Task<List<PaymentDto>> GetAllPaymentsAsync();
+        Task<string> CreatePaymentAsync(CreatePaymentDto dto);
     }
 }

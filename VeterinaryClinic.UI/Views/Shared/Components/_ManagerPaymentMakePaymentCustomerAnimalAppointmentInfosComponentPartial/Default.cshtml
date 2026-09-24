@@ -1,0 +1,242 @@
+﻿@model (UserDto owner, AnimalDto animal, AppointmentDto appointment)
+
+<div class="payment-pay-info-grid">
+
+
+    <div class="payment-pay-card">
+
+        <div class="payment-pay-card-header">
+
+            <div class="payment-pay-card-icon primary">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+
+                <h2 class="payment-pay-card-title">
+                    Müşteri Bilgileri
+                </h2>
+
+                <p class="payment-pay-card-description">
+                    Ödeme sahibi
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-pay-person">
+
+            <div class="payment-pay-avatar">
+                AD
+            </div>
+
+            <div class="payment-pay-person-content">
+
+                <h3 class="payment-pay-person-name">
+
+                    @Model.owner.FullName
+
+                    <span class="payment-pay-customer-badge">
+                        Müşteri
+                    </span>
+
+                </h3>
+
+                <div class="payment-pay-person-meta">
+                    <i class="fa-solid fa-phone"></i>
+                    @Model.owner.PhoneNumber
+                </div>
+
+                <div class="payment-pay-person-meta">
+                    <i class="fa-solid fa-envelope"></i>
+                    @Model.owner.Email
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-pay-card">
+
+        <div class="payment-pay-card-header">
+
+            <div class="payment-pay-card-icon success">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <div>
+
+                <h2 class="payment-pay-card-title">
+                    Hayvan Bilgileri
+                </h2>
+
+                <p class="payment-pay-card-description">
+                    Hasta bilgileri
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-pay-person">
+
+            <img src="@Model.animal.ImageUrl"
+                 class="payment-pay-animal-image"
+                 alt="@Model.animal.Name">
+
+
+            <div class="payment-pay-person-content">
+
+                <div class="payment-pay-animal-name-row">
+
+                    <span class="payment-pay-animal-name">
+                        @Model.animal.Name
+                    </span>
+
+                    <span class="payment-pay-animal-species">
+                        @Model.animal.Species
+                    </span>
+
+                </div>
+
+
+                <div class="payment-pay-person-meta">
+                    <i class="fa-solid fa-paw"></i>
+                    @Model.animal.Breed
+                </div>
+
+                <div class="payment-pay-person-meta">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    @Model.animal.Age yaşında
+                </div>
+
+                <div class="payment-pay-person-meta">
+                    <i class="fa-solid fa-weight-scale"></i>
+                    @Model.animal.Weight
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="payment-pay-card">
+
+    <div class="payment-pay-card-header">
+
+        <div class="payment-pay-card-icon info">
+            <i class="fa-solid fa-calendar-check"></i>
+        </div>
+
+        <div>
+
+            <h2 class="payment-pay-card-title">
+                Randevu Bilgileri
+            </h2>
+
+            <p class="payment-pay-card-description">
+                Ödemenin bağlı olduğu randevu
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-pay-appointment">
+
+
+        <div class="payment-pay-date-box">
+
+            <span class="payment-pay-date-day">
+                @Model.appointment.Date.ToString("dd")
+            </span>
+
+            <span class="payment-pay-date-month">
+                @Model.appointment.Date.ToString("MMM yyyy")
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <div class="payment-pay-appointment-title">
+
+                <strong>
+                    @Model.appointment.AppointmentType
+                </strong>
+
+                @if (Model.appointment.Status == "Completed")
+                {
+                    <span class="payment-pay-status">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        Tamamlandı
+                    </span>
+                }
+                else if (Model.appointment.Status == "Scheduled")
+                {
+                    <span class="payment-pay-status">
+
+                        <i class="fa-solid fa-calendar-check"></i>
+
+                        Planlandı
+                    </span>
+                }
+                else
+                {
+                    <span class="payment-pay-status">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        İptal Edildi
+                    </span>
+                }
+
+            </div>
+
+
+            <div class="payment-pay-appointment-meta">
+
+                <i class="fa-regular fa-clock"></i>
+
+                @Model.appointment.Date.ToString("dddd"), @Model.appointment.Time.ToString(@"hh\:mm")
+
+            </div>
+
+
+            <div class="payment-pay-appointment-meta">
+
+                <i class="fa-solid fa-user-doctor"></i>
+
+                Veteriner Hekim: Doç. Dr. Yavuz Bahadır SEVİM
+
+            </div>
+
+
+            <div class="payment-pay-appointment-meta">
+
+                <i class="fa-solid fa-hashtag"></i>
+
+                Randevu No: AP-@Model.appointment.Id
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

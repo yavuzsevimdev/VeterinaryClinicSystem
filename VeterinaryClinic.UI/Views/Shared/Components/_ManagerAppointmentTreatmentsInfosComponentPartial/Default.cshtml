@@ -1,0 +1,117 @@
+﻿@model AppointmentDto
+@{
+    var treatments = (List<TreatmentDto>)ViewBag.Treatments;
+}
+
+<section class="card-ui manager-appointment-detail-card">
+
+    <div class="section-header">
+
+        <div class="section-header-text">
+
+            <div class="section-header-title-row">
+
+                <div class="card-icon-tile is-info">
+                    <i class="fa-solid fa-syringe"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-card-title">
+                        Tedavi Geçmişi
+                    </h2>
+
+                    <p class="section-header-desc">
+                        Bu randevuya ait tedavi kayıtları
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section-header-actions">
+
+            <span class="badge-ui badge-ui--neutral">
+                @treatments.Count() Tedavi
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="manager-appointment-detail-treatment-list">
+
+        @foreach (var item in treatments)
+        {
+            <div class="manager-appointment-detail-treatment-row">
+
+                <div class="manager-appointment-detail-treatment-icon">
+                    <i class="fa-solid fa-syringe"></i>
+                </div>
+
+
+                <div class="manager-appointment-detail-treatment-info">
+
+                    <div class="manager-appointment-detail-treatment-title">
+
+                        <strong>
+                            @item.TreatmentType
+                        </strong>
+
+                        <span class="badge-ui badge-ui--success">
+                            @Model.Status
+                        </span>
+
+                    </div>
+
+                    <div class="manager-appointment-detail-treatment-meta">
+
+                        <span>
+                            <i class="fa-regular fa-calendar"></i>
+                            @item.Date.Value.ToString("dd MMM yyyy")
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-stethoscope"></i>
+                            Klinik Muayene
+                        </span>
+
+                    </div>
+
+                    <p>
+                        @item.Notes
+                    </p>
+
+                </div>
+
+
+                <div class="manager-appointment-detail-treatment-cost">
+
+                    <span>
+                        Maliyet
+                    </span>
+
+                    <strong>
+                        @item.Cost.ToString("N2") ₺
+                    </strong>
+
+                </div>
+
+
+                <a href="#"
+                   class="manager-appointment-detail-treatment-action"
+                   title="Tedavi detayını görüntüle">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </a>
+
+            </div>
+            <br />
+            <hr />
+            <br />
+        }
+
+    </div>
+
+</section>

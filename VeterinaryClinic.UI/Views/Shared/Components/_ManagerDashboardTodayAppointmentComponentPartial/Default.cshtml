@@ -1,10 +1,10 @@
-﻿@model List<ManagerDashboardAppointmentDto>
+﻿@model List<AppointmentDetailDto>
 
 <section class="dashboard-appointments card-ui" id="dashboard-appointments" aria-label="Today's appointments">
     <div class="card-header-row">
         <div>
             <h2 class="text-card-title">Bugüne Ait Randevular</h2>
-            <span class="text-tiny text-muted">@DateTime.Today.ToString("dddd, M MMMM, yyyy") </span>
+            <span class="text-tiny text-muted">@DateTime.Today.ToString("dddd, dd MMMM, yyyy") </span>
         </div>
         <a href="#" class="link-action">View All <i class="bi bi-arrow-right"></i></a>
     </div>
@@ -16,7 +16,7 @@
                 <div class="appointment-time">@item.Time.ToString(@"hh\:mm")</div>
                 <span class="appointment-time-sep"></span>
                 <div class="appointment-body">
-                    <span class="appointment-animal">@item.AnimalName <span class="appointment-animal-id">#@item.AnimalId</span></span>
+                    <span class="appointment-animal">@item.Animal.Name <span class="appointment-animal-id">#@item.AnimalId</span></span>
                     <div class="appointment-notes">@item.Notes</div>
                 </div>
                 <div class="appointment-meta">

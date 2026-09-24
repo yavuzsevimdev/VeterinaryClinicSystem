@@ -1,103 +1,102 @@
-﻿  @model List<TreatmentListDto> 
+﻿@model List<TreatmentListDto>
 
-  <section class="card-ui treatment-history-list">
+<section class="card-ui treatment-history-list">
 
-                <div class="history-list-head">
-                    <div class="history-list-title">
-                        <div class="history-list-title-icon">
-                            <i class="bi bi-list-task"></i>
-                        </div>
-                        <h2>Tedavi Listesi (<span id="listCount">@ViewBag.TotalTreatmentCount</span>)</h2>
-                    </div>
-                </div>
+    <div class="history-list-head">
+        <div class="history-list-title">
+            <div class="history-list-title-icon">
+                <i class="bi bi-list-task"></i>
+            </div>
+            <h2>Tedavi Listesi (<span id="listCount">@ViewBag.TotalTreatmentCount</span>)</h2>
+        </div>
+    </div>
 
-                <div class="history-table-wrap">
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>Tarih <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
-                                <th>Hayvan <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
-                                <th>Tedavi Türü <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
-                                <th>Açıklama / Not <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
-                                <th>Maliyet <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
-                                <th>Randevu <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
-                                <th style="text-align:right;">İşlemler</th>
-                            </tr>
-                        </thead>
+    <div class="history-table-wrap">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Tarih <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                    <th>Hayvan <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                    <th>Tedavi Türü <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                    <th>Açıklama / Not <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                    <th>Maliyet <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                    <th>Randevu <i class="bi bi-arrow-down-up" style="margin-left:3px;"></i></th>
+                    <th style="text-align:right;">İşlemler</th>
+                </tr>
+            </thead>
 
-                        <tbody id="treatmentTableBody">
+            <tbody id="treatmentTableBody">
 
-                                @foreach (var item in Model)
-                                    {
-                                    <tr data-row data-animal="@item.Animal.Name" data-type="@item.TreatmentType">
-                                        <td class="history-date">@(item.Date?.ToString("dd.MM.yyyy") ?? "-")</td>
-                                        <td>
-                                            <div class="history-animal">
-                                                <!-- Razor dönüşümünde src değerini @@item.ImageUrl yap -->
-                                                <img class="history-animal-image"
-                                                     src="@item.Animal.ImageUrl"
-                                                     alt="Mavi">
-                                                <div>
-                                                    <p class="history-animal-name">@item.Animal.Name</p>
-                                                    <div class="history-animal-breed">@item.Animal.Breed</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="history-treatment-badge is-vaccine">@item.TreatmentType</span>
-                                        </td>
-                                        <td>
-                                            <div class="history-note">@item.Notes </div>
-                                        </td>
-                                        <td class="history-cost"> @item.Cost ₺</td>
-                                        <td class="history-appointment">@(item.Date?.ToString("dd.MM.yyyy") ?? "-")</td>
-                                        <td>
-                                            <div class="treatment-actions">
-                                                <a asp-controller="Treatment"
-                                                   asp-action="Detail"
-                                                   asp-route-id="@item.Id"
-                                                   class="treatment-action-btn"
-                                                   title="Detay">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    }
+                @foreach (var item in Model)
+                {
+                    <tr data-row data-animal="@item.Animal.Name" data-type="@item.TreatmentType">
+                        <td class="history-date">@(item.Date?.ToString("dd.MM.yyyy") ?? "-")</td>
+                        <td>
+                            <div class="history-animal">
+                                <img class="history-animal-image"
+                                     src="@item.Animal.ImageUrl"
+                                     alt="Mavi">
+                                <div>
+                                    <p class="history-animal-name">@item.Animal.Name</p>
+                                    <div class="history-animal-breed">@item.Animal.Breed</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="history-treatment-badge is-vaccine">@item.TreatmentType</span>
+                        </td>
+                        <td>
+                            <div class="history-note">@item.Notes </div>
+                        </td>
+                        <td class="history-cost"> @item.Cost ₺</td>
+                        <td class="history-appointment">@(item.Date?.ToString("dd.MM.yyyy") ?? "-")</td>
+                        <td>
+                            <div class="treatment-actions">
+                                <a asp-controller="Treatment"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="treatment-action-btn"
+                                   title="Detay">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
 
-                        </tbody>
-                    </table>
+            </tbody>
+        </table>
 
-                    <div class="history-empty" id="emptyState">
-                        <div class="history-empty-icon">
-                            <i class="bi bi-heart-pulse"></i>
-                        </div>
-                        <h3 class="text-card-title" style="margin-bottom:6px;">Tedavi kaydı bulunamadı</h3>
-                        <p class="text-muted" style="margin:0;">
-                            Seçtiğiniz filtrelere uygun tedavi kaydı bulunmuyor.
-                        </p>
-                    </div>
-                </div>
+        <div class="history-empty" id="emptyState">
+            <div class="history-empty-icon">
+                <i class="bi bi-heart-pulse"></i>
+            </div>
+            <h3 class="text-card-title" style="margin-bottom:6px;">Tedavi kaydı bulunamadı</h3>
+            <p class="text-muted" style="margin:0;">
+                Seçtiğiniz filtrelere uygun tedavi kaydı bulunmuyor.
+            </p>
+        </div>
+    </div>
 
-                <div class="history-pagination">
-                    <div class="history-pagination-info">
-                        <span id="paginationInfo">8 kayıttan 1 - 6 arası gösteriliyor</span>
-                    </div>
+    <div class="history-pagination">
+        <div class="history-pagination-info">
+            <span id="paginationInfo">8 kayıttan 1 - 6 arası gösteriliyor</span>
+        </div>
 
-                    <div class="history-pagination-controls">
-                        <button class="history-page-btn is-disabled" aria-label="Önceki sayfa">
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                        <button class="history-page-btn is-active">1</button>
-                        <button class="history-page-btn">2</button>
-                        <button class="history-page-btn">
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
-                        <div class="history-page-size">
-                            6 / sayfa
-                            <i class="bi bi-chevron-down"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="history-pagination-controls">
+            <button class="history-page-btn is-disabled" aria-label="Önceki sayfa">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="history-page-btn is-active">1</button>
+            <button class="history-page-btn">2</button>
+            <button class="history-page-btn">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+            <div class="history-page-size">
+                6 / sayfa
+                <i class="bi bi-chevron-down"></i>
+            </div>
+        </div>
+    </div>
 
-            </section>
+</section>

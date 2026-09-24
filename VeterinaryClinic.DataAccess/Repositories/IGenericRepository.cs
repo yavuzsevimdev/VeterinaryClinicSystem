@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VeterinaryClinic.DataAccess.Repositories
+﻿namespace VeterinaryClinic.DataAccess.Repositories
 {
     public interface IGenericRepository<T> where T : class
     {

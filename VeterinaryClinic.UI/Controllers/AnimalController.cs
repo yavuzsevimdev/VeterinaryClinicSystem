@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeterinaryClinic.UI.Dtos.Animal;
 using VeterinaryClinic.UI.Services.Animal;
+using VeterinaryClinic.UI.Services.User;
 
 namespace VeterinaryClinic.UI.Controllers
 {
     public class AnimalController : Controller
     {
         private readonly IAnimalService _animalService;
+        private readonly IUserService _userService;
 
-        public AnimalController(IAnimalService animalService)
+        public AnimalController(IAnimalService animalService, IUserService userService)
         {
             _animalService = animalService;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -21,6 +24,7 @@ namespace VeterinaryClinic.UI.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+
             return View();
         }
 
@@ -49,6 +53,9 @@ namespace VeterinaryClinic.UI.Controllers
             var animal = await _animalService.GetAnimalByIdAsync(id);
             if (animal == null)
                 return NotFound();
+
+            ViewBag.OwnerFullName = (await _userService.GetAllUsersAsync()).Where(x => x.Id == animal.OwnerId).Select(x => x.FullName).FirstOrDefault();
+
             return View(animal);
         }
 

@@ -1,70 +1,70 @@
 ﻿@{
     DateTime lastTreatmentDate = (DateTime)ViewBag.LastTreatmentDate;
-}            
+}
 <div class="treatment-history-stats">
 
-                <div class="card-ui history-stat-card">
-                    <div class="row-start" style="gap:12px; align-items:center;">
-                        <div class="history-stat-icon is-primary">
-                            <i class="bi bi-clipboard2-pulse"></i>
-                        </div>
-                        <div>
-                            <p class="history-stat-label">Toplam Tedavi</p>
-                            <span class="history-stat-value">@ViewBag.TotalTreatment</span>
-                            <div class="history-stat-meta">↗ +@ViewBag.TotalTreatmentThisYear bu yıl</div>
-                        </div>
-                    </div>
-                    <div class="history-stat-decoration">
-                        <i class="bi bi-bar-chart-fill"></i>
-                    </div>
-                </div>
-
-                <div class="card-ui history-stat-card">
-                    <div class="row-start" style="gap:12px; align-items:center;">
-                        <div class="history-stat-icon is-success">
-                            <i class="bi bi-people-fill"></i>
-                        </div>
-                        <div>
-                            <p class="history-stat-label">Tedavi Edilen Hayvan</p>
-                            <span class="history-stat-value">@ViewBag.TotalTreatedAnimal</span>
-                            <div class="history-stat-meta">Toplam evcil hayvanınız</div>
-                        </div>
-                    </div>
-                    <div class="history-stat-decoration" style="color:#75b7ee;">
-                        <i class="bi bi-person-hearts"></i>
-                    </div>
-                </div>
-
-                <div class="card-ui history-stat-card">
-                    <div class="row-start" style="gap:12px; align-items:center;">
-                        <div class="history-stat-icon is-info">
-                            <i class="bi bi-stack"></i>
-                        </div>
-                        <div>
-                            <p class="history-stat-label">Toplam Maliyet</p>
-                            <span class="history-stat-value">@ViewBag.TotalCost ₺</span>
-                            <div class="history-stat-meta">Bu yıl: @ViewBag.TotalCostThisYear ₺</div>
-                        </div>
-                    </div>
-                    <div class="history-stat-decoration" style="color:#5bc8b1;">
-                        <i class="bi bi-graph-up-arrow"></i>
-                    </div>
-                </div>
-
-                <div class="card-ui history-stat-card">
-                    <div class="row-start" style="gap:12px; align-items:center;">
-                        <div class="history-stat-icon is-accent">
-                            <i class="bi bi-calendar2-heart"></i>
-                        </div>
-                        <div>
-                            <p class="history-stat-label">Son Tedavi</p>
-                            <span class="history-stat-value" style="font-size:18px;">@lastTreatmentDate.ToString("dd MMM yyyy")</span>
-                            <div class="history-stat-meta">@ViewBag.LastTreatmentAnimal · @ViewBag.LastTreatmentType</div>
-                        </div>
-                    </div>
-                    <div class="history-stat-decoration" style="color:#8a87eb;">
-                        <i class="bi bi-calendar-week"></i>
-                    </div>
-                </div>
-
+    <div class="card-ui history-stat-card">
+        <div class="row-start" style="gap:12px; align-items:center;">
+            <div class="history-stat-icon is-primary">
+                <i class="bi bi-clipboard2-pulse"></i>
             </div>
+            <div>
+                <p class="history-stat-label">Toplam Tedavi</p>
+                <span class="history-stat-value">@ViewBag.TotalTreatment</span>
+                <div class="history-stat-meta">↗ +@ViewBag.TotalTreatmentThisYear bu yıl</div>
+            </div>
+        </div>
+        <div class="history-stat-decoration">
+            <i class="bi bi-bar-chart-fill"></i>
+        </div>
+    </div>
+
+    <div class="card-ui history-stat-card">
+        <div class="row-start" style="gap:12px; align-items:center;">
+            <div class="history-stat-icon is-success">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <p class="history-stat-label">Tedavi Edilen Hayvan</p>
+                <span class="history-stat-value">@ViewBag.TotalTreatedAnimal</span>
+                <div class="history-stat-meta">Toplam evcil hayvanınız</div>
+            </div>
+        </div>
+        <div class="history-stat-decoration" style="color:#75b7ee;">
+            <i class="bi bi-person-hearts"></i>
+        </div>
+    </div>
+
+    <div class="card-ui history-stat-card">
+        <div class="row-start" style="gap:12px; align-items:center;">
+            <div class="history-stat-icon is-info">
+                <i class="bi bi-stack"></i>
+            </div>
+            <div>
+                <p class="history-stat-label">Toplam Maliyet</p>
+                <span class="history-stat-value">@ViewBag.TotalCost ₺</span>
+                <div class="history-stat-meta">Bu yıl: @ViewBag.TotalCostThisYear ₺</div>
+            </div>
+        </div>
+        <div class="history-stat-decoration" style="color:#5bc8b1;">
+            <i class="bi bi-graph-up-arrow"></i>
+        </div>
+    </div>
+
+    <div class="card-ui history-stat-card">
+        <div class="row-start" style="gap:12px; align-items:center;">
+            <div class="history-stat-icon is-accent">
+                <i class="bi bi-calendar2-heart"></i>
+            </div>
+            <div>
+                <p class="history-stat-label">Son Tedavi</p>
+                <span class="history-stat-value" style="font-size:18px;">@lastTreatmentDate.ToString("dd MMM yyyy")</span>
+                <div class="history-stat-meta">@ViewBag.LastTreatmentAnimal · @ViewBag.LastTreatmentType</div>
+            </div>
+        </div>
+        <div class="history-stat-decoration" style="color:#8a87eb;">
+            <i class="bi bi-calendar-week"></i>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,213 @@
+﻿@model CreatePaymentDto
+
+<form id="paymentForm" method="post" class="payment-pay-form">
+    <input type="hidden" asp-for="AppointmentId" value="@ViewBag.AppointmentId" />
+    <input type="hidden" asp-for="PaymentDate" value="@DateTime.Today.Date" />
+    <div class="payment-pay-form-divider"></div>
+
+    <div class="payment-pay-form-group">
+
+        <label class="payment-pay-label"
+               for="paymentAmount">
+
+            Ödeme Tutarı
+
+            <span class="payment-pay-required">
+                *
+            </span>
+
+        </label>
+
+
+        <div class="payment-pay-input-wrapper">
+
+            <i class="fa-solid fa-turkish-lira-sign payment-pay-input-icon"></i>
+
+            <input id="paymentAmount" asp-for="AmountPaid"
+                   class="payment-pay-input"
+                   type="number"
+                   min="0.01"
+                   max="5000"
+                   step="0.01"
+                   placeholder="Ödeme tutarını giriniz..."
+                   required>
+
+        </div>
+
+
+        <span class="payment-pay-input-hint">
+            Maksimum ₺<span id="paymentAmountValue">5.000,00</span> ödeme yapabilirsiniz.
+        </span>
+
+    </div>
+
+    <div class="payment-pay-form-group">
+
+        <label class="payment-pay-label">
+
+            Ödeme Yöntemi
+
+            <span class="payment-pay-required">
+                *
+            </span>
+
+        </label>
+
+
+        <div class="payment-pay-method-grid">
+
+            <div class="payment-pay-method-option">
+
+                <input type="radio" asp-for="PaymentMethod"
+                       id="methodCard"
+                       name="paymentMethod"
+                       value="Kredi Kartı"
+                       checked>
+
+                <label class="payment-pay-method-label"
+                       for="methodCard">
+
+                    <i class="fa-solid fa-credit-card"></i>
+
+                    <span>
+                        Kredi Kartı
+                    </span>
+
+                </label>
+
+                <span class="payment-pay-method-check">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+
+            </div>
+
+            <div class="payment-pay-method-option">
+
+                <input type="radio" asp-for="PaymentMethod"
+                       id="methodCash"
+                       name="paymentMethod"
+                       value="Nakit">
+
+                <label class="payment-pay-method-label"
+                       for="methodCash">
+
+                    <i class="fa-solid fa-money-bill-wave"></i>
+
+                    <span>
+                        Nakit
+                    </span>
+
+                </label>
+
+                <span class="payment-pay-method-check">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+
+            </div>
+
+            <div class="payment-pay-method-option">
+
+                <input type="radio" asp-for="PaymentMethod"
+                       id="methodTransfer"
+                       name="paymentMethod"
+                       value="Havale/EFT">
+
+                <label class="payment-pay-method-label"
+                       for="methodTransfer">
+
+                    <i class="fa-solid fa-building-columns"></i>
+
+                    <span>
+                        Havale/EFT
+                    </span>
+
+                </label>
+
+                <span class="payment-pay-method-check">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+
+            </div>
+
+            <div class="payment-pay-method-option">
+
+                <input type="radio" asp-for="PaymentMethod"
+                       id="methodOther"
+                       name="paymentMethod"
+                       value="Diğer">
+
+                <label class="payment-pay-method-label"
+                       for="methodOther">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                    <span>
+                        Diğer
+                    </span>
+
+                </label>
+
+                <span class="payment-pay-method-check">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="payment-pay-form-group">
+
+        <label class="payment-pay-label"
+               for="paymentNote">
+
+            Açıklama
+
+            <span style="font-weight:400;color:var(--color-muted);">
+                (Opsiyonel)
+            </span>
+
+        </label>
+
+
+        <textarea id="paymentNote"
+                  class="payment-pay-textarea"
+                  maxlength="200"
+                  placeholder="Ödeme ile ilgili not ekleyebilirsiniz..."></textarea>
+
+
+        <div class="payment-pay-textarea-footer">
+
+            <span id="noteCounter">
+                0
+            </span>
+
+            / 200
+
+        </div>
+
+    </div>
+
+    <button type="submit"
+            class="payment-pay-submit">
+
+        <i class="fa-solid fa-credit-card"></i>
+
+        Ödemeyi Kaydet
+
+    </button>
+
+
+    <div class="payment-pay-warning">
+
+        <i class="fa-solid fa-circle-info"></i>
+
+        <span>
+            Ödeme kaydı oluşturulduğunda bu tutar
+            randevunun toplam borcundan düşülecektir.
+        </span>
+
+    </div>
+
+</form>

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
 using System.Security.Claims;
 using VeterinaryClinic.Business.Dtos.TreatmentDtos;
 using VeterinaryClinic.Business.Services;

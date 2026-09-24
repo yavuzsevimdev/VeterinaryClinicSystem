@@ -1,0 +1,73 @@
+﻿@{
+    decimal totalCost = ViewBag.TotalCost;
+    decimal amountPaid = ViewBag.AmountPaid;
+    decimal outstandingDebt = ViewBag.OutstandingDebt;
+}
+
+<section class="card-ui manager-appointment-detail-card">
+
+    <div class="manager-appointment-detail-sidebar-title">
+
+        <div class="card-icon-tile is-success">
+            <i class="fa-solid fa-credit-card"></i>
+        </div>
+
+        <div>
+            <h2 class="text-card-title">
+                Ödeme Özeti
+            </h2>
+
+            <p class="section-header-desc">
+                Randevu ödeme durumu
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="manager-appointment-detail-payment">
+
+        <div class="manager-appointment-detail-payment-row">
+
+            <span>
+                Toplam Tutar
+            </span>
+
+            <strong>
+                @totalCost.ToString("N2") ₺
+            </strong>
+
+        </div>
+
+
+        <div class="manager-appointment-detail-payment-row">
+
+            <span>
+                Ödenen
+            </span>
+
+            <strong class="is-success">
+                @amountPaid.ToString("N2") ₺
+            </strong>
+
+        </div>
+
+
+        <div class="manager-appointment-detail-payment-divider"></div>
+
+
+        <div class="manager-appointment-detail-payment-row is-total">
+
+            <span>
+                Kalan
+            </span>
+
+            <strong>
+                @outstandingDebt.ToString("N2") ₺
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>

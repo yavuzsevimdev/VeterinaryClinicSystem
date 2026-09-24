@@ -8,12 +8,14 @@ namespace VeterinaryClinic.Business.Services
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly ITreatmentRepository _treatmentRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IAnimalRepository _animalRepository;
 
-        public ReportService(IAppointmentRepository appointmentRepository, ITreatmentRepository treatmentRepository, IPaymentRepository paymentRepository)
+        public ReportService(IAppointmentRepository appointmentRepository, ITreatmentRepository treatmentRepository, IPaymentRepository paymentRepository, IAnimalRepository animalRepository)
         {
             _appointmentRepository = appointmentRepository;
             _treatmentRepository = treatmentRepository;
             _paymentRepository = paymentRepository;
+            _animalRepository = animalRepository;
         }
 
         public async Task<DailyAppointmentReportDto> GetDailyAppointmentReportAsync(DateTime date)
@@ -91,6 +93,19 @@ namespace VeterinaryClinic.Business.Services
                 Notes = x.Notes,
                 Cost = x.Cost
             }).ToList();
+        }
+
+        public async Task<List<AnimalTreatmentHistoryDto>> GetAllAnimalTreatmentHistoryAsync()
+        {
+            var animals = await _animalRepository.GetAllAsync();
+            var result = new List<AnimalTreatmentHistoryDto>();
+            foreach (var animal in animals)
+            {
+                var treatments = await GetAnimalTreatmentHistoryAsync(animal.Id);
+
+                result.AddRange(treatments);
+            }
+            return result;
         }
     }
 }

@@ -1,0 +1,96 @@
+﻿@{
+    var owner = (UserDto)ViewBag.Owner;
+}
+
+<section class="card-ui animal-detail-owner-card">
+
+    <div class="section-header">
+
+        <div class="section-header-content">
+
+            <div class="card-icon-tile card-icon-tile--secondary">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+
+                <h3>Sahibi</h3>
+
+                <p>Hayvan sahibine ait bilgiler</p>
+
+            </div>
+
+        </div>
+
+
+        @if (owner != null)
+        {
+            <a href="#"
+               class="btn-ui btn-ui--outline btn-ui--sm">
+
+                <i class="fa-solid fa-user"></i>
+
+                Sahip Detayı
+
+            </a>
+        }
+
+    </div>
+
+
+    @if (owner != null)
+    {
+        <div class="animal-detail-owner-content">
+
+            <div class="animal-detail-owner-avatar">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+
+            <div class="animal-detail-owner-info">
+
+                <div class="animal-detail-owner-name">
+
+                    <strong>
+                        @owner.FullName
+                    </strong>
+
+                    <span class="badge-ui badge-ui--success">
+                        Müşteri
+                    </span>
+
+                </div>
+
+
+                <div class="animal-detail-owner-contact">
+
+                    @if (!string.IsNullOrWhiteSpace(owner.PhoneNumber))
+                    {
+                        <span>
+                            <i class="fa-solid fa-phone"></i>
+                            @owner.PhoneNumber
+                        </span>
+                    }
+
+                    <span>
+                        <i class="fa-solid fa-envelope"></i>
+                        @owner.Email
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="animal-detail-empty">
+            <i class="fa-solid fa-user-slash"></i>
+            <span>Sahip bilgisi bulunamadı.</span>
+        </div>
+    }
+
+</section>

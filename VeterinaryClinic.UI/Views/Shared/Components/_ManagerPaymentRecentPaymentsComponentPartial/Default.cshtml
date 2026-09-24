@@ -1,0 +1,136 @@
+﻿@model List<(UserDto User, AppointmentDto Appointment, AnimalDto Animal, PaymentDto Payment)>
+
+@{
+    int count = 0;
+}
+<div class="payment-card">
+
+    <div class="payment-card-header">
+
+        <div>
+
+            <h2 class="payment-card-title">
+                Son Ödemeler
+            </h2>
+
+            <p class="payment-card-description">
+                Yapılan son 5 ödeme
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-table-wrapper">
+
+        <table class="payment-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+                    <th>Hayvan</th>
+                    <th>Sahip</th>
+                    <th>Tedavi</th>
+                    <th>Tutar</th>
+                    <th>Tarih</th>
+                    <th>Yöntem</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="recentPaymentsTable">
+
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+
+                        <td>@count</td>
+
+                        <td>
+                            <div class="payment-animal">
+
+                                <div class="payment-animal-avatar">
+                                    @if (!string.IsNullOrEmpty(item.Animal.ImageUrl))
+                                    {
+                                        <img src="@item.Animal.ImageUrl"
+                                             alt="@item.Animal.Name" />
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-dog"></i>
+                                    }
+                                </div>
+
+                                <span class="payment-animal-name">
+                                    @item.Animal.Name
+                                </span>
+
+                            </div>
+                        </td>
+
+                        <td class="payment-owner">
+                            @item.User.FullName
+                        </td>
+
+                        <td>
+                            @item.Appointment.AppointmentType
+                        </td>
+
+                        <td class="payment-amount">
+                            ₺ @item.Payment.AmountPaid
+                        </td>
+
+                        <td>
+                            @item.Payment.PaymentDate
+                        </td>
+
+                        <td>
+
+                            @if (item.Payment.PaymentMethod == "Kredi Kartı")
+                            {
+                                <span class="payment-method-badge card">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    Kredi Kartı
+                                </span>
+                            }
+                            else if (item.Payment.PaymentMethod == "Nakit")
+                            {
+                                <span class="payment-method-badge cash">
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                    Nakit
+                                </span>
+                            }
+                            else if (item.Payment.PaymentMethod == "Havale/EFT")
+                            {
+                                <span class="payment-method-badge transfer">
+                                    <i class="fa-solid fa-building-columns"></i>
+                                    Havale/EFT
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="payment-method-badge other">
+                                    <i class="fa-solid fa-wallet"></i>
+                                    Diğer
+                                </span>
+                            }
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

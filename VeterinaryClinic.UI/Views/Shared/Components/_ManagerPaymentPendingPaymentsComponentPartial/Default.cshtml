@@ -1,0 +1,196 @@
+﻿@model List<(string AnimalName, string ImageUrl, string OwnerFullName, string AppointmentType, decimal TreatmentCost, decimal AmountPaid, decimal RemaningCost, int AppointmentId, int? PaymentId)>
+@{
+    int count = 0;
+}
+<section class="payment-card payment-outstanding-card">
+
+
+    <div class="payment-outstanding-header">
+
+        <div class="payment-outstanding-title-wrapper">
+
+            <div class="payment-outstanding-icon">
+                <i class="fa-regular fa-calendar-xmark"></i>
+            </div>
+
+            <div>
+
+                <h2 class="payment-outstanding-title">
+                    Kalan Ödemeler
+                </h2>
+
+                <p class="payment-outstanding-subtitle">
+                    Henüz tam olarak ödenmemiş tedaviler
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a href="#"
+           class="payment-outstanding-link">
+
+            Tümünü Gör
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+
+    <div class="payment-table-wrapper"
+         style="padding-bottom:0;">
+
+        <div class="payment-filter-area">
+
+            <div class="payment-search">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input type="text"
+                       id="outstandingSearch"
+                       placeholder="Hayvan veya sahip ara...">
+
+            </div>
+
+
+            <select id="outstandingMethodFilter"
+                    class="payment-filter-select">
+
+                <option value="all">
+                    Tüm Durumlar
+                </option>
+
+                <option value="high">
+                    Yüksek Borç
+                </option>
+
+                <option value="low">
+                    Düşük Borç
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="payment-outstanding-table-wrapper">
+
+
+        <table class="payment-outstanding-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+                    <th>Hayvan</th>
+                    <th>Sahip</th>
+                    <th>Tedavi</th>
+                    <th>Tedavi Tutarı</th>
+                    <th>Ödenen</th>
+                    <th>Kalan</th>
+                    <th>Randevu</th>
+                    <th>İşlem</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="outstandingTable">
+
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr data-name="@item.AnimalName @item.OwnerFullName"
+                        data-remaining="@item.RemaningCost">
+
+                        <td>@count</td>
+
+                        <td>
+
+                            <div class="outstanding-animal">
+
+                                <div class="payment-animal-avatar">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl"
+                                             alt="@item.AnimalName" />
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-dog"></i>
+                                    }
+                                </div>
+
+                                <span class="outstanding-animal-name">
+                                    @item.AnimalName
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                        <td class="outstanding-owner">
+                            @item.OwnerFullName
+                        </td>
+
+                        <td class="outstanding-treatment">
+                            @item.AppointmentType
+                        </td>
+
+                        <td class="outstanding-total">
+                            ₺ @item.TreatmentCost.ToString("0,0")
+                        </td>
+
+                        <td class="outstanding-paid">
+                            ₺ @item.AmountPaid.ToString("0,0")
+                        </td>
+
+                        <td class="outstanding-remaining">
+                            ₺ @item.RemaningCost.ToString("0,0")
+                        </td>
+
+                        <td class="outstanding-appointment">
+                            #AP-@item.AppointmentId
+                        </td>
+
+                        <td>
+
+                            <a href="/Payment/MakePayment/@item.AppointmentId" class="btn payment-btn payment-btn-primary payment-btn-small">
+
+                                <i class="fa-solid fa-plus"></i>
+
+                                Ödeme Yap
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+
+        <div class="payment-empty"
+             id="outstandingEmpty">
+
+            <i class="fa-solid fa-file-circle-check"></i>
+
+            Kriterlere uygun kalan ödeme bulunamadı.
+
+        </div>
+
+    </div>
+
+</section>

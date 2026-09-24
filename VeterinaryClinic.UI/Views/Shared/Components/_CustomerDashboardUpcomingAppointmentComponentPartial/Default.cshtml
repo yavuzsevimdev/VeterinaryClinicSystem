@@ -1,9 +1,52 @@
 ﻿@model UpcomingAppointmentDto
+<style>
+    .upcoming-empty-state {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: var(--space-4);
+    padding: 16px;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-alt);
+}
 
+.upcoming-empty-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    font-size: 1.2rem;
+}
+
+.upcoming-empty-content {
+    min-width: 0;
+}
+
+.upcoming-empty-content h4 {
+    margin: 0 0 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.upcoming-empty-content p {
+    margin: 0 0 12px;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+}
+</style>
 <div class="card-ui card-ui--status is-info">
 
-
-    <div class="card-header-row">
+    @if(Model != null)
+    {
+        <div class="card-header-row">
 
         <div>
 
@@ -76,5 +119,38 @@
         </a>
 
     </div>
+    }
+    @if (Model == null)
+{
+    <div class="upcoming-empty-state">
+
+        <div class="upcoming-empty-icon">
+            <i class="bi bi-calendar-heart"></i>
+        </div>
+
+        <div class="upcoming-empty-content">
+
+            <h4>
+                Yaklaşan randevunuz bulunmuyor
+            </h4>
+
+            <p>
+                Şu anda planlanmış bir randevunuz bulunmuyor.
+                Yeni bir randevu oluşturarak kliniğimizi ziyaret edebilirsiniz.
+            </p>
+
+            <a href="/Appointment/Create"
+               class="btn btn-ui btn-ui--outline btn-ui--sm">
+
+                <i class="bi bi-plus-lg"></i>
+
+                Randevu Oluştur
+
+            </a>
+
+        </div>
+
+    </div>
+}
 
 </div>

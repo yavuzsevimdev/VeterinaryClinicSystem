@@ -1,0 +1,216 @@
+﻿@model List<AppointmentManagerDto>
+
+<section class="manager-appointment-section">
+
+    <div class="manager-appointment-section-header">
+
+        <div>
+
+            <h2 class="manager-appointment-section-title">
+                Yaklaşan Randevular
+            </h2>
+
+            <p class="manager-appointment-section-description">
+                Önümüzdeki günlerde kliniğinizi ziyaret edecek hastalar.
+            </p>
+
+        </div>
+
+        <a href="#allAppointments"
+           class="manager-appointment-section-action">
+
+            Tümünü Gör
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+    <div class="manager-appointment-slider">
+
+        <button type="button"
+                class="manager-appointment-slider-arrow prev"
+                id="upcomingPrev"
+                aria-label="Önceki randevular">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </button>
+
+        <div class="manager-appointment-slider-viewport">
+
+            <div class="manager-appointment-cards"
+                 id="upcomingAppointmentTrack">
+
+                @foreach (var item in Model)
+                {
+                    <article class="manager-appointment-card">
+
+                        <div class="manager-appointment-card-status">
+
+                            @{
+                                var appointmentDateTime = item.Date.Date + item.Time;
+                                var hoursUntilAppointment = (appointmentDateTime - DateTime.Now).TotalHours;
+
+                                var isApproaching = item.Date.Date == DateTime.Today && hoursUntilAppointment >= 0 && hoursUntilAppointment <= 5;
+                            }
+
+                            @if (isApproaching)
+                            {
+                                <span class="badge-ui badge-ui--warning">
+                                    <i class="fa-solid fa-clock"></i>
+                                    Yaklaşıyor
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge-ui badge-ui--info">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    Planlandı
+                                </span>
+                            }
+
+                            <span class="manager-appointment-card-status-date">
+
+                                @if (item.Date.Date == DateTime.Today)
+                                {
+                                    <span>Bugün</span>
+                                }
+                                else if (item.Date.Date == DateTime.Today.AddDays(1))
+                                {
+                                    <span>Yarın</span>
+                                }
+                                else
+                                {
+                                    @item.Date.ToString("dd MMMM")
+                                }
+
+                                · @item.Time.ToString(@"hh\:mm")
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="manager-appointment-card-animal">
+
+                            <div class="manager-appointment-card-animal-image">
+
+                                @if (!string.IsNullOrEmpty(item.Animal.ImageUrl))
+                                {
+                                    <img src="@item.Animal.ImageUrl"
+                                         alt="@item.Animal.Name">
+                                }
+                                else
+                                {
+                                    <i class="fa-solid fa-paw"></i>
+                                }
+
+                            </div>
+
+
+                            <div>
+
+                                <span class="manager-appointment-card-animal-name">
+                                    @item.Animal.Name
+                                </span>
+
+                                <span class="manager-appointment-card-type">
+                                    @item.Animal.Species · @item.Animal.Breed
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="manager-appointment-card-info">
+
+                            <div class="manager-appointment-card-info-item">
+
+                                <span class="manager-appointment-card-info-label">
+                                    Randevu
+                                </span>
+
+                                <span class="manager-appointment-card-info-value">
+                                    @item.AppointmentType
+                                </span>
+
+                            </div>
+
+
+                            <div class="manager-appointment-card-info-item">
+
+                                <span class="manager-appointment-card-info-label">
+                                    Saat
+                                </span>
+
+                                <span class="manager-appointment-card-info-value">
+                                    @item.Time.ToString(@"hh\:mm")
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="manager-appointment-card-customer">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <span>
+                                @item.Owner.FullName
+                            </span>
+
+                        </div>
+
+
+                        <div class="manager-appointment-card-actions">
+
+                            <a href="/Appointment/Detail/@item.Id"
+                               class="manager-appointment-card-action">
+
+                                <i class="fa-solid fa-eye"></i>
+                                Detay
+
+                            </a>
+
+                            <a href="/Appointment/Update/@item.Id"
+                               class="manager-appointment-card-action primary">
+
+                                <i class="fa-solid fa-pen"></i>
+                                Düzenle
+
+                            </a>
+
+                            <a href="/Appointment/Cancel/@item.Id"
+                               class="manager-appointment-card-action cancel">
+
+                                <i class="fa-solid fa-calendar-xmark"></i>
+                                İptal Et
+
+                            </a>
+
+                        </div>
+
+                    </article>
+                }
+
+            </div>
+
+        </div>
+
+
+        <button type="button"
+                class="manager-appointment-slider-arrow next"
+                id="upcomingNext"
+                aria-label="Sonraki randevular">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+    </div>
+
+</section>

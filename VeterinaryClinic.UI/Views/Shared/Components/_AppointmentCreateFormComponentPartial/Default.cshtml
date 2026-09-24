@@ -1,193 +1,184 @@
-﻿@model AppointmentDto  
+﻿@model AppointmentDto
 
 <form id="appointmentCreateForm" method="post" novalidate>
     <div class="card-ui appointment-create-card">
 
-      <!-- ---------------- 1) EVCİL HAYVAN BİLGİLERİ ---------------- -->
-      <section class="appointment-create-section" aria-labelledby="acSection1">
-        <div class="appointment-create-section-head">
-          <span class="appointment-create-step">1</span>
-          <div>
-            <h2 class="appointment-create-section-title" id="acSection1">Evcil Hayvan Bilgileri</h2>
-            <p class="appointment-create-section-desc">Randevu oluşturmak istediğiniz evcil hayvanı seçin</p>
-          </div>
-        </div>
-
-        <div class="appointment-create-pet-grid">
-          <div>
-            <div class="form-group-ui" id="animalGroup">
-              <label class="form-label-ui" for="AnimalId">Evcil Hayvan <span class="is-required">*</span></label>
-              <!-- Razor: kullanıcının kendi hayvanları burada listelenir (value = Animal.Id) -->
-              <select id="AnimalId" asp-for="AnimalId" class="form-control-ui appointment-create-select-lg" required>
-                <option value="">Evcil hayvanınızı seçin</option>
-                @foreach (var animal in ViewBag.Animals)
-                {
-                    <option value="@animal.Id"
-                            data-name="@animal.Name"
-                            data-breed="@animal.Breed"
-                            data-icon="🐾">
-                        @animal.Name - @animal.Breed
-                    </option>
-                }
-              </select>
-              <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir evcil hayvan seçin.</span>
-            </div>
-
-            <div class="appointment-create-pet-preview" id="petPreview" aria-live="polite">
-              <div class="appointment-create-pet-avatar" id="petPreviewIcon">🐾</div>
-              <div>
-                <div class="appointment-create-pet-name" id="petPreviewName"></div>
-                <div class="appointment-create-pet-breed" id="petPreviewBreed"></div>
-              </div>
-            </div>
-          </div>
-
-          <aside class="appointment-create-help">
-            <div class="card-icon-tile is-primary"><i class="bi bi-question-circle"></i></div>
-            <div class="appointment-create-help-title">Evcil hayvanınızı göremiyor musunuz?</div>
-            <div class="appointment-create-help-text">Önce Hayvanlarım sayfasından yeni bir evcil hayvan ekleyebilirsiniz.</div>
-            <a href="#" class="btn-ui btn-ui--ghost btn-ui--sm" id="addAnimalBtn"><i class="bi bi-plus-lg"></i> Hayvan Ekle</a>
-          </aside>
-        </div>
-      </section>
-
-      <!-- ---------------- 2) RANDEVU BİLGİLERİ ---------------- -->
-      <section class="appointment-create-section" aria-labelledby="acSection2">
-        <div class="appointment-create-section-head">
-          <span class="appointment-create-step">2</span>
-          <div>
-            <h2 class="appointment-create-section-title" id="acSection2">Randevu Bilgileri</h2>
-            <p class="appointment-create-section-desc">Randevu tarihi, saati ve randevu türünü belirleyin</p>
-          </div>
-        </div>
-
-        <div class="appointment-create-details-grid">
-
-          <!-- Sol: Tarih + Saat -->
-          <div class="appointment-create-col">
-            <div class="form-group-ui" id="dateGroup">
-              <label class="form-label-ui" for="Date">Tarih <span class="is-required">*</span></label>
-              <div class="input-icon-wrap">
-                <i class="bi bi-calendar3 input-icon-wrap-icon" aria-hidden="true"></i>
-                <input type="date" id="Date" asp-for="Date" class="form-control-ui" required>
-              </div>
-              <div class="appointment-create-date-shortcuts">
-                <button type="button" class="appointment-create-chip" data-date-offset="0">Bugün</button>
-                <button type="button" class="appointment-create-chip" data-date-offset="1">Yarın</button>
-                <button type="button" class="appointment-create-chip" data-date-offset="7">1 hafta sonra</button>
-              </div>
-              <span class="form-feedback is-invalid" id="dateFeedback"><i class="bi bi-exclamation-circle"></i> <span>Lütfen bir tarih seçin.</span></span>
-            </div>
-
-            <div class="form-group-ui" id="timeGroup">
-              <span class="form-label-ui" id="timeLabel">Saat <span class="is-required">*</span></span>
-              <!-- Razor: uygun saat dilimleri sunucudan gelebilir; name="Time" TimeSpan ile eşleşir -->
-              <div class="appointment-create-slots" id="timeSlots" role="radiogroup" aria-labelledby="timeLabel"></div>
-               <input asp-for="Time" type="hidden" id="Time">
-              <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir saat seçin.</span>
-            </div>
-          </div>
-
-          <!-- Sağ: Randevu Türü + Durum -->
-          <div class="appointment-create-col">
-            <div class="form-group-ui" id="typeGroup">
-              <label class="form-label-ui" for="AppointmentType">Randevu Türü <span class="is-required">*</span></label>
-             <select asp-for="AppointmentType" id="AppointmentType" class="form-control-ui appointment-create-select-lg" required>
-            <option value="">Randevu türünü seçin</option>
-
-            <option value="Genel Muayene"
-                    data-icon="bi-clipboard2-pulse"
-                    data-text="Genel sağlık durumunun kontrol edildiği rutin muayene.">
-                Genel Muayene
-            </option>
-
-            <option value="Kontrol"
-                    data-icon="bi-arrow-repeat"
-                    data-text="Daha önce başlanan tedavi veya muayenenin takip kontrolü.">
-                Kontrol
-            </option>
-
-            <option value="Aşı"
-                    data-icon="bi-eyedropper"
-                    data-text="Rutin veya hatırlatma aşı uygulamaları.">
-                Aşı
-            </option>
-
-            <option value="Diş Kontrolü"
-                    data-icon="bi-emoji-smile"
-                    data-text="Diş ve ağız sağlığı muayenesi.">
-                Diş Kontrolü
-            </option>
-
-            <option value="Acil Muayene"
-                    data-icon="bi-exclamation-triangle"
-                    data-text="Acil durumlar için öncelikli muayene.">
-                Acil Muayene
-            </option>
-
-            <option value="Cerrahi Kontrol"
-                    data-icon="bi-bandaid"
-                    data-text="Operasyon sonrası iyileşme kontrolü.">
-                Cerrahi Kontrol
-            </option>
-        </select>
-              <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir randevu türü seçin.</span>
-
-              <div class="appointment-create-type-card is-empty" id="typeCard" aria-live="polite">
-                <div class="appointment-create-type-icon"><i class="bi bi-clipboard2-pulse" id="typeCardIcon"></i></div>
+        <section class="appointment-create-section" aria-labelledby="acSection1">
+            <div class="appointment-create-section-head">
+                <span class="appointment-create-step">1</span>
                 <div>
-                  <div class="appointment-create-type-name" id="typeCardName">Randevu türü seçilmedi</div>
-                  <div class="appointment-create-type-text" id="typeCardText">Seçtiğiniz türe göre kısa bir açıklama burada görünür.</div>
+                    <h2 class="appointment-create-section-title" id="acSection1">Evcil Hayvan Bilgileri</h2>
+                    <p class="appointment-create-section-desc">Randevu oluşturmak istediğiniz evcil hayvanı seçin</p>
                 </div>
-              </div>
             </div>
 
-            <!-- Status formda düzenlenemez; yeni randevu her zaman "Scheduled" oluşturulur -->
-            <div class="appointment-create-status">
-              <span>Randevu durumu</span>
-              <span class="badge-ui badge-ui--info"><i class="bi bi-calendar2-check"></i> Planlandı</span>
-              <input asp-for="Status" type="hidden" value="Scheduled">
+            <div class="appointment-create-pet-grid">
+                <div>
+                    <div class="form-group-ui" id="animalGroup">
+                        <label class="form-label-ui" for="AnimalId">Evcil Hayvan <span class="is-required">*</span></label>
+                        <select id="AnimalId" asp-for="AnimalId" class="form-control-ui appointment-create-select-lg" required>
+                            <option value="">Evcil hayvanınızı seçin</option>
+                            @foreach (var animal in ViewBag.Animals)
+                            {
+                                <option value="@animal.Id"
+                                        data-name="@animal.Name"
+                                        data-breed="@animal.Breed"
+                                        data-icon="🐾">
+                                    @animal.Name - @animal.Breed
+                                </option>
+                            }
+                        </select>
+                        <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir evcil hayvan seçin.</span>
+                    </div>
+
+                    <div class="appointment-create-pet-preview" id="petPreview" aria-live="polite">
+                        <div class="appointment-create-pet-avatar" id="petPreviewIcon">🐾</div>
+                        <div>
+                            <div class="appointment-create-pet-name" id="petPreviewName"></div>
+                            <div class="appointment-create-pet-breed" id="petPreviewBreed"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="appointment-create-help">
+                    <div class="card-icon-tile is-primary"><i class="bi bi-question-circle"></i></div>
+                    <div class="appointment-create-help-title">Evcil hayvanınızı göremiyor musunuz?</div>
+                    <div class="appointment-create-help-text">Önce Hayvanlarım sayfasından yeni bir evcil hayvan ekleyebilirsiniz.</div>
+                    <a href="/animal/create" class="btn-ui btn-ui--ghost btn-ui--sm"><i class="bi bi-plus-lg"></i> Hayvan Ekle</a>
+                </aside>
             </div>
-          </div>
-        </div>
+        </section>
 
-        <!-- Notlar (opsiyonel, tam genişlik) -->
-        <div class="form-group-ui appointment-create-notes">
-          <label class="form-label-ui" for="Notes">Notlar <span class="appointment-create-hint">(opsiyonel)</span></label>
-          <textarea id="Notes" asp-for="Notes" class="form-control-ui" rows="4" placeholder="Evcil hayvanınızın durumu hakkında eklemek istediğiniz bir not varsa yazabilirsiniz..."></textarea>
-        </div>
-      </section>
+        <section class="appointment-create-section" aria-labelledby="acSection2">
+            <div class="appointment-create-section-head">
+                <span class="appointment-create-step">2</span>
+                <div>
+                    <h2 class="appointment-create-section-title" id="acSection2">Randevu Bilgileri</h2>
+                    <p class="appointment-create-section-desc">Randevu tarihi, saati ve randevu türünü belirleyin</p>
+                </div>
+            </div>
 
-      <!-- ---------------- 3) ONAY ---------------- -->
-      <section class="appointment-create-section" aria-labelledby="acSection3">
-        <div class="appointment-create-section-head">
-          <span class="appointment-create-step">3</span>
-          <div>
-            <h2 class="appointment-create-section-title" id="acSection3">Onay</h2>
-            <p class="appointment-create-section-desc">Randevuyu oluşturmadan önce bilgilerinizi kontrol edin</p>
-          </div>
-        </div>
+            <div class="appointment-create-details-grid">
 
-        <div class="appointment-create-info">
-          <div class="card-icon-tile"><i class="bi bi-info-circle"></i></div>
-          <div>
-            <div class="appointment-create-info-title">Bilgilendirme</div>
-            <div class="appointment-create-info-text">Randevunuzu oluşturduktan sonra randevu bilgileriniz Randevularım sayfasında görüntülenecektir.</div>
-          </div>
-        </div>
+                <div class="appointment-create-col">
+                    <div class="form-group-ui" id="dateGroup">
+                        <label class="form-label-ui" for="Date">Tarih <span class="is-required">*</span></label>
+                        <div class="input-icon-wrap">
+                            <i class="bi bi-calendar3 input-icon-wrap-icon" aria-hidden="true"></i>
+                            <input type="date" id="Date" asp-for="Date" class="form-control-ui" required>
+                        </div>
+                        <div class="appointment-create-date-shortcuts">
+                            <button type="button" class="appointment-create-chip" data-date-offset="0">Bugün</button>
+                            <button type="button" class="appointment-create-chip" data-date-offset="1">Yarın</button>
+                            <button type="button" class="appointment-create-chip" data-date-offset="7">1 hafta sonra</button>
+                        </div>
+                        <span class="form-feedback is-invalid" id="dateFeedback"><i class="bi bi-exclamation-circle"></i> <span>Lütfen bir tarih seçin.</span></span>
+                    </div>
 
-        <div class="appointment-create-summary" id="appointmentSummary" aria-live="polite">
-          <span class="appointment-create-summary-item is-empty" data-summary="animal"><i class="bi bi-heart-pulse"></i> Hayvan seçilmedi</span>
-          <span class="appointment-create-summary-item is-empty" data-summary="date"><i class="bi bi-calendar3"></i> Tarih seçilmedi</span>
-          <span class="appointment-create-summary-item is-empty" data-summary="time"><i class="bi bi-clock"></i> Saat seçilmedi</span>
-          <span class="appointment-create-summary-item is-empty" data-summary="type"><i class="bi bi-clipboard2-pulse"></i> Tür seçilmedi</span>
-        </div>
+                    <div class="form-group-ui" id="timeGroup">
+                        <span class="form-label-ui" id="timeLabel">Saat <span class="is-required">*</span></span>
+                        <div class="appointment-create-slots" id="timeSlots" role="radiogroup" aria-labelledby="timeLabel"></div>
+                        <input asp-for="Time" type="hidden" id="Time">
+                        <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir saat seçin.</span>
+                    </div>
+                </div>
 
-        <div class="form-actions appointment-create-actions">
-          <button type="button" class="btn-ui btn-ui--ghost" id="appointmentCancelBtn"><i class="bi bi-x-lg"></i> Vazgeç</button>
-          <button type="submit" class="btn-ui btn-ui--primary btn-ui--lg"><i class="bi bi-check-lg"></i> Randevu Oluştur</button>
-        </div>
-      </section>
+                <div class="appointment-create-col">
+                    <div class="form-group-ui" id="typeGroup">
+                        <label class="form-label-ui" for="AppointmentType">Randevu Türü <span class="is-required">*</span></label>
+                        <select asp-for="AppointmentType" id="AppointmentType" class="form-control-ui appointment-create-select-lg" required>
+                            <option value="">Randevu türünü seçin</option>
+
+                            <option value="Genel Muayene"
+                                    data-icon="bi-clipboard2-pulse"
+                                    data-text="Genel sağlık durumunun kontrol edildiği rutin muayene.">
+                                Genel Muayene
+                            </option>
+
+                            <option value="Kontrol"
+                                    data-icon="bi-arrow-repeat"
+                                    data-text="Daha önce başlanan tedavi veya muayenenin takip kontrolü.">
+                                Kontrol
+                            </option>
+
+                            <option value="Aşı"
+                                    data-icon="bi-eyedropper"
+                                    data-text="Rutin veya hatırlatma aşı uygulamaları.">
+                                Aşı
+                            </option>
+
+                            <option value="Diş Kontrolü"
+                                    data-icon="bi-emoji-smile"
+                                    data-text="Diş ve ağız sağlığı muayenesi.">
+                                Diş Kontrolü
+                            </option>
+
+                            <option value="Acil Muayene"
+                                    data-icon="bi-exclamation-triangle"
+                                    data-text="Acil durumlar için öncelikli muayene.">
+                                Acil Muayene
+                            </option>
+
+                            <option value="Cerrahi Kontrol"
+                                    data-icon="bi-bandaid"
+                                    data-text="Operasyon sonrası iyileşme kontrolü.">
+                                Cerrahi Kontrol
+                            </option>
+                        </select>
+                        <span class="form-feedback is-invalid"><i class="bi bi-exclamation-circle"></i> Lütfen bir randevu türü seçin.</span>
+
+                        <div class="appointment-create-type-card is-empty" id="typeCard" aria-live="polite">
+                            <div class="appointment-create-type-icon"><i class="bi bi-clipboard2-pulse" id="typeCardIcon"></i></div>
+                            <div>
+                                <div class="appointment-create-type-name" id="typeCardName">Randevu türü seçilmedi</div>
+                                <div class="appointment-create-type-text" id="typeCardText">Seçtiğiniz türe göre kısa bir açıklama burada görünür.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="appointment-create-status">
+                        <span>Randevu durumu</span>
+                        <span class="badge-ui badge-ui--info"><i class="bi bi-calendar2-check"></i> Planlandı</span>
+                        <input asp-for="Status" type="hidden" value="Scheduled">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group-ui appointment-create-notes">
+                <label class="form-label-ui" for="Notes">Notlar <span class="appointment-create-hint">(opsiyonel)</span></label>
+                <textarea id="Notes" asp-for="Notes" class="form-control-ui" rows="4" placeholder="Evcil hayvanınızın durumu hakkında eklemek istediğiniz bir not varsa yazabilirsiniz..."></textarea>
+            </div>
+        </section>
+
+        <section class="appointment-create-section" aria-labelledby="acSection3">
+            <div class="appointment-create-section-head">
+                <span class="appointment-create-step">3</span>
+                <div>
+                    <h2 class="appointment-create-section-title" id="acSection3">Onay</h2>
+                    <p class="appointment-create-section-desc">Randevuyu oluşturmadan önce bilgilerinizi kontrol edin</p>
+                </div>
+            </div>
+
+            <div class="appointment-create-info">
+                <div class="card-icon-tile"><i class="bi bi-info-circle"></i></div>
+                <div>
+                    <div class="appointment-create-info-title">Bilgilendirme</div>
+                    <div class="appointment-create-info-text">Randevunuzu oluşturduktan sonra randevu bilgileriniz Randevularım sayfasında görüntülenecektir.</div>
+                </div>
+            </div>
+
+            <div class="appointment-create-summary" id="appointmentSummary" aria-live="polite">
+                <span class="appointment-create-summary-item is-empty" data-summary="animal"><i class="bi bi-heart-pulse"></i> Hayvan seçilmedi</span>
+                <span class="appointment-create-summary-item is-empty" data-summary="date"><i class="bi bi-calendar3"></i> Tarih seçilmedi</span>
+                <span class="appointment-create-summary-item is-empty" data-summary="time"><i class="bi bi-clock"></i> Saat seçilmedi</span>
+                <span class="appointment-create-summary-item is-empty" data-summary="type"><i class="bi bi-clipboard2-pulse"></i> Tür seçilmedi</span>
+            </div>
+
+            <div class="form-actions appointment-create-actions">
+                <button type="button" class="btn-ui btn-ui--ghost" id="appointmentCancelBtn"><i class="bi bi-x-lg"></i> Vazgeç</button>
+                <button type="submit" class="btn-ui btn-ui--primary btn-ui--lg"><i class="bi bi-check-lg"></i> Randevu Oluştur</button>
+            </div>
+        </section>
 
     </div>
-  </form>
+</form>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VeterinaryClinic.UI.Dtos.Animal;
 using VeterinaryClinic.UI.Dtos.Appointment;
+using VeterinaryClinic.UI.Dtos.Treatment;
 using VeterinaryClinic.UI.Services.Animal;
 using VeterinaryClinic.UI.Services.Appointment;
 using VeterinaryClinic.UI.Services.Treatment;
@@ -22,7 +23,15 @@ namespace VeterinaryClinic.UI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var treatments = await _treatmentService.GetMyTreatmentsAsync();
+            var treatments = new List<TreatmentDto>();
+            if (User.IsInRole("Manager"))
+            {
+                treatments = await _treatmentService.GetAllTreatmentsAsync();
+            }
+            if (User.IsInRole("Customer"))
+            {
+                treatments = await _treatmentService.GetMyTreatmentsAsync();
+            }
             ViewBag.TotalTreatment = treatments.Count();
             ViewBag.TotalTreatmentThisYear = treatments.Count(x => x.Date.Value.Year == DateTime.Now.Year);
 

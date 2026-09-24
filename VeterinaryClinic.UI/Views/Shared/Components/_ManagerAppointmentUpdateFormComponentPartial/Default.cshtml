@@ -1,0 +1,329 @@
+﻿@model AppointmentDto
+@{
+    var owner = (UserDto)ViewBag.Owner;
+    var animal = (AnimalDto)ViewBag.Animal;
+}
+<div class="manager-appointment-create-form-card">
+
+    <form method="post" id="appointmentCreateForm">
+        <input type="hidden" asp-for="Id" />
+        <div class="manager-appointment-create-form-header">
+
+            <div class="manager-appointment-create-form-header-icon">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Randevu Bilgileri
+                </h2>
+
+                <p>
+                    Önce müşteri ve hayvanı seçin.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="manager-appointment-create-form-body">
+
+            <div class="manager-appointment-create-form-section">
+
+
+                <div class="manager-appointment-create-section-heading">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <h3>
+                        Müşteri ve Hayvan
+                    </h3>
+
+                </div>
+
+
+                <div class="manager-appointment-create-form-grid">
+
+                    <div class="manager-appointment-create-form-group full">
+
+                        <label class="manager-appointment-create-label">
+
+                            Müşteri
+                            <span>*</span>
+
+                        </label>
+
+
+                        <select class="manager-appointment-create-select"
+                                id="customerSelect"
+                                name="CustomerId"
+                                required>
+
+                            <option value="@owner.Id">
+                                @owner.FullName
+                            </option>
+
+                            @foreach (var item in ViewBag.Owners)
+                            {
+                                <option value="@item.Id" data-email="@item.Email">
+                                    @item.FullName
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <div class="manager-appointment-create-form-group full"
+                         id="selectedCustomerBox"
+                         style="display: none;">
+
+                        <div class="manager-appointment-create-selected-user">
+
+                            <div class="manager-appointment-create-user-avatar">
+
+                                <i class="fa-solid fa-user"></i>
+
+                            </div>
+
+
+                            <div class="manager-appointment-create-user-info">
+
+                                <span class="manager-appointment-create-user-name"
+                                      id="selectedCustomerName">
+
+
+                                </span>
+
+                                <span class="manager-appointment-create-user-email"
+                                      id="selectedCustomerEmail">
+
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="manager-appointment-create-form-group full">
+
+                        <label class="manager-appointment-create-label">
+
+                            Hayvan
+                            <span>*</span>
+
+                        </label>
+
+
+                        <select class="manager-appointment-create-select"
+                                id="animalSelect"
+                                asp-for="AnimalId"
+                                name="AnimalId"
+                                disabled
+                                required>
+
+                            <option value="@animal.Id">
+                                @animal.Name
+                            </option>
+
+                            @foreach (var item in ViewBag.Animals)
+                            {
+                                <option value="@item.Id"
+                                        data-owner-id="@item.OwnerId"
+                                        data-name="@item.Name"
+                                        data-species="@item.Species"
+                                        data-breed="@item.Breed"
+                                        data-age="@item.Age"
+                                        data-weight="@item.Weight"
+                                        data-image="@item.ImageUrl">
+
+                                    @item.Name - @item.Species - @item.Breed
+
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <div class="manager-appointment-create-form-group full"
+                         id="selectedAnimalBox"
+                         style="display: none;">
+
+                        <div class="manager-appointment-create-selected-animal">
+
+                            <div class="manager-appointment-create-animal-image">
+
+                                <img id="selectedAnimalImage"
+                                     src=""
+                                     alt="Hayvan">
+
+                            </div>
+
+                            <div class="manager-appointment-create-animal-info">
+
+                                <span class="manager-appointment-create-animal-name"
+                                      id="selectedAnimalName">
+                                </span>
+
+                                <span class="manager-appointment-create-animal-meta"
+                                      id="selectedAnimalMeta">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-appointment-create-form-section">
+
+
+                <div class="manager-appointment-create-section-heading">
+
+                    <i class="fa-solid fa-calendar-days"></i>
+
+                    <h3>
+                        Randevu Detayları
+                    </h3>
+
+                </div>
+
+
+                <div class="manager-appointment-create-form-grid">
+
+                    <div class="manager-appointment-create-form-group full">
+
+                        <label class="manager-appointment-create-label">
+
+                            Randevu Türü
+                            <span>*</span>
+
+                        </label>
+
+
+                        <select class="manager-appointment-create-select"
+                                id="appointmentType"
+                                asp-for="AppointmentType"
+                                name="AppointmentType"
+                                required>
+
+                            <option value="">
+                                Randevu türü seçiniz
+                            </option>
+
+                            @foreach (var item in ViewBag.AppointmentTypes)
+                            {
+                                <option value="@item">
+                                    @item
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <div class="manager-appointment-create-form-group">
+
+                        <label class="manager-appointment-create-label">
+
+                            Tarih
+                            <span>*</span>
+
+                        </label>
+
+
+                        <input type="date"
+                               class="manager-appointment-create-input"
+                               id="appointmentDate"
+                               asp-for="Date"
+                               name="Date"
+                               required>
+
+                    </div>
+
+
+                    <div class="manager-appointment-create-form-group">
+
+                        <label class="manager-appointment-create-label">
+
+                            Saat
+                            <span>*</span>
+
+                        </label>
+
+
+                        <input type="time"
+                               class="manager-appointment-create-input"
+                               id="appointmentTime"
+                               asp-for="Time"
+                               name="Time"
+                               required>
+
+                    </div>
+
+
+                    <div class="manager-appointment-create-form-group full">
+
+                        <label class="manager-appointment-create-label">
+
+                            Notlar
+
+                        </label>
+
+
+                        <textarea class="manager-appointment-create-textarea"
+                                  id="appointmentNotes"
+                                  name="Notes"
+                                  asp-for="Notes"
+                                  placeholder="Randevu ile ilgili notlarınızı yazabilirsiniz..."></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <input type="hidden" asp-for="Status" />
+
+            <div class="manager-appointment-create-actions">
+
+                <a href="/Appointment/Index"
+                   class="btn-ui btn-ui--outline">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Vazgeç
+
+                </a>
+
+
+                <button type="submit"
+                        class="btn-ui btn-ui--primary">
+
+                    <i class="fa-solid fa-calendar-plus"></i>
+
+                    Randevuyu Güncelle
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </form>
+
+</div>

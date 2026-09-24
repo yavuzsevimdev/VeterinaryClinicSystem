@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VeterinaryClinic.UI.Dtos.Treatment;
 using VeterinaryClinic.UI.Services.Appointment;
 using VeterinaryClinic.UI.Services.Treatment;
 
@@ -17,7 +18,15 @@ namespace VeterinaryClinic.UI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            var treatments = await _treatmentService.GetMyTreatmentsAsync();
+            var treatments = new List<TreatmentDto>();
+            if (User.IsInRole("Manager"))
+            {
+                treatments = await _treatmentService.GetAllTreatmentsAsync();
+            }
+            if (User.IsInRole("Customer"))
+            {
+                treatments = await _treatmentService.GetMyTreatmentsAsync();
+            }
             var activeTreatment = treatments.FirstOrDefault(t => t.Id == id);
             if (activeTreatment == null)
             {

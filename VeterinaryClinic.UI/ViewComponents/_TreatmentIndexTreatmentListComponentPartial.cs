@@ -21,7 +21,15 @@ namespace VeterinaryClinic.UI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var treatments = await _treatmentService.GetMyTreatmentsAsync();
+            var treatments = new List<TreatmentDto>();
+            if (User.IsInRole("Manager"))
+            {
+                treatments = await _treatmentService.GetAllTreatmentsAsync();
+            }
+            if (User.IsInRole("Customer"))
+            {
+                treatments = await _treatmentService.GetMyTreatmentsAsync();
+            }
             if (treatments == null)
                 return null;
 

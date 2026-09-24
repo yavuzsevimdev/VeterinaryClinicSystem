@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using VeterinaryClinic.Business.Dtos.UserDtos;
 using VeterinaryClinic.Business.Services;
@@ -78,6 +79,23 @@ namespace VeterinaryClinic.API.Controllers
                 user.Email,
                 user.PhoneNumber
             });
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("customers")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetCustomers()
+        {
+            var customers = await _userManager.GetUsersInRoleAsync("Customer");
+
+            return Ok(customers);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace VeterinaryClinic.UI.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var values = await _animalService.GetAllAnimalsAsync();
-            return View(values);
+            return View(values.Take(8).ToList());
         }
     }
 }

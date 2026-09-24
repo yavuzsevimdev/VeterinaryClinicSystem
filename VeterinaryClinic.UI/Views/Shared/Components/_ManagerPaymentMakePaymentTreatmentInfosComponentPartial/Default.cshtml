@@ -1,0 +1,105 @@
+﻿@model List<TreatmentDto>
+@{
+    int count = 0;
+    decimal totalCost = Model.Sum(x => x.Cost);
+}
+<div class="payment-pay-card">
+
+    <div class="payment-pay-card-header">
+
+        <div class="payment-pay-card-icon accent">
+            <i class="fa-solid fa-stethoscope"></i>
+        </div>
+
+        <div>
+
+            <h2 class="payment-pay-card-title">
+                Tedavi Bilgileri
+            </h2>
+
+            <p class="payment-pay-card-description">
+                Bu randevuya ait tedavi kayıtları
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-pay-table-wrapper">
+
+        <table class="payment-pay-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Tedavi Adı</th>
+
+                    <th>Tarih</th>
+
+                    <th>Açıklama</th>
+
+                    <th>Tutar</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    count++;
+                    <tr>
+
+                        <td>@count</td>
+
+                        <td>
+
+                            <div class="payment-pay-treatment-name">
+                                @item.TreatmentType
+                            </div>
+
+                        </td>
+
+                        <td>
+                            @item.Date.Value.ToString("dd.MM.yyyy")
+                        </td>
+
+                        <td>
+
+                            <div class="payment-pay-treatment-description">
+                                @item.Notes
+                            </div>
+
+                        </td>
+
+                        <td>
+                            ₺@item.Cost.ToString("0,0")
+                        </td>
+
+                    </tr>
+                }
+
+                <tr class="payment-pay-total-row">
+
+                    <td colspan="4">
+                        Toplam Tedavi Tutarı
+                    </td>
+
+                    <td>
+                        ₺@totalCost.ToString("0,0")
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

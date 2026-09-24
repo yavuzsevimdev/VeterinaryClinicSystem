@@ -16,6 +16,7 @@ secrets.json
 # Logs
 *.log
 logs/
+Logs/
 
 # OS
 .DS_Store

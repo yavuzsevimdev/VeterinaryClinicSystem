@@ -2,22 +2,2766 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tedavi Geçmişi | VetCare</title>
+@if (User.IsInRole("Manager"))
+{
+    @model List<TreatmentListDto>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    ViewData["Title"] = "Tedaviler";
 
-    <!-- Global VetCare UI Foundation -->
-    <link rel="stylesheet" href="css/main.css">
+    var treatments = Model;
 
+    var today = DateTime.Today;
+
+    var totalTreatmentCount = treatments.Count;
+
+    var thisMonthTreatments = treatments
+        .Where(x =>
+            x.Date.HasValue &&
+            x.Date.Value.Year == today.Year &&
+            x.Date.Value.Month == today.Month)
+        .ToList();
+
+    var totalCost = treatments.Sum(x => x.Cost);
+
+    var averageCost = totalTreatmentCount > 0
+        ? totalCost / totalTreatmentCount
+        : 0;
+
+    var recentTreatments = treatments
+        .OrderByDescending(x => x.Date)
+        .Take(3)
+        .ToList();
+
+    var treatmentGroups = treatments
+        .Where(x => !string.IsNullOrWhiteSpace(x.TreatmentType))
+        .GroupBy(x => x.TreatmentType)
+        .Select(x => new
+        {
+            Name = x.Key,
+            Count = x.Count(),
+            Cost = x.Sum(y => y.Cost)
+        })
+        .OrderByDescending(x => x.Count)
+        .Take(5)
+        .ToList();
+
+    var maxTreatmentCount = treatmentGroups.Any()
+        ? treatmentGroups.Max(x => x.Count)
+        : 1;
+
+
+
+    <style>
+
+        /* =========================================================
+               PAGE
+               ========================================================= */
+
+        .manager-treatment-page {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+
+        /* =========================================================
+               HEADER
+               ========================================================= */
+
+        .manager-treatment-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .manager-treatment-page-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .manager-treatment-page-icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 1.4rem;
+        }
+
+        .manager-treatment-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.2rem;
+            color: var(--color-muted-light);
+            font-size: 0.68rem;
+        }
+
+            .manager-treatment-breadcrumb i {
+                font-size: 0.5rem;
+            }
+
+        .manager-treatment-page-title h1 {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .manager-treatment-page-title p {
+            margin: 0.3rem 0 0;
+            color: var(--color-muted);
+            font-size: 0.76rem;
+        }
+
+
+
+        /* =========================================================
+               SECTION TITLE
+               ========================================================= */
+
+        .manager-treatment-section-heading {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .manager-treatment-section-heading-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.75rem;
+        }
+
+        .manager-treatment-section-heading h2 {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+               STATISTICS
+               ========================================================= */
+
+        .manager-treatment-statistics {
+            margin-bottom: 1.25rem;
+        }
+
+
+        /* =========================================================
+               DASHBOARD GRID
+               ========================================================= */
+
+        .manager-treatment-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.9fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .manager-treatment-secondary-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.9fr;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+
+        /* =========================================================
+               CARD HEADER
+               ========================================================= */
+
+        .manager-treatment-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .manager-treatment-card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            min-width: 0;
+        }
+
+            .manager-treatment-card-title h2 {
+                margin: 0;
+                color: var(--color-text);
+                font-size: 0.86rem;
+                font-weight: 700;
+            }
+
+            .manager-treatment-card-title p {
+                margin: 0.15rem 0 0;
+                color: var(--color-muted);
+                font-size: 0.65rem;
+            }
+
+        .manager-treatment-small-icon {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+            .manager-treatment-small-icon.primary {
+                background: var(--color-primary-light);
+                color: var(--color-primary);
+            }
+
+            .manager-treatment-small-icon.info {
+                background: var(--color-info-light);
+                color: var(--color-info);
+            }
+
+            .manager-treatment-small-icon.accent {
+                background: var(--color-accent-light);
+                color: #c87862;
+            }
+
+            .manager-treatment-small-icon.secondary {
+                background: var(--color-secondary-light);
+                color: #4b9475;
+            }
+
+
+        /* =========================================================
+               RECENT TREATMENTS
+               ========================================================= */
+
+        .manager-treatment-recent-card {
+            padding: 1.15rem;
+        }
+
+        .manager-treatment-recent-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =========================================================
+           RECENT TREATMENTS - ANIMAL CARD STYLE
+           ========================================================= */
+
+        .manager-treatment-recent-card {
+            padding: 1.15rem;
+        }
+
+
+        /* ---------------------------------------------------------
+           LIST
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        /* ---------------------------------------------------------
+           ITEM
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-card-item {
+            display: grid;
+            grid-template-columns: minmax(190px, 1.15fr) minmax(180px, 1.2fr) 90px 105px 65px;
+            align-items: center;
+            gap: 1rem;
+            min-height: 74px;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-border);
+            color: inherit;
+            text-decoration: none;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+            .manager-treatment-recent-card-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .manager-treatment-recent-card-item:first-child {
+                padding-top: 0;
+            }
+
+            .manager-treatment-recent-card-item:hover {
+                background-color: var(--color-surface-alt);
+                border-radius: var(--radius-md);
+            }
+
+
+        /* ---------------------------------------------------------
+           ANIMAL
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-animal {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+
+        .manager-treatment-recent-animal-image {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            overflow: hidden;
+            border-radius: 50%;
+            background-color: var(--color-secondary-light);
+            border: 2px solid var(--color-surface);
+            box-shadow: var(--shadow-xs);
+        }
+
+
+            .manager-treatment-recent-animal-image img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+            }
+
+
+        .manager-treatment-recent-animal-info {
+            min-width: 0;
+        }
+
+
+            .manager-treatment-recent-animal-info strong {
+                display: block;
+                color: var(--color-text);
+                font-size: 0.76rem;
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+
+            .manager-treatment-recent-animal-info span {
+                display: block;
+                margin-top: 0.2rem;
+                color: var(--color-muted);
+                font-size: 0.61rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+
+        /* ---------------------------------------------------------
+           TREATMENT
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-treatment {
+            min-width: 0;
+        }
+
+
+            .manager-treatment-recent-treatment strong {
+                display: block;
+                color: var(--color-text);
+                font-size: 0.72rem;
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+
+            .manager-treatment-recent-treatment span {
+                display: block;
+                margin-top: 0.2rem;
+                color: var(--color-muted);
+                font-size: 0.6rem;
+                line-height: 1.35;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+
+            .manager-treatment-recent-treatment small {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+                margin-top: 0.3rem;
+                color: var(--color-muted-light);
+                font-size: 0.58rem;
+            }
+
+
+                .manager-treatment-recent-treatment small i {
+                    color: var(--color-primary);
+                }
+
+
+        /* ---------------------------------------------------------
+           APPOINTMENT
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-appointment {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+
+        .manager-treatment-recent-label {
+            color: var(--color-muted-light);
+            font-size: 0.55rem;
+        }
+
+
+        .manager-treatment-recent-appointment strong {
+            color: var(--color-text);
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+
+        /* ---------------------------------------------------------
+           STATUS
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-status {
+            justify-self: start;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+            font-size: 0.55rem;
+        }
+
+
+        /* ---------------------------------------------------------
+           PRICE
+           --------------------------------------------------------- */
+
+        .manager-treatment-recent-price {
+            justify-self: end;
+            color: var(--color-text);
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        /* ---------------------------------------------------------
+           EMPTY
+           --------------------------------------------------------- */
+
+        .manager-treatment-empty-small {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem 0;
+        }
+
+
+        .manager-treatment-empty-small-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.9rem;
+        }
+
+
+        .manager-treatment-empty-small strong {
+            display: block;
+            color: var(--color-text);
+            font-size: 0.7rem;
+        }
+
+
+        .manager-treatment-empty-small span {
+            display: block;
+            margin-top: 0.15rem;
+            color: var(--color-muted);
+            font-size: 0.6rem;
+        }
+
+
+        /* =========================================================
+               MONTHLY CHART
+               ========================================================= */
+
+        .manager-treatment-monthly-card {
+            padding: 1.15rem;
+        }
+
+        .manager-treatment-chart-select {
+            height: 32px;
+            padding: 0 0.6rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            color: var(--color-muted);
+            font-family: inherit;
+            font-size: 0.63rem;
+            outline: none;
+        }
+
+        .manager-treatment-chart {
+            height: 160px;
+            display: flex;
+            align-items: flex-end;
+            gap: 0.9rem;
+            padding: 0 0.5rem;
+        }
+
+        .manager-treatment-chart-column {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .manager-treatment-bars {
+            height: 125px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+            .manager-treatment-bars span {
+                width: 10px;
+                display: block;
+                border-radius: 5px 5px 2px 2px;
+            }
+
+            .manager-treatment-bars .treatment-bar {
+                background: var(--color-primary);
+            }
+
+            .manager-treatment-bars .cost-bar {
+                background: #d6d0f0;
+            }
+
+        .manager-treatment-chart-column small {
+            color: var(--color-muted-light);
+            font-size: 0.58rem;
+        }
+
+        .manager-treatment-chart-legend {
+            display: flex;
+            gap: 1rem;
+            padding-top: 0.7rem;
+            border-top: 1px solid var(--color-border);
+            color: var(--color-muted);
+            font-size: 0.6rem;
+        }
+
+            .manager-treatment-chart-legend span {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+            }
+
+            .manager-treatment-chart-legend i {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--color-primary);
+            }
+
+                .manager-treatment-chart-legend i.cost {
+                    background: #d6d0f0;
+                }
+
+
+        /* =========================================================
+               POPULAR
+               ========================================================= */
+
+        .manager-treatment-popular-card,
+        .manager-treatment-quick-card {
+            padding: 1.15rem;
+        }
+
+        .manager-treatment-popular-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .manager-treatment-popular-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .manager-treatment-popular-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .manager-treatment-popular-top > div {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .manager-treatment-popular-top strong {
+                color: var(--color-text);
+                font-size: 0.68rem;
+            }
+
+            .manager-treatment-popular-top > span {
+                color: var(--color-muted);
+                font-size: 0.65rem;
+                font-weight: 600;
+            }
+
+        .manager-treatment-popular-icon {
+            width: 27px;
+            height: 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.65rem;
+        }
+
+        .manager-treatment-progress {
+            height: 6px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: var(--color-primary-light);
+        }
+
+            .manager-treatment-progress span {
+                display: block;
+                height: 100%;
+                border-radius: inherit;
+                background: var(--gradient-primary);
+            }
+
+
+        /* =========================================================
+               QUICK ACTIONS
+               ========================================================= */
+
+        .manager-treatment-quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+        }
+
+        .manager-treatment-quick-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 105px;
+            gap: 0.55rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-surface-alt);
+            color: var(--color-text);
+            text-decoration: none;
+            transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+            .manager-treatment-quick-item:hover {
+                border-color: var(--color-primary);
+                background: var(--color-primary-light);
+                transform: translateY(-2px);
+            }
+
+            .manager-treatment-quick-item .card-icon-tile {
+                width: 38px;
+                height: 38px;
+                font-size: 0.85rem;
+            }
+
+            .manager-treatment-quick-item > span {
+                font-size: 0.62rem;
+                font-weight: 600;
+            }
+
+
+        /* =========================================================
+               FILTER
+               ========================================================= */
+
+        .manager-treatment-filter-card {
+            padding: 1.2rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .manager-treatment-filter-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1.05fr;
+            gap: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .manager-treatment-filter-field label {
+            display: block;
+            margin-bottom: 0.35rem;
+            color: var(--color-text);
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .manager-treatment-input-wrapper {
+            position: relative;
+        }
+
+            .manager-treatment-input-wrapper i {
+                position: absolute;
+                left: 0.8rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--color-muted-light);
+                pointer-events: none;
+            }
+
+            .manager-treatment-input-wrapper input {
+                padding-left: 2.2rem;
+            }
+
+        .manager-treatment-filter-action {
+            display: flex;
+            align-items: flex-end;
+        }
+
+            .manager-treatment-filter-action .btn-ui {
+                width: 100%;
+                height: 40px;
+            }
+
+
+        /* =========================================================
+               RECORD TITLE
+               ========================================================= */
+
+        .manager-treatment-records-card {
+            padding: 1.15rem;
+        }
+
+        .manager-treatment-record-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .manager-treatment-record-title h2 {
+                margin: 0;
+                color: var(--color-text);
+                font-size: 0.86rem;
+            }
+
+        .manager-treatment-view-switch {
+            display: flex;
+            padding: 0.2rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-surface-alt);
+        }
+
+            .manager-treatment-view-switch button {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                height: 31px;
+                padding: 0 0.7rem;
+                border: none;
+                border-radius: var(--radius-sm);
+                background: transparent;
+                color: var(--color-muted);
+                font-family: inherit;
+                font-size: 0.65rem;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+                .manager-treatment-view-switch button.active {
+                    background: var(--color-surface);
+                    color: var(--color-primary);
+                    box-shadow: var(--shadow-xs);
+                }
+
+
+        /* =========================================================
+               TABLE
+               ========================================================= */
+
+        .manager-treatment-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .manager-treatment-table {
+            width: 100%;
+            min-width: 1100px;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+            .manager-treatment-table th {
+                padding: 0.75rem 0.65rem;
+                border-bottom: 1px solid var(--color-border);
+                color: var(--color-muted-light);
+                font-size: 0.58rem;
+                font-weight: 700;
+                text-align: left;
+                letter-spacing: 0.03em;
+            }
+
+            .manager-treatment-table td {
+                padding: 0.8rem 0.65rem;
+                border-bottom: 1px solid var(--color-border);
+                vertical-align: middle;
+            }
+
+            .manager-treatment-table tbody tr {
+                transition: background-color var(--transition-fast);
+            }
+
+                .manager-treatment-table tbody tr:hover {
+                    background: var(--color-surface-alt);
+                }
+
+
+            /* Column widths */
+
+            .manager-treatment-table th:nth-child(1),
+            .manager-treatment-table td:nth-child(1) {
+                width: 16%;
+            }
+
+            .manager-treatment-table th:nth-child(2),
+            .manager-treatment-table td:nth-child(2) {
+                width: 17%;
+            }
+
+            .manager-treatment-table th:nth-child(3),
+            .manager-treatment-table td:nth-child(3) {
+                width: 23%;
+            }
+
+            .manager-treatment-table th:nth-child(4),
+            .manager-treatment-table td:nth-child(4) {
+                width: 15%;
+            }
+
+            .manager-treatment-table th:nth-child(5),
+            .manager-treatment-table td:nth-child(5) {
+                width: 13%;
+            }
+
+            .manager-treatment-table th:nth-child(6),
+            .manager-treatment-table td:nth-child(6) {
+                width: 8%;
+            }
+
+            .manager-treatment-table th:nth-child(7),
+            .manager-treatment-table td:nth-child(7) {
+                width: 12%;
+            }
+
+
+        /* Person */
+
+        .manager-treatment-table-person {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .manager-treatment-table-avatar {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 0.72rem;
+        }
+
+            .manager-treatment-table-avatar.animal {
+                background: var(--color-secondary-light);
+                color: #4a9275;
+            }
+
+            .manager-treatment-table-avatar.owner {
+                background: var(--color-primary-light);
+                color: var(--color-primary);
+            }
+
+            .manager-treatment-table-avatar.vet {
+                background: var(--color-info-light);
+                color: var(--color-info);
+            }
+
+        .manager-treatment-table-person strong {
+            display: block;
+            color: var(--color-text);
+            font-size: 0.67rem;
+            font-weight: 700;
+        }
+
+        .manager-treatment-table-person span {
+            display: block;
+            margin-top: 0.15rem;
+            color: var(--color-muted-light);
+            font-size: 0.56rem;
+        }
+
+
+        /* Treatment */
+
+        .manager-treatment-table-treatment strong {
+            display: block;
+            color: var(--color-text);
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .manager-treatment-table-treatment span {
+            display: block;
+            margin-top: 0.18rem;
+            color: var(--color-muted);
+            font-size: 0.58rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .manager-treatment-table-treatment small {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.25rem;
+            color: var(--color-muted-light);
+            font-size: 0.56rem;
+        }
+
+            .manager-treatment-table-treatment small i {
+                color: var(--color-primary);
+            }
+
+
+        /* Appointment */
+
+        .manager-treatment-table-appointment strong {
+            display: block;
+            color: var(--color-text);
+            font-size: 0.67rem;
+        }
+
+        .manager-treatment-table-appointment .badge-ui {
+            margin-top: 0.25rem;
+            font-size: 0.53rem;
+        }
+
+
+        /* Cost */
+
+        .manager-treatment-table-cost {
+            color: var(--color-text);
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }
+
+
+        /* Actions */
+
+        .manager-treatment-table-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .manager-treatment-table-action {
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-surface-alt);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 0.7rem;
+            transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+        }
+
+            .manager-treatment-table-action:hover {
+                border-color: var(--color-primary);
+                background: var(--color-primary-light);
+            }
+
+            .manager-treatment-table-action.danger {
+                color: var(--color-danger);
+            }
+
+                .manager-treatment-table-action.danger:hover {
+                    border-color: var(--color-danger);
+                    background: var(--color-danger-light);
+                }
+
+
+        /* =========================================================
+               PAGINATION
+               ========================================================= */
+
+        .manager-treatment-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.9rem;
+            color: var(--color-muted);
+            font-size: 0.62rem;
+        }
+
+        .manager-treatment-pagination-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+            .manager-treatment-pagination-buttons button {
+                width: 29px;
+                height: 29px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--color-border);
+                border-radius: 7px;
+                background: var(--color-surface);
+                color: var(--color-muted);
+                font-family: inherit;
+                font-size: 0.62rem;
+                cursor: pointer;
+            }
+
+                .manager-treatment-pagination-buttons button:hover,
+                .manager-treatment-pagination-buttons button.active {
+                    border-color: var(--color-primary);
+                    background: var(--color-primary-light);
+                    color: var(--color-primary);
+                }
+
+                .manager-treatment-pagination-buttons button:disabled {
+                    opacity: 0.45;
+                    cursor: not-allowed;
+                }
+
+
+        /* =========================================================
+               EMPTY
+               ========================================================= */
+
+        .manager-treatment-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .manager-treatment-empty-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+            border-radius: 15px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 1.1rem;
+        }
+
+        .manager-treatment-empty h3 {
+            margin: 0 0 0.25rem;
+            color: var(--color-text);
+            font-size: 0.85rem;
+        }
+
+        .manager-treatment-empty p {
+            margin: 0 0 1rem;
+            color: var(--color-muted);
+            font-size: 0.68rem;
+        }
+
+
+        /* =========================================================
+               RESPONSIVE
+               ========================================================= */
+
+        @@media (max-width: 1200px) {
+
+            .manager-treatment-dashboard-grid,
+            .manager-treatment-secondary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        @@media (max-width: 900px) {
+
+            .manager-treatment-filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .manager-treatment-quick-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+
+        @@media (max-width: 768px) {
+
+            .manager-treatment-page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+                .manager-treatment-page-header > .btn-ui {
+                    width: 100%;
+                }
+
+            .manager-treatment-recent-row {
+                grid-template-columns: 38px 1fr auto;
+            }
+
+                .manager-treatment-recent-date,
+                .manager-treatment-recent-row .badge-ui {
+                    display: none;
+                }
+
+            .manager-treatment-filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .manager-treatment-filter-action {
+                align-items: stretch;
+            }
+        }
+
+
+        @@media (max-width: 480px) {
+
+            .manager-treatment-page-title {
+                align-items: flex-start;
+            }
+
+            .manager-treatment-page-icon {
+                width: 48px;
+                height: 48px;
+            }
+
+            .manager-treatment-quick-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .manager-treatment-pagination {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        @@media (max-width: 1100px) {
+
+            .manager-treatment-recent-card-item {
+                grid-template-columns: minmax(170px, 1fr) minmax(150px, 1fr) 80px auto;
+                gap: 0.7rem;
+            }
+
+            .manager-treatment-recent-price {
+                display: none;
+            }
+        }
+
+
+        @@media (max-width: 768px) {
+
+            .manager-treatment-recent-card-item {
+                grid-template-columns: 1fr auto;
+                gap: 0.6rem;
+            }
+
+            .manager-treatment-recent-animal {
+                grid-column: 1;
+            }
+
+            .manager-treatment-recent-treatment {
+                grid-column: 1;
+            }
+
+            .manager-treatment-recent-appointment {
+                display: none;
+            }
+
+            .manager-treatment-recent-status {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .manager-treatment-recent-price {
+                display: block;
+                grid-column: 2;
+                grid-row: 2;
+            }
+        }
+
+        .manager-treatment-filter-card .manager-treatment-filter-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+
+        .manager-treatment-filter-card
+        .manager-treatment-filter-field {
+            min-width: 0;
+        }
+
+
+            /* LABEL */
+
+            .manager-treatment-filter-card
+            .manager-treatment-filter-field label {
+                display: block;
+                margin-bottom: 0.4rem;
+                color: var(--color-text);
+                font-size: 0.68rem;
+                font-weight: 600;
+                line-height: 1.2;
+            }
+
+
+        /* INPUT + SELECT ORTAK */
+
+        .manager-treatment-filter-card
+        .form-control-ui {
+            display: block;
+            width: 100%;
+            height: 42px;
+            padding: 0.55rem 0.85rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 500;
+            outline: none;
+            box-shadow: none;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+        }
+
+
+        /* INPUT */
+
+        .manager-treatment-filter-card
+        input.form-control-ui {
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+
+            .manager-treatment-filter-card
+            input.form-control-ui::placeholder {
+                color: var(--color-muted-light);
+                opacity: 1;
+            }
+
+
+        /* SELECT */
+
+        .manager-treatment-filter-card
+        select.form-control-ui {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            padding-right: 2.4rem;
+            background-color: var(--color-surface);
+            background-image: linear-gradient( 45deg, transparent 50%, var(--color-muted) 50% ), linear-gradient( 135deg, var(--color-muted) 50%, transparent 50% );
+            background-position: calc(100% - 15px) 17px, calc(100% - 10px) 17px;
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+        }
+
+
+        /* DATE */
+
+        .manager-treatment-filter-card
+        input[type="date"].form-control-ui {
+            color: var(--color-text);
+            cursor: pointer;
+        }
+
+
+        /* FOCUS */
+
+        .manager-treatment-filter-card
+        .form-control-ui:focus {
+            border-color: var(--color-primary);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-focus);
+        }
+
+
+        /* HOVER */
+
+        .manager-treatment-filter-card
+        .form-control-ui:hover {
+            border-color: var(--color-border-strong);
+        }
+
+
+        /* SEARCH */
+
+        .manager-treatment-filter-card
+        .manager-treatment-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+
+            .manager-treatment-filter-card
+            .manager-treatment-input-wrapper i {
+                position: absolute;
+                left: 0.85rem;
+                top: 50%;
+                z-index: 2;
+                transform: translateY(-50%);
+                color: var(--color-muted-light);
+                font-size: 0.8rem;
+                pointer-events: none;
+            }
+
+
+            .manager-treatment-filter-card
+            .manager-treatment-input-wrapper
+            input.form-control-ui {
+                padding-left: 2.35rem;
+            }
+
+
+        /* FILTER BUTTON */
+
+        .manager-treatment-filter-card
+        .manager-treatment-filter-action {
+            display: flex;
+            align-items: flex-end;
+        }
+
+
+            .manager-treatment-filter-card
+            .manager-treatment-filter-action .btn-ui {
+                width: 100%;
+                height: 42px;
+                justify-content: center;
+            }
+
+
+        /* CLEAR BUTTON */
+
+        .manager-treatment-filter-card
+        .manager-treatment-card-header
+        .btn-ui--ghost {
+            color: var(--color-muted);
+        }
+
+
+            .manager-treatment-filter-card
+            .manager-treatment-card-header
+            .btn-ui--ghost:hover {
+                background-color: var(--color-surface-alt);
+                color: var(--color-primary);
+            }
+
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+        @@media (max-width: 1100px) {
+
+            .manager-treatment-filter-card
+            .manager-treatment-filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        @@media (max-width: 650px) {
+
+            .manager-treatment-filter-card
+            .manager-treatment-filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .manager-treatment-filter-card
+            .manager-treatment-filter-action {
+                align-items: stretch;
+            }
+        }
+    </style>
+
+<div class="manager-treatment-page">
+
+    <!-- =========================================================
+         PAGE HEADER
+         ========================================================= -->
+
+    <div class="manager-treatment-page-header">
+
+        <div class="manager-treatment-page-title">
+
+            <div class="manager-treatment-page-icon">
+                <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+
+            <div>
+
+                <div class="manager-treatment-breadcrumb">
+                    <span>Ana Sayfa</span>
+                    <i class="bi bi-chevron-right"></i>
+                    <span>Tedaviler</span>
+                </div>
+
+                <h1>
+                    Tedaviler
+                </h1>
+
+                <p>
+                    Tedavi kayıtlarını yönetin, takip edin ve analiz edin.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a href="/Treatment/Create"
+           class="btn-ui btn-ui--primary">
+
+            <i class="bi bi-plus-lg"></i>
+
+            Yeni Tedavi Kaydı
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         STATISTICS
+         ========================================================= -->
+
+    <section class="manager-treatment-statistics">
+
+        <div class="manager-treatment-section-heading">
+
+            <div class="manager-treatment-section-heading-icon">
+                <i class="bi bi-bar-chart-line-fill"></i>
+            </div>
+
+            <h2>
+                İstatistikler
+            </h2>
+
+        </div>
+
+
+        <div class="grid-4">
+
+
+            <!-- TOTAL -->
+
+            <div class="card-ui stat-card">
+
+                <div class="row-between">
+
+                    <span class="stat-card-label">
+                        Toplam Tedavi
+                    </span>
+
+                    <div class="card-icon-tile is-primary">
+                        <i class="bi bi-clipboard2-pulse"></i>
+                    </div>
+
+                </div>
+
+                <span class="stat-card-value">
+                    @totalTreatmentCount
+                </span>
+
+                <span class="stat-card-support">
+                    Sistemde kayıtlı
+                </span>
+
+            </div>
+
+
+            <!-- MONTH -->
+
+            <div class="card-ui stat-card">
+
+                <div class="row-between">
+
+                    <span class="stat-card-label">
+                        Bu Ay
+                    </span>
+
+                    <div class="card-icon-tile is-info">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+
+                </div>
+
+                <span class="stat-card-value">
+                    @thisMonthTreatments.Count
+                </span>
+
+                <span class="stat-card-support">
+                    @today.ToString("MMMM yyyy")
+                </span>
+
+            </div>
+
+
+            <!-- TOTAL COST -->
+
+            <div class="card-ui stat-card">
+
+                <div class="row-between">
+
+                    <span class="stat-card-label">
+                        Toplam Maliyet
+                    </span>
+
+                    <div class="card-icon-tile is-accent">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+
+                </div>
+
+                <span class="stat-card-value">
+                    @totalCost.ToString("N0") ₺
+                </span>
+
+                <span class="stat-card-support">
+                    Tüm tedaviler
+                </span>
+
+            </div>
+
+
+            <!-- AVERAGE -->
+
+            <div class="card-ui stat-card">
+
+                <div class="row-between">
+
+                    <span class="stat-card-label">
+                        Ortalama Maliyet
+                    </span>
+
+                    <div class="card-icon-tile is-secondary">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+
+                </div>
+
+                <span class="stat-card-value">
+                    @averageCost.ToString("N0") ₺
+                </span>
+
+                <span class="stat-card-support">
+                    Tedavi başına
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         RECENT + MONTHLY
+         ========================================================= -->
+
+    <div class="manager-treatment-dashboard-grid">
+
+
+        <!-- =====================================================
+             RECENT TREATMENTS
+             ===================================================== -->
+
+            <section class="card-ui manager-treatment-recent-card">
+
+                <div class="manager-treatment-card-header">
+
+                    <div class="manager-treatment-card-title">
+
+                        <div class="manager-treatment-small-icon primary">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Son Eklenen Tedaviler
+                            </h2>
+
+                            <p>
+                                Son tedavi kayıtları
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a href="#treatmentRecords"
+                       class="link-action">
+
+                        Tümünü Gör
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+
+                <div class="manager-treatment-recent-list">
+
+                    @if (recentTreatments.Any())
+                    {
+                        foreach (var item in recentTreatments)
+                        {
+                            <a href="/Treatment/Detail/@item.Id"
+                               class="manager-treatment-recent-card-item">
+
+
+                                <!-- =================================================
+                         ANIMAL
+                         ================================================= -->
+
+                                <div class="manager-treatment-recent-animal">
+
+                                    <div class="manager-treatment-recent-animal-image">
+
+                                        <img src="@(string.IsNullOrWhiteSpace(item.Animal.ImageUrl)
+                                            ? "/images/default-animal.png"
+                                            : item.Animal.ImageUrl)"
+                                             alt="@item.Animal.Name" />
+
+                                    </div>
+
+
+                                    <div class="manager-treatment-recent-animal-info">
+
+                                        <strong>
+                                            @item.Animal.Name
+                                        </strong>
+
+                                        <span>
+                                            @item.Animal.Species · @item.Animal.Breed
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- =================================================
+                         TREATMENT
+                         ================================================= -->
+
+                                <div class="manager-treatment-recent-treatment">
+
+                                    <strong>
+                                        @item.TreatmentType
+                                    </strong>
+
+                                    <span>
+                                        @(string.IsNullOrWhiteSpace(item.Notes)
+                                            ? "Tedavi kaydı"
+                                            : item.Notes)
+                                    </span>
+
+                                    <small>
+
+                                        <i class="bi bi-calendar3"></i>
+
+                                        @(item.Date?.ToString("dd MMM yyyy") ?? "-")
+
+                                    </small>
+
+                                </div>
+
+
+
+                                <!-- =================================================
+                         APPOINTMENT
+                         ================================================= -->
+
+                                <div class="manager-treatment-recent-appointment">
+
+                                    <span class="manager-treatment-recent-label">
+                                        Randevu
+                                    </span>
+
+                                    <strong>
+                                        #AP-@item.AppointmentId
+                                    </strong>
+
+                                </div>
+
+
+
+                                <!-- =================================================
+                         STATUS
+                         ================================================= -->
+
+                                <span class="badge-ui badge-ui--success manager-treatment-recent-status">
+
+                                    <i class="bi bi-check-circle"></i>
+
+                                    Tamamlandı
+
+                                </span>
+
+
+
+                                <!-- =================================================
+                         COST
+                         ================================================= -->
+
+                                <strong class="manager-treatment-recent-price">
+
+                                    @item.Cost.ToString("N0") ₺
+
+                                </strong>
+
+
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div class="manager-treatment-empty-small">
+
+                            <div class="manager-treatment-empty-small-icon">
+
+                                <i class="bi bi-clipboard2-pulse"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Henüz tedavi kaydı bulunmuyor.
+                                </strong>
+
+                                <span>
+                                    Yeni bir tedavi kaydı oluşturabilirsiniz.
+                                </span>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+
+
+        <!-- =====================================================
+             MONTHLY STATISTICS
+             ===================================================== -->
+
+        <section class="card-ui manager-treatment-monthly-card">
+
+            <div class="manager-treatment-card-header">
+
+                <div class="manager-treatment-card-title">
+
+                    <div class="manager-treatment-small-icon info">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Aylık Tedavi İstatistikleri
+                        </h2>
+
+                        <p>
+                            Tedavi yoğunluğu
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <select class="manager-treatment-chart-select">
+
+                    <option>
+                        Son 6 Ay
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="manager-treatment-chart">
+
+                @{
+                    var chartMonths = Enumerable
+                        .Range(0, 6)
+                        .Select(i => today.AddMonths(-5 + i))
+                        .ToList();
+                }
+
+                @foreach (var month in chartMonths)
+                {
+                    var monthCount = treatments.Count(x =>
+                        x.Date.HasValue &&
+                        x.Date.Value.Year == month.Year &&
+                        x.Date.Value.Month == month.Month);
+
+                    var monthCost = treatments
+                        .Where(x =>
+                            x.Date.HasValue &&
+                            x.Date.Value.Year == month.Year &&
+                            x.Date.Value.Month == month.Month)
+                        .Sum(x => x.Cost);
+
+                    var barHeight = monthCount == 0
+                        ? 8
+                        : Math.Min(100, 20 + monthCount * 8);
+
+                    var costHeight = monthCost == 0
+                        ? 8
+                        : Math.Min(100, 15 + (int)(monthCost / 500) * 7);
+
+                    <div class="manager-treatment-chart-column">
+
+                        <div class="manager-treatment-bars">
+
+                            <span class="treatment-bar"
+                                  style="height:@barHeight%"></span>
+
+                            <span class="cost-bar"
+                                  style="height:@costHeight%"></span>
+
+                        </div>
+
+                        <small>
+                            @month.ToString("MMM")
+                        </small>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <div class="manager-treatment-chart-legend">
+
+                <span>
+                    <i class="treatment"></i>
+                    Tedavi Sayısı
+                </span>
+
+                <span>
+                    <i class="cost"></i>
+                    Toplam Maliyet
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         POPULAR + QUICK ACTIONS
+         ========================================================= -->
+
+    <div class="manager-treatment-secondary-grid">
+
+
+        <!-- POPULAR -->
+
+        <section class="card-ui manager-treatment-popular-card">
+
+            <div class="manager-treatment-card-header">
+
+                <div class="manager-treatment-card-title">
+
+                    <div class="manager-treatment-small-icon accent">
+                        <i class="bi bi-pie-chart-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Popüler Tedavi Türleri
+                        </h2>
+
+                        <p>
+                            En sık uygulanan tedaviler
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href="#treatmentRecords"
+                   class="link-action">
+
+                    Tümünü Gör
+
+                </a>
+
+            </div>
+
+
+            <div class="manager-treatment-popular-list">
+
+                @if (treatmentGroups.Any())
+                {
+                    foreach (var item in treatmentGroups)
+                    {
+                        var percentage = (item.Count * 100) / maxTreatmentCount;
+
+                        <div class="manager-treatment-popular-item">
+
+                            <div class="manager-treatment-popular-top">
+
+                                <div>
+
+                                    <span class="manager-treatment-popular-icon">
+                                        <i class="bi bi-heart-pulse"></i>
+                                    </span>
+
+                                    <strong>
+                                        @item.Name
+                                    </strong>
+
+                                </div>
+
+                                <span>
+                                    @item.Count
+                                </span>
+
+                            </div>
+
+                            <div class="manager-treatment-progress">
+
+                                <span style="width:@percentage%"></span>
+
+                            </div>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted text-small">
+                        Tedavi istatistiği bulunmuyor.
+                    </span>
+                }
+
+            </div>
+
+        </section>
+
+
+
+        <!-- QUICK ACTIONS -->
+        <section class="card-ui manager-treatment-quick-card">
+
+            <div class="manager-treatment-card-header">
+
+                <div class="manager-treatment-card-title">
+
+                    <div class="manager-treatment-small-icon secondary">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Hızlı İşlemler
+                        </h2>
+
+                        <p>
+                            Sık kullanılan işlemler
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-treatment-quick-grid">
+
+
+                <a href="/Treatment/Create"
+                   class="manager-treatment-quick-item">
+
+                    <div class="card-icon-tile is-primary">
+
+                        <i class="bi bi-plus-lg"></i>
+
+                    </div>
+
+                    <span>
+                        Yeni Tedavi
+                    </span>
+
+                </a>
+
+
+                <a href="/Appointment/Index"
+                       class="manager-treatment-quick-item">
+
+                    <div class="card-icon-tile is-info">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                    </div>
+
+                    <span>
+                        Randevular
+                    </span>
+
+                </a>
+
+                <a href="/Animal/Index"
+                   class="manager-treatment-quick-item">
+
+                    <div class="card-icon-tile is-secondary">
+
+                        <i class="bi bi-heart-pulse"></i>
+
+                    </div>
+
+                    <span>
+                        Hayvanlar
+                    </span>
+
+                </a>
+
+
+                <a href="/Payment/Index"
+                   class="manager-treatment-quick-item">
+
+                    <div class="card-icon-tile is-accent">
+
+                        <i class="bi bi-credit-card"></i>
+
+                    </div>
+
+                    <span>
+                        Ödemeler
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         FILTERS
+         ========================================================= -->
+
+    <section class="card-ui manager-treatment-filter-card">
+
+        <div class="manager-treatment-card-header">
+
+            <div class="manager-treatment-card-title">
+
+                <div class="manager-treatment-small-icon primary">
+                    <i class="bi bi-funnel-fill"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Tedavi Kayıtlarını Filtrele
+                    </h2>
+
+                    <p>
+                        Tedavi kayıtlarını istediğiniz kriterlere göre filtreleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button type="button"
+                    class="btn-ui btn-ui--ghost btn-ui--sm"
+                    id="clearTreatmentFilters">
+
+                <i class="bi bi-x-circle"></i>
+
+                Filtreleri Temizle
+
+            </button>
+
+        </div>
+
+
+        <div class="manager-treatment-filter-grid">
+
+
+            <div class="manager-treatment-filter-field search">
+
+                <label>
+                    Arama
+                </label>
+
+                <div class="manager-treatment-input-wrapper">
+
+                    <i class="bi bi-search"></i>
+
+                    <input type="text"
+                           id="treatmentSearch"
+                           class="form-control-ui"
+                           placeholder="Hayvan, sahip, tedavi ara..." />
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-treatment-filter-field">
+
+                <label>
+                    Tedavi Türü
+                </label>
+
+                <select id="treatmentTypeFilter"
+                        class="form-control-ui">
+
+                    <option value="">
+                        Tüm Tedaviler
+                    </option>
+
+                    @foreach (var group in treatmentGroups)
+                    {
+                        <option value="@group.Name">
+                            @group.Name
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+
+            <div class="manager-treatment-filter-field">
+
+                <label>
+                    Randevu Durumu
+                </label>
+
+                <select class="form-control-ui">
+
+                    <option>
+                        Tümü
+                    </option>
+
+                    <option>
+                        Tamamlandı
+                    </option>
+
+                    <option>
+                        Planlandı
+                    </option>
+
+                    <option>
+                        İptal Edildi
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="manager-treatment-filter-field">
+
+                <label>
+                    Tarih Aralığı
+                </label>
+
+                <input type="date"
+                       id="treatmentDateFilter"
+                       class="form-control-ui" />
+
+            </div>
+
+
+            <div class="manager-treatment-filter-field">
+
+                <label>
+                    Veteriner
+                </label>
+
+                <select class="form-control-ui">
+
+                    <option>
+                        Tüm Veterinerler
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="manager-treatment-filter-field">
+
+                <label>
+                    Sıralama
+                </label>
+
+                <select id="treatmentSort"
+                        class="form-control-ui">
+
+                    <option value="newest">
+                        En Yeni
+                    </option>
+
+                    <option value="oldest">
+                        En Eski
+                    </option>
+
+                    <option value="cost-high">
+                        Maliyet ↓
+                    </option>
+
+                    <option value="cost-low">
+                        Maliyet ↑
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="manager-treatment-filter-action">
+
+                <button type="button"
+                        class="btn-ui btn-ui--primary"
+                        id="applyTreatmentFilter">
+
+                    <i class="bi bi-funnel"></i>
+
+                    Filtrele
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         TREATMENT RECORDS
+         ========================================================= -->
+
+    <section class="card-ui manager-treatment-records-card"
+             id="treatmentRecords">
+
+
+        <div class="manager-treatment-card-header">
+
+            <div class="manager-treatment-card-title">
+
+                <div class="manager-treatment-small-icon primary">
+
+                    <i class="bi bi-clipboard2-pulse"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="manager-treatment-record-title">
+
+                        <h2>
+                            Tedavi Kayıtları
+                        </h2>
+
+                        <span class="badge-ui badge-ui--primary">
+                            @totalTreatmentCount
+                        </span>
+
+                    </div>
+
+                    <p>
+                        Kliniğe ait tüm tedavi kayıtları
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-treatment-view-switch">
+
+                <button type="button"
+                        class="active">
+
+                    <i class="bi bi-list-ul"></i>
+
+                    Liste
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="manager-treatment-table-wrapper">
+
+            <table class="manager-treatment-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            HAYVAN
+                        </th>
+
+                        <th>
+                            SAHİP
+                        </th>
+
+                        <th>
+                            TEDAVİ BİLGİLERİ
+                        </th>
+
+                        <th>
+                            RANDEVU
+                        </th>
+
+                        <th>
+                            VETERİNER
+                        </th>
+
+                        <th>
+                            MALİYET
+                        </th>
+
+                        <th>
+                            İŞLEMLER
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="treatmentTableBody">
+
+                    @if (treatments.Any())
+                    {
+                        foreach (var item in treatments)
+                        {
+                            <tr class="manager-treatment-row"
+                                data-treatment-type="@item.TreatmentType"
+                                data-date="@(item.Date?.ToString("yyyy-MM-dd") ?? "")"
+                                data-cost="@item.Cost">
+
+
+                                <!-- ANIMAL -->
+
+                                <td>
+
+                                    <div class="manager-treatment-table-person">
+
+                                        <div class="manager-treatment-table-avatar animal">
+
+                                                <img src="@(string.IsNullOrWhiteSpace(item.Animal.ImageUrl)
+                                                            ? "/images/default-animal.png"
+                                                            : item.Animal.ImageUrl)"
+                                                     alt="@item.Animal.Name" />
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @item.Animal.Name
+                                            </strong>
+
+                                            <span>
+                                                Randevu #@item.AppointmentId
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- OWNER -->
+
+                                <td>
+
+                                    <div class="manager-treatment-table-person">
+
+                                        <div class="manager-treatment-table-avatar owner">
+
+                                            <i class="bi bi-person"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @item.Owner.FullName
+                                            </strong>
+
+                                            <span>
+                                                @item.Owner.PhoneNumber
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- TREATMENT -->
+
+                                <td>
+
+                                    <div class="manager-treatment-table-treatment">
+
+                                        <strong>
+                                            @item.TreatmentType
+                                        </strong>
+
+                                        <span>
+                                            @(string.IsNullOrWhiteSpace(item.Notes)
+                                                ? "Tedavi açıklaması bulunmuyor."
+                                                : item.Notes)
+                                        </span>
+
+                                        <small>
+
+                                            <i class="bi bi-calendar3"></i>
+
+                                            @(item.Date?.ToString("dd MMM yyyy") ?? "-")
+
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- APPOINTMENT -->
+
+                                <td>
+
+                                    <div class="manager-treatment-table-appointment">
+
+                                        <strong>
+                                            #AP-@item.AppointmentId
+                                        </strong>
+
+
+                                            @if(item.Appointment.Status == "Completed")
+                                            {
+                                                <span class="badge-ui badge-ui--success">
+
+                                                <i class="bi bi-check-circle-fill"></i>
+
+                                                Tamamlandı
+                                                </span>
+                                            }
+                                            @if (item.Appointment.Status == "Cancelled")
+                                            {
+                                                <span class="badge-ui badge-ui--danger">
+
+                                                    <i class="fa-solid fa-circle-xmark"></i>
+
+                                                    İptal Edildi
+                                                </span>
+                                            }
+                                            @if (item.Appointment.Status == "Scheduled")
+                                            {
+                                                 <span class="badge-ui badge-ui--warning">
+
+                                                    <i class="bi bi-questionmark"></i>
+
+                                                    Planlandı
+                                                </span>
+                                            }
+
+                                        
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- VET -->
+
+                                <td>
+
+                                    <div class="manager-treatment-table-person">
+
+                                        <div class="manager-treatment-table-avatar vet">
+
+                                            <i class="bi bi-person-badge"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                Doç. Dr. Yavuz Bahadır SEVİM
+                                            </strong>
+
+                                            <span>
+                                                Klinik Doktoru
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- COST -->
+
+                                <td>
+
+                                    <strong class="manager-treatment-table-cost">
+
+                                        @item.Cost.ToString("N0") ₺
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div class="manager-treatment-table-actions">
+
+                                        <a href="/Treatment/Detail/@item.Id"
+                                           class="manager-treatment-table-action"
+                                           title="Detay">
+
+                                            <i class="bi bi-eye"></i>
+
+                                        </a>
+
+
+                                        <a href="/Treatment/Update/@item.Id"
+                                           class="manager-treatment-table-action"
+                                           title="Düzenle">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </a>
+
+
+                                        <a href="/Treatment/Delete/@item.Id"
+                                                class="manager-treatment-table-action danger"
+                                                title="Sil">
+
+                                            <i class="fa-solid fa-circle-xmark"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+
+                            <td colspan="7">
+
+                                <div class="manager-treatment-empty">
+
+                                    <div class="manager-treatment-empty-icon">
+
+                                        <i class="bi bi-clipboard2-pulse"></i>
+
+                                    </div>
+
+                                    <h3>
+                                        Henüz tedavi kaydı bulunmuyor
+                                    </h3>
+
+                                    <p>
+                                        İlk tedavi kaydını oluşturarak başlayabilirsiniz.
+                                    </p>
+
+                                    <a href="/Treatment/Create"
+                                       class="btn-ui btn-ui--primary">
+
+                                        <i class="bi bi-plus-lg"></i>
+
+                                        Yeni Tedavi
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- PAGINATION -->
+
+        <div class="manager-treatment-pagination">
+
+            <span>
+                @totalTreatmentCount kayıttan
+                <strong>
+                    1-@Math.Min(totalTreatmentCount, 8)
+                </strong>
+                arası gösteriliyor
+            </span>
+
+
+            <div class="manager-treatment-pagination-buttons">
+
+                <button type="button"
+                        disabled>
+
+                    <i class="bi bi-chevron-left"></i>
+
+                </button>
+
+                <button type="button"
+                        class="active">
+                    1
+                </button>
+
+                <button type="button">
+                    2
+                </button>
+
+                <button type="button">
+                    3
+                </button>
+
+                <button type="button">
+                    4
+                </button>
+
+                <button type="button">
+                    5
+                </button>
+
+                <span>
+                    ...
+                </span>
+
+                <button type="button">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+}
+
+@if (User.IsInRole("Customer"))
+{
     <style>
         .treatment-history-page {
             display: flex;
@@ -26,8 +2770,8 @@
         }
 
         /* ------------------------------------------------------------
-           Page Header
-        ------------------------------------------------------------ */
+                   Page Header
+                ------------------------------------------------------------ */
         .treatment-history-header {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(380px, 540px);
@@ -122,8 +2866,8 @@
         }
 
         /* ------------------------------------------------------------
-           Stats
-        ------------------------------------------------------------ */
+                   Stats
+                ------------------------------------------------------------ */
         .treatment-history-stats {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -146,25 +2890,25 @@
             font-size: 21px;
         }
 
-        .history-stat-icon.is-primary {
-            color: #6258d0;
-            background: #f0eeff;
-        }
+            .history-stat-icon.is-primary {
+                color: #6258d0;
+                background: #f0eeff;
+            }
 
-        .history-stat-icon.is-success {
-            color: #4ea58b;
-            background: #e9f7f1;
-        }
+            .history-stat-icon.is-success {
+                color: #4ea58b;
+                background: #e9f7f1;
+            }
 
-        .history-stat-icon.is-info {
-            color: #439be4;
-            background: #eaf5ff;
-        }
+            .history-stat-icon.is-info {
+                color: #439be4;
+                background: #eaf5ff;
+            }
 
-        .history-stat-icon.is-accent {
-            color: #7267d5;
-            background: #f1efff;
-        }
+            .history-stat-icon.is-accent {
+                color: #7267d5;
+                background: #f1efff;
+            }
 
         .history-stat-label {
             margin: 0 0 3px;
@@ -197,60 +2941,60 @@
         }
 
         /* ============================================================
-   TREATMENT ACTIONS
-   ============================================================ */
+           TREATMENT ACTIONS
+           ============================================================ */
 
-            .treatment-actions {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 8px;
+        .treatment-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .treatment-action-btn {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 1px solid #e3e0ef;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #6c63a8;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .treatment-action-btn:hover {
+                background: #f6f4ff;
+                border-color: #d6d1ee;
+                color: #554c91;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(108, 99, 168, 0.08);
             }
 
-            .treatment-action-btn {
-                width: 36px;
-                height: 36px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-                border: 1px solid #e3e0ef;
-                border-radius: 10px;
-                background: #ffffff;
-                color: #6c63a8;
-                text-decoration: none;
+            .treatment-action-btn.is-danger {
+                color: #df7c89;
+            }
+
+                .treatment-action-btn.is-danger:hover {
+                    background: #fff3f5;
+                    border-color: #f0c6cd;
+                    color: #c95f6d;
+                }
+
+            .treatment-action-btn i {
                 font-size: 14px;
                 line-height: 1;
-                cursor: pointer;
-                transition: all 0.2s ease;
             }
 
-                .treatment-action-btn:hover {
-                    background: #f6f4ff;
-                    border-color: #d6d1ee;
-                    color: #554c91;
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 10px rgba(108, 99, 168, 0.08);
-                }
-
-                .treatment-action-btn.is-danger {
-                    color: #df7c89;
-                }
-
-                    .treatment-action-btn.is-danger:hover {
-                        background: #fff3f5;
-                        border-color: #f0c6cd;
-                        color: #c95f6d;
-                    }
-
-                .treatment-action-btn i {
-                    font-size: 14px;
-                    line-height: 1;
-                }
-
         /* ------------------------------------------------------------
-           Filters
-        ------------------------------------------------------------ */
+                   Filters
+                ------------------------------------------------------------ */
         .treatment-history-filters {
             padding: 16px 18px 14px;
         }
@@ -283,14 +3027,14 @@
             font-size: 12px;
         }
 
-        .history-date-range i {
-            color: #6c63a8;
-            font-size: 15px;
-        }
+            .history-date-range i {
+                color: #6c63a8;
+                font-size: 15px;
+            }
 
-        .history-date-range .arrow {
-            color: #aaa8bc;
-        }
+            .history-date-range .arrow {
+                color: #aaa8bc;
+            }
 
         .history-filter-btn {
             height: 42px;
@@ -298,8 +3042,8 @@
         }
 
         /* ------------------------------------------------------------
-           List
-        ------------------------------------------------------------ */
+                   List
+                ------------------------------------------------------------ */
         .treatment-history-list {
             overflow: hidden;
         }
@@ -349,40 +3093,40 @@
             overflow: hidden;
         }
 
-        .history-table thead th {
-            padding: 11px 14px;
-            background: #f6f5fb;
-            border-bottom: 1px solid #ebe9f5;
-            color: #666687;
-            text-align: left;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
+            .history-table thead th {
+                padding: 11px 14px;
+                background: #f6f5fb;
+                border-bottom: 1px solid #ebe9f5;
+                color: #666687;
+                text-align: left;
+                font-size: 11px;
+                font-weight: 600;
+                white-space: nowrap;
+            }
 
-        .history-table thead th:first-child {
-            border-top-left-radius: 9px;
-        }
+                .history-table thead th:first-child {
+                    border-top-left-radius: 9px;
+                }
 
-        .history-table thead th:last-child {
-            border-top-right-radius: 9px;
-        }
+                .history-table thead th:last-child {
+                    border-top-right-radius: 9px;
+                }
 
-        .history-table tbody td {
-            padding: 13px 14px;
-            border-bottom: 1px solid #ecebf4;
-            color: #35375a;
-            vertical-align: middle;
-            font-size: 12px;
-        }
+            .history-table tbody td {
+                padding: 13px 14px;
+                border-bottom: 1px solid #ecebf4;
+                color: #35375a;
+                vertical-align: middle;
+                font-size: 12px;
+            }
 
-        .history-table tbody tr:last-child td {
-            border-bottom: 0;
-        }
+            .history-table tbody tr:last-child td {
+                border-bottom: 0;
+            }
 
-        .history-table tbody tr:hover {
-            background: #fcfbff;
-        }
+            .history-table tbody tr:hover {
+                background: #fcfbff;
+            }
 
         .history-animal {
             display: flex;
@@ -443,30 +3187,30 @@
             font-weight: 600;
         }
 
-        .history-treatment-badge.is-vaccine {
-            color: #32a582;
-            background: #e7f7f0;
-        }
+            .history-treatment-badge.is-vaccine {
+                color: #32a582;
+                background: #e7f7f0;
+            }
 
-        .history-treatment-badge.is-checkup {
-            color: #5f56c8;
-            background: #efedff;
-        }
+            .history-treatment-badge.is-checkup {
+                color: #5f56c8;
+                background: #efedff;
+            }
 
-        .history-treatment-badge.is-dental {
-            color: #e7637a;
-            background: #ffe8ee;
-        }
+            .history-treatment-badge.is-dental {
+                color: #e7637a;
+                background: #ffe8ee;
+            }
 
-        .history-treatment-badge.is-urgent {
-            color: #dc6b16;
-            background: #fff0e1;
-        }
+            .history-treatment-badge.is-urgent {
+                color: #dc6b16;
+                background: #fff0e1;
+            }
 
-        .history-treatment-badge.is-control {
-            color: #4b91d9;
-            background: #e9f3ff;
-        }
+            .history-treatment-badge.is-control {
+                color: #4b91d9;
+                background: #e9f3ff;
+            }
 
         .history-note {
             max-width: 260px;
@@ -506,10 +3250,10 @@
             font-weight: 600;
         }
 
-        .history-detail-btn:hover {
-            background: #f7f5ff;
-            color: #4c43b5;
-        }
+            .history-detail-btn:hover {
+                background: #f7f5ff;
+                color: #4c43b5;
+            }
 
         .history-more-btn {
             width: 34px;
@@ -522,10 +3266,10 @@
             color: #6d6c90;
         }
 
-        .history-more-btn:hover {
-            color: #5c54c3;
-            border-color: #d7d2f1;
-        }
+            .history-more-btn:hover {
+                color: #5c54c3;
+                border-color: #d7d2f1;
+            }
 
         .history-pagination {
             padding: 12px 18px 17px;
@@ -558,16 +3302,16 @@
             font-size: 12px;
         }
 
-        .history-page-btn.is-active {
-            border-color: #6c63a8;
-            background: #6c63a8;
-            color: #fff;
-            box-shadow: 0 7px 16px rgba(108, 99, 168, .20);
-        }
+            .history-page-btn.is-active {
+                border-color: #6c63a8;
+                background: #6c63a8;
+                color: #fff;
+                box-shadow: 0 7px 16px rgba(108, 99, 168, .20);
+            }
 
-        .history-page-btn.is-disabled {
-            color: #c7c5d2;
-        }
+            .history-page-btn.is-disabled {
+                color: #c7c5d2;
+            }
 
         .history-page-size {
             height: 36px;
@@ -664,159 +3408,158 @@
             }
         }
     </style>
-</head>
 
-<body>
-<main class="app-content">
-    <div class="app-content-inner">
+    <main class="app-content">
+        <div class="app-content-inner">
 
-        <div class="treatment-history-page">
+            <div class="treatment-history-page">
 
-            <!-- Page Header -->
-            <div class="treatment-history-header">
-                <div class="treatment-history-title">
-                    <div class="treatment-history-title-icon">
-                        <i class="bi bi-heart-pulse"></i>
-                    </div>
+                <!-- Page Header -->
+                <div class="treatment-history-header">
+                    <div class="treatment-history-title">
+                        <div class="treatment-history-title-icon">
+                            <i class="bi bi-heart-pulse"></i>
+                        </div>
 
-                    <div>
-                        <h1 class="treatment-history-heading">Tedavi Geçmişi</h1>
-                        <p class="treatment-history-subtitle">
-                            Evcil hayvanlarınızın tüm tedavi geçmişini görüntüleyin
-                        </p>
-                    </div>
-                </div>
-
-                <div class="treatment-history-banner">
-                    <div class="treatment-banner-animals" aria-hidden="true">
-                        <span class="banner-dog">🐶</span>
-                        <span class="banner-cat">🐱</span>
-                    </div>
-
-                    <div class="treatment-banner-copy">
-                        <h2 class="treatment-banner-title">
-                            Sağlıklı patiler,<br>
-                            mutlu yarınlar ❤️
-                        </h2>
-                        <p>
-                            Düzenli tedaviler, onların daha uzun<br>
-                            ve sağlıklı bir yaşam sürmesine yardımcı olur.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Statistics -->
-                @await Component.InvokeAsync("_TreatmentIndexStatisticsComponentPartial")
-
-
-            <!-- Filters -->
-            <section class="card-ui treatment-history-filters">
-                <div class="history-filters-grid">
-
-                    <div class="form-group-ui">
-                        <label class="history-filter-label" for="animalFilter">Hayvan</label>
-                        <select id="animalFilter" class="form-control-ui">
-                            <option value="">Tümü</option>
-                            <option value="Mavi">Mavi</option>
-                            <option value="Luna">Luna</option>
-                            <option value="Pamuk">Pamuk</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group-ui">
-                        <label class="history-filter-label" for="typeFilter">Tedavi Türü</label>
-                        <select id="typeFilter" class="form-control-ui">
-                            <option value="">Tümü</option>
-                            <option value="Aşı">Aşı</option>
-                            <option value="Genel Muayene">Genel Muayene</option>
-                            <option value="Diş Kontrolü">Diş Kontrolü</option>
-                            <option value="Acil Muayene">Acil Muayene</option>
-                            <option value="Kontrol">Kontrol</option>
-                        </select>
-                    </div>
-
-                    <div class="history-date-field form-group-ui">
-                        <label class="history-filter-label">Tarih Aralığı</label>
-                        <div class="history-date-range">
-                            <i class="bi bi-calendar3"></i>
-                            <span>Başlangıç</span>
-                            <span class="arrow">→</span>
-                            <span>Bitiş</span>
+                        <div>
+                            <h1 class="treatment-history-heading">Tedavi Geçmişi</h1>
+                            <p class="treatment-history-subtitle">
+                                Evcil hayvanlarınızın tüm tedavi geçmişini görüntüleyin
+                            </p>
                         </div>
                     </div>
 
-                    <button type="button" class="btn-ui btn-ui--primary history-filter-btn" id="filterButton">
-                        <i class="bi bi-search"></i>
-                        Filtrele
-                    </button>
+                    <div class="treatment-history-banner">
+                        <div class="treatment-banner-animals" aria-hidden="true">
+                            <span class="banner-dog">🐶</span>
+                            <span class="banner-cat">🐱</span>
+                        </div>
 
-                    <button type="button" class="btn-ui btn-ui--ghost history-filter-btn" id="clearButton">
-                        <i class="bi bi-arrow-repeat"></i>
-                        Temizle
-                    </button>
-
+                        <div class="treatment-banner-copy">
+                            <h2 class="treatment-banner-title">
+                                Sağlıklı patiler,<br>
+                                mutlu yarınlar ❤️
+                            </h2>
+                            <p>
+                                Düzenli tedaviler, onların daha uzun<br>
+                                ve sağlıklı bir yaşam sürmesine yardımcı olur.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </section>
 
-            <!-- Treatment List -->
+                <!-- Statistics -->
+                @await Component.InvokeAsync("_TreatmentIndexStatisticsComponentPartial")
+
+
+                <!-- Filters -->
+                <section class="card-ui treatment-history-filters">
+                    <div class="history-filters-grid">
+
+                        <div class="form-group-ui">
+                            <label class="history-filter-label" for="animalFilter">Hayvan</label>
+                            <select id="animalFilter" class="form-control-ui">
+                                <option value="">Tümü</option>
+                                <option value="Mavi">Mavi</option>
+                                <option value="Luna">Luna</option>
+                                <option value="Pamuk">Pamuk</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group-ui">
+                            <label class="history-filter-label" for="typeFilter">Tedavi Türü</label>
+                            <select id="typeFilter" class="form-control-ui">
+                                <option value="">Tümü</option>
+                                <option value="Aşı">Aşı</option>
+                                <option value="Genel Muayene">Genel Muayene</option>
+                                <option value="Diş Kontrolü">Diş Kontrolü</option>
+                                <option value="Acil Muayene">Acil Muayene</option>
+                                <option value="Kontrol">Kontrol</option>
+                            </select>
+                        </div>
+
+                        <div class="history-date-field form-group-ui">
+                            <label class="history-filter-label">Tarih Aralığı</label>
+                            <div class="history-date-range">
+                                <i class="bi bi-calendar3"></i>
+                                <span>Başlangıç</span>
+                                <span class="arrow">→</span>
+                                <span>Bitiş</span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-ui btn-ui--primary history-filter-btn" id="filterButton">
+                            <i class="bi bi-search"></i>
+                            Filtrele
+                        </button>
+
+                        <button type="button" class="btn-ui btn-ui--ghost history-filter-btn" id="clearButton">
+                            <i class="bi bi-arrow-repeat"></i>
+                            Temizle
+                        </button>
+
+                    </div>
+                </section>
+
+                <!-- Treatment List -->
                 @await Component.InvokeAsync("_TreatmentIndexTreatmentListComponentPartial")
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<script>
-    const animalFilter = document.getElementById("animalFilter");
-    const typeFilter = document.getElementById("typeFilter");
-    const filterButton = document.getElementById("filterButton");
-    const clearButton = document.getElementById("clearButton");
-    const rows = [...document.querySelectorAll("[data-row]")];
-    const emptyState = document.getElementById("emptyState");
-    const listCount = document.getElementById("listCount");
+    <script>
+        const animalFilter = document.getElementById("animalFilter");
+        const typeFilter = document.getElementById("typeFilter");
+        const filterButton = document.getElementById("filterButton");
+        const clearButton = document.getElementById("clearButton");
+        const rows = [...document.querySelectorAll("[data-row]")];
+        const emptyState = document.getElementById("emptyState");
+        const listCount = document.getElementById("listCount");
 
-    function applyFilters() {
-        const animal = animalFilter.value;
-        const type = typeFilter.value;
+        function applyFilters() {
+            const animal = animalFilter.value;
+            const type = typeFilter.value;
 
-        let visibleCount = 0;
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const matchesAnimal = !animal || row.dataset.animal === animal;
+                const matchesType = !type || row.dataset.type === type;
+                const show = matchesAnimal && matchesType;
+
+                row.style.display = show ? "" : "none";
+
+                if (show) {
+                    visibleCount++;
+                }
+            });
+
+            emptyState.style.display = visibleCount === 0 ? "block" : "none";
+            listCount.textContent = visibleCount;
+        }
+
+        filterButton.addEventListener("click", applyFilters);
+
+        clearButton.addEventListener("click", () => {
+            animalFilter.value = "";
+            typeFilter.value = "";
+            applyFilters();
+        });
 
         rows.forEach(row => {
-            const matchesAnimal = !animal || row.dataset.animal === animal;
-            const matchesType = !type || row.dataset.type === type;
-            const show = matchesAnimal && matchesType;
+            const image = row.querySelector(".history-animal-image");
 
-            row.style.display = show ? "" : "none";
+            if (!image) return;
 
-            if (show) {
-                visibleCount++;
-            }
+            image.addEventListener("error", () => {
+                const fallback = document.createElement("div");
+                fallback.className = "history-animal-fallback";
+                fallback.innerHTML = '<i class="bi bi-heart"></i>';
+                image.replaceWith(fallback);
+            });
         });
+    </script>
+}
 
-        emptyState.style.display = visibleCount === 0 ? "block" : "none";
-        listCount.textContent = visibleCount;
-    }
+    
 
-    filterButton.addEventListener("click", applyFilters);
-
-    clearButton.addEventListener("click", () => {
-        animalFilter.value = "";
-        typeFilter.value = "";
-        applyFilters();
-    });
-
-    rows.forEach(row => {
-        const image = row.querySelector(".history-animal-image");
-
-        if (!image) return;
-
-        image.addEventListener("error", () => {
-            const fallback = document.createElement("div");
-            fallback.className = "history-animal-fallback";
-            fallback.innerHTML = '<i class="bi bi-heart"></i>';
-            image.replaceWith(fallback);
-        });
-    });
-</script>
-
-</body>
-</html>

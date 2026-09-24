@@ -1,0 +1,480 @@
+﻿@model List<AnimalListAtManagerDto>
+
+<style>
+    #animalPageNumbers {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+</style>
+<section class="animal-table-card">
+
+
+    <div class="animal-table-header">
+
+        <div class="animal-table-title">
+
+            <div class="animal-table-title-icon">
+
+                <i class="bi bi-list-ul"></i>
+
+            </div>
+
+            <h2>
+                Hayvan Listesi
+                <span>
+                    (@Model.Count())
+                </span>
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="animal-table-wrapper">
+
+        <table class="animal-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Hayvan
+                    </th>
+
+                    <th>
+                        Tür
+                    </th>
+
+                    <th>
+                        Irk
+                    </th>
+
+                    <th>
+                        Sahibi
+                    </th>
+
+                    <th>
+                        Yaş
+                    </th>
+
+                    <th>
+                        Son Randevu
+                    </th>
+
+                    <th>
+                        Durum
+                    </th>
+
+                    <th style="text-align:right;">
+                        İşlemler
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="animalTableBody">
+                @foreach (var item in Model)
+                {
+                    <tr data-animal-row>
+
+                        <td>
+
+                            <div class="animal-info">
+
+                                <img src="@item.ImageUrl"
+                                     alt="@item.Name"
+                                     class="animal-image">
+
+                                <div>
+
+                                    <p class="animal-name">
+                                        @item.Name
+                                    </p>
+
+                                    <p class="animal-id">
+                                        #@item.Id
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="animal-species">
+                                @item.Species
+                            </span>
+                        </td>
+
+
+                        <td>
+                            <span class="animal-breed">
+                                @item.Breed
+                            </span>
+                        </td>
+
+
+                        <td>
+
+                            <div class="animal-owner">
+
+                                <span class="animal-owner-icon">
+                                    <i class="bi bi-person"></i>
+                                </span>
+
+                                <span class="animal-owner-name">
+                                    @item.Owner.FullName
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="animal-age">
+                                @item.Age yaş
+                            </span>
+                        </td>
+
+
+                        <td>
+
+                            <div class="animal-last-visit">
+
+                                <span class="animal-last-visit-date">
+                                    @item.LastAppointment?.Date.ToString("dd.MM.yyyy")
+                                </span>
+
+                                <span class="animal-last-visit-label">
+                                    @item.LastAppointment?.AppointmentType
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            @if (item.LastAppointment == null)
+                            {
+                                <span class="animal-status pasive">
+
+                                    <i class="bi bi-heart-pulse-fill"></i>
+
+                                    Pasif
+
+                                </span>
+                            }
+                            else if (item.LastAppointment.Status == "Completed" || item.LastAppointment.Status == "Cancelled")
+                            {
+                                <span class="animal-status active">
+
+                                    <i class="bi bi-check-circle-fill"></i>
+
+                                    Taburcu
+
+                                </span>
+                            }
+                            else if (item.LastAppointment.Status == "Scheduled")
+                            {
+                                <span class="animal-status treatment">
+
+                                    <i class="bi bi-heart-pulse-fill"></i>
+
+                                    Tedavi Sürecinde
+
+                                </span>
+                            }
+
+                            
+                        </td>
+
+
+                        <td>
+
+                            <div class="animal-actions">
+
+                                <a href="/Animal/Detail/@item.Id"
+                                   class="animal-action"
+                                   title="Detay">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </a>
+
+                                <a href="/Animal/Update/@item.Id"
+                                   class="animal-action"
+                                   title="Düzenle">
+
+                                    <i class="fa-solid fa-pen"></i>
+
+                                </a>
+
+                                <a href="/Animal/delete/@item.Id"
+                                   class="btn animal-action danger"
+                                   title="Sil">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="animal-table-footer">
+
+        <p class="animal-result-count" id="animalResultCount">
+
+            Toplam @Model.Count() hayvan içerisinden
+            0 - 0 arası gösteriliyor.
+
+        </p>
+
+
+        <div class="animal-pagination" id="animalPagination">
+
+            <button type="button"
+                    class="animal-page-button"
+                    id="animalPrevPage">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+
+            <div id="animalPageNumbers"></div>
+
+            <button type="button"
+                    class="animal-page-button"
+                    id="animalNextPage">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+    const pageSize = 10;
+    let currentPage = 1;
+
+    const allRows = Array.from(
+        document.querySelectorAll("#animalTableBody [data-animal-row]")
+    );
+
+    let filteredRows = [...allRows];
+
+    const prevButton = document.getElementById("animalPrevPage");
+    const nextButton = document.getElementById("animalNextPage");
+    const pageNumbers = document.getElementById("animalPageNumbers");
+    const resultCount = document.getElementById("animalResultCount");
+
+
+    function renderAnimalTable() {
+
+        const totalPages = Math.ceil(filteredRows.length / pageSize);
+
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+
+
+        allRows.forEach(row => {
+            row.style.display = "none";
+        });
+
+
+        filteredRows.forEach((row, index) => {
+
+            if (index >= startIndex && index < endIndex) {
+                row.style.display = "";
+            }
+
+        });
+
+
+        const visibleStart = filteredRows.length === 0
+            ? 0
+            : startIndex + 1;
+
+        const visibleEnd = Math.min(
+            endIndex,
+            filteredRows.length
+        );
+
+
+        resultCount.textContent =
+            `Toplam ${filteredRows.length} hayvan içerisinden ${visibleStart} - ${visibleEnd} arası gösteriliyor.`;
+
+
+        renderPageNumbers(totalPages);
+
+
+        prevButton.disabled =
+            currentPage === 1 || totalPages === 0;
+
+        nextButton.disabled =
+            currentPage === totalPages || totalPages === 0;
+    }
+
+
+    function renderPageNumbers(totalPages) {
+
+        pageNumbers.innerHTML = "";
+
+        for (let i = 1; i <= totalPages; i++) {
+
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.className = "animal-page-button";
+
+            if (i === currentPage) {
+                button.classList.add("active");
+            }
+
+            button.textContent = i;
+
+
+            button.addEventListener("click", function () {
+
+                currentPage = i;
+
+                renderAnimalTable();
+
+            });
+
+
+            pageNumbers.appendChild(button);
+        }
+    }
+
+
+    prevButton.addEventListener("click", function () {
+
+        if (currentPage > 1) {
+
+            currentPage--;
+
+            renderAnimalTable();
+
+        }
+
+    });
+
+
+    nextButton.addEventListener("click", function () {
+
+        const totalPages = Math.ceil(
+            filteredRows.length / pageSize
+        );
+
+        if (currentPage < totalPages) {
+
+            currentPage++;
+
+            renderAnimalTable();
+
+        }
+
+    });
+
+
+    document.addEventListener(
+        "animalFilterChanged",
+        function (event) {
+
+            const filters = event.detail;
+
+
+            const searchValue =
+                filters.search.toLowerCase();
+
+
+            const speciesValue =
+                filters.species;
+
+
+            const statusValue =
+                filters.status;
+
+
+            filteredRows = allRows.filter(row => {
+
+                const rowText =
+                    row.textContent.toLowerCase();
+
+                const matchesSearch =
+                    searchValue === "" ||
+                    rowText.includes(searchValue);
+
+                const speciesElement =
+                    row.querySelector(".animal-species");
+
+                const rowSpecies =
+                    speciesElement
+                        ? speciesElement.textContent.trim()
+                        : "";
+
+
+                const matchesSpecies =
+                    speciesValue === "" ||
+                    rowSpecies === speciesValue;
+
+                const statusElement =
+                    row.querySelector(".animal-status");
+
+                const rowStatus =
+                    statusElement
+                        ? statusElement.textContent.trim()
+                        : "";
+
+
+                const matchesStatus =
+                    statusValue === "" ||
+                    rowStatus === statusValue;
+
+
+                return (
+                    matchesSearch &&
+                    matchesSpecies &&
+                    matchesStatus
+                );
+
+            });
+
+            currentPage = 1;
+
+            renderAnimalTable();
+
+        }
+    );
+
+
+    renderAnimalTable();
+
+</script>

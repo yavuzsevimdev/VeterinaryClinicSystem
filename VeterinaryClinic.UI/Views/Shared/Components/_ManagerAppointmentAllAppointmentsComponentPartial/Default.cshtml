@@ -1,0 +1,268 @@
+﻿@model List<AppointmentManagerDto>
+
+<section class="manager-appointment-section"
+         id="allAppointments">
+
+
+    <div class="manager-appointment-section-header">
+
+        <div>
+
+            <h2 class="manager-appointment-section-title">
+                Tüm Randevular
+            </h2>
+
+            <p class="manager-appointment-section-description">
+                Klinik randevularını tarih ve durumlarına göre yönetin.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="manager-all-appointments">
+
+
+
+        <div class="manager-all-header">
+
+            <div class="manager-all-header-left">
+
+                <h3 class="manager-all-header-title">
+                    Randevu Listesi
+                </h3>
+
+                <span class="badge-ui badge-ui--primary">
+                    @Model.Count()
+                </span>
+
+            </div>
+
+
+            <div class="manager-all-filter">
+
+                <select class="manager-all-select">
+
+                    <option>
+                        Tüm Durumlar
+                    </option>
+
+                    <option>
+                        Planlandı
+                    </option>
+
+                    <option>
+                        Tamamlandı
+                    </option>
+
+                    <option>
+                        İptal Edildi
+                    </option>
+
+                </select>
+
+
+                <select class="manager-all-select">
+
+                    <option>
+                        Tüm Türler
+                    </option>
+
+                    <option>
+                        Genel Muayene
+                    </option>
+
+                    <option>
+                        Aşı
+                    </option>
+
+                    <option>
+                        Kontrol
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="manager-all-table-wrapper">
+
+            <table class="manager-all-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Tarih & Saat
+                        </th>
+
+                        <th>
+                            Hayvan
+                        </th>
+
+                        <th>
+                            Sahibi
+                        </th>
+
+                        <th>
+                            Randevu Türü
+                        </th>
+
+                        <th>
+                            Durum
+                        </th>
+
+                        <th style="text-align:right;">
+                            İşlem
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <div class="manager-table-date">
+
+                                    <strong>
+                                        @item.Date.ToString("dd MMMM yyyy")
+                                    </strong>
+
+                                    <span>
+                                        @item.Time.ToString(@"hh\:mm")
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="manager-table-pet">
+
+                                    <div class="manager-table-pet-icon">
+
+                                        @if (!string.IsNullOrEmpty(item.Animal.ImageUrl))
+                                        {
+                                            <img src="@item.Animal.ImageUrl"
+                                                 alt="@item.Animal.Name">
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-solid fa-paw"></i>
+                                        }
+
+                                    </div>
+
+                                    <div class="manager-table-pet-name">
+
+                                        <strong>
+                                            @item.Animal.Name
+                                        </strong>
+
+                                        <span>
+                                            @item.Animal.Species · @item.Animal.Breed
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                @item.Owner.FullName
+                            </td>
+
+
+                            <td>
+                                @item.AppointmentType
+                            </td>
+
+
+                            <td>
+                                @if (item.Status == "Scheduled")
+                                {
+                                    <span class="badge-ui badge-ui--info">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                        Planlandı
+                                    </span>
+                                }
+                                @if (item.Status == "Completed")
+                                {
+                                    <span class="badge-ui badge-ui--success">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        Tamamlandı
+                                    </span>
+                                }
+                                @if (item.Status == "Cancelled")
+                                {
+                                    <span class="badge-ui badge-ui--danger">
+                                        <i class="fa-solid fa-calendar-xmark"></i>
+                                        İptal Edildi
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="manager-table-actions">
+
+                                    <a href="/Appointment/Detail/@item.Id"
+                                       class="manager-table-action"
+                                       title="Görüntüle">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </a>
+
+
+                                    <a href="/Appointment/Update/@item.Id"
+                                       class="manager-table-action"
+                                       title="Düzenle">
+
+                                        <i class="fa-solid fa-pen"></i>
+
+                                    </a>
+
+                                    <a href="/Appointment/Cancel/@item.Id"
+                                       class="manager-table-action"
+                                       title="İptal Et">
+
+                                        <i class="fa-solid fa-xmark"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+</section>

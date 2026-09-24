@@ -56,7 +56,6 @@
 
             <tbody>
 
-                <!-- ROW 1 -->
                 @foreach (var item in Model)
                 {
                     count++;
@@ -125,7 +124,7 @@
                         <td>
 
                             <div class="payment-method">
-                                @if(item.PaymentMethod == "Kredi Kartı")
+                                @if (item.PaymentMethod == "Kredi Kartı")
                                 {
                                     <span class="payment-method-icon">
                                         <i class="bi bi-credit-card-fill"></i>
@@ -155,7 +154,7 @@
 
 
                         <td>
-                            @if(item.TotalDebt - item.AmountPaid == 0)
+                            @if (item.TotalDebt - item.AmountPaid == 0)
                             {
                                 <span class="payment-status paid">
                                     <i class="bi bi-check-circle-fill"></i>
@@ -182,11 +181,6 @@
         </table>
 
     </div>
-
-
-    <!-- =================================================
-                 TABLE FOOTER
-                 ================================================= -->
 
     <div class="payment-table-footer">
 

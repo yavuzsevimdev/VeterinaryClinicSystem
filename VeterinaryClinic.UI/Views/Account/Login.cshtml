@@ -778,7 +778,7 @@
       <div class="hero-proof-card">
         <div class="hero-proof-icon"><i class="bi bi-heart-pulse"></i></div>
         <div>
-          <div class="hero-proof-value">12,000+ patients cared for</div>
+          <div class="hero-proof-value">100'den fazla hastaya bakım sağlandı</div>
                     <div class="hero-proof-label">Modern veteriner klinikleri tarafından güveniliyor</div>
         </div>
       </div>
@@ -803,10 +803,21 @@
           <p class="login-subtitle">VetCare OS hesabınıza devam etmek için oturum açın.</p>
         </div>
 
-        <div id="authError" class="auth-alert auth-alert--danger" role="alert" aria-live="assertive">
-          <i class="bi bi-x-circle-fill auth-alert-icon"></i>
-          <span class="auth-alert-text" id="authErrorText">Email veya şifre hatalı!</span>
-        </div>
+                @if (ViewBag.LoginError != null)
+                {
+                    <div id="authError"
+                         class="auth-alert auth-alert--danger is-visible"
+                         role="alert"
+                         aria-live="assertive">
+
+                        <i class="bi bi-x-circle-fill auth-alert-icon"></i>
+
+                        <span class="auth-alert-text">
+                            @ViewBag.LoginError
+                        </span>
+
+                    </div>
+                }
 
         <div id="authSuccess" class="auth-alert auth-alert--success" role="status" aria-live="polite">
           <i class="bi bi-check-circle-fill auth-alert-icon"></i>
@@ -976,22 +987,29 @@
 
     /* ---- Submit handler (frontend-only demo) ---- */
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
+                    if (isSubmitting) {
+                        e.preventDefault();
+                        return;
+                    }
 
-      if (isSubmitting) return;
+                    hideAuthMessages();
 
-      hideAuthMessages();
+                    var emailValid = validateEmail();
+                    var passwordValid = validatePassword();
 
-      var emailValid = validateEmail();
-      var passwordValid = validatePassword();
+                    if (!emailValid || !passwordValid) {
+                        e.preventDefault();
 
-      if (!emailValid || !passwordValid) {
-        var firstInvalid = !emailValid ? emailInput : passwordInput;
-        firstInvalid.focus();
-        return;
-      }
+                        var firstInvalid = !emailValid
+                            ? emailInput
+                            : passwordInput;
 
-      setLoading(true);
+                        firstInvalid.focus();
+
+                        return;
+                    }
+
+                    setLoading(true);
 
       // Simulated authentication request — replace with the real API call
       // once this markup is ported into Login.cshtml.

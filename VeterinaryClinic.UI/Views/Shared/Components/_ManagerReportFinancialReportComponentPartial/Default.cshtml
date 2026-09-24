@@ -1,0 +1,174 @@
+﻿<div class="manager-report-card manager-report-card--financial">
+
+    <div class="manager-report-card-header">
+
+        <div class="manager-report-card-heading">
+
+            <div class="manager-report-card-icon">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Finansal Rapor
+                </h2>
+
+                <p>
+                    Gelir, tahsilat ve bakiye durumunu inceleyin.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-report-date-badge">
+
+            <i class="fa-regular fa-calendar"></i>
+
+            2026
+
+        </div>
+
+    </div>
+
+    <div class="manager-report-stat-grid manager-report-stat-grid--three">
+
+        <div class="manager-report-stat">
+
+            <div class="manager-report-stat-icon manager-report-stat-icon--warning">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+
+            <div>
+
+                <span class="manager-report-stat-label">
+                    Toplam Tedavi Tutarı
+                </span>
+
+                <strong class="manager-report-stat-value--warning">
+                    @ViewBag.AnnualTreatmentsTotalCost.ToString("0,0") ₺
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-report-stat">
+
+            <div class="manager-report-stat-icon manager-report-stat-icon--success">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+
+            <div>
+
+                <span class="manager-report-stat-label">
+                    Toplam Tahsilat
+                </span>
+
+                <strong class="manager-report-stat-value--success">
+                    @ViewBag.AnnualPaymentsAmountPaid.ToString("0,0") ₺
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-report-stat">
+
+            <div class="manager-report-stat-icon manager-report-stat-icon--danger">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+
+            <div>
+
+                <span class="manager-report-stat-label">
+                    Kalan Tutar
+                </span>
+
+                <strong class="manager-report-stat-value--danger">
+                    @ViewBag.RemaningAmount.ToString("0,0") ₺
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="manager-report-content">
+
+        <span class="manager-report-content-title">
+            Rapor İçeriği
+        </span>
+
+        <div class="manager-report-check-grid">
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Toplam tedavi tutarı
+            </span>
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Kalan borçlar
+            </span>
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Tahsil edilen ödemeler
+            </span>
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Kategori bazlı finansal analiz
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="manager-report-actions">
+
+        <a href="/Report/DownloadFinancialReportPdf"
+           class="manager-report-action manager-report-action--financial">
+
+            <i class="fa-solid fa-file-pdf"></i>
+
+            PDF İndir
+
+        </a>
+
+        <button type="button"
+                class="manager-report-action manager-report-action--outline-financial"
+                onclick="window.print()">
+
+            <i class="fa-solid fa-print"></i>
+
+            Yazdır
+
+        </button>
+
+        <form asp-controller="Report"
+              asp-action="SendFinancialReportPdf"
+              method="post"
+              style="display:inline;">
+
+            <button type="submit"
+                    class="manager-report-action manager-report-action--soft-financial">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                Email Gönder
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

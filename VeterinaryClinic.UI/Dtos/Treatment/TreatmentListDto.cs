@@ -1,5 +1,6 @@
 ﻿using VeterinaryClinic.UI.Dtos.Animal;
 using VeterinaryClinic.UI.Dtos.Appointment;
+using VeterinaryClinic.UI.Dtos.User;
 
 namespace VeterinaryClinic.UI.Dtos.Treatment
 {
@@ -14,5 +15,6 @@ namespace VeterinaryClinic.UI.Dtos.Treatment
 
         public AnimalDto Animal { get; set; }
         public AppointmentDto Appointment { get; set; }
+        public UserDto? Owner { get; set; }
     }
 }

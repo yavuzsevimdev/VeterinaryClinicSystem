@@ -1,1278 +1,2688 @@
-﻿<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Randevularım — VetCare</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+﻿@if (User.IsInRole("Manager"))
+{
+    <!DOCTYPE html>
+    <html lang="tr">
 
-    <style>
+    <head>
 
-            :root {
-                --color-primary: #6C63A8;
-                --color-primary-dark: #554C91;
-                --color-primary-light: #EDEBF7;
-                --color-secondary: #8FC9B5;
-                --color-secondary-light: #E7F4EF;
-                --color-accent: #F3B7A5;
-                --color-accent-light: #FDEEE9;
-                --color-background: #F8F7FC;
-                --color-surface: #FFFFFF;
-                --color-surface-alt: #FBFAFD;
-                --color-border: #E7E4F2;
-                --color-border-strong: #D8D3EC;
-                --color-text: #303044;
-                --color-muted: #7B7B90;
-                --color-muted-light: #A6A4B8;
-                --color-success: #71B58A;
-                --color-success-light: #E7F5EC;
-                --color-warning: #E8B86A;
-                --color-warning-light: #FBF0DE;
-                --color-danger: #DF7C89;
-                --color-danger-light: #FBE9EB;
-                --color-info: #7FAFD0;
-                --color-info-light: #E9F2F8;
-                --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-                --font-family-base: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                --radius-sm: 8px;
-                --radius-md: 12px;
-                --radius-lg: 16px;
-                --radius-pill: 999px;
-                --shadow-xs: 0 1px 2px rgba(48, 48, 68, 0.05);
-                --shadow-sm: 0 2px 8px rgba(48, 48, 68, 0.06);
-                --shadow-md: 0 8px 24px rgba(48, 48, 68, 0.08);
-                --shadow-primary-glow: 0 8px 20px rgba(108, 99, 168, 0.28);
-                --transition-fast: 150ms ease;
-                --transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
-                --transition-slow: 360ms cubic-bezier(0.4, 0, 0.2, 1);
-            }
+        <meta charset="UTF-8">
 
-            * {
-                box-sizing: border-box;
-            }
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0">
 
-            body {
-                margin: 0;
-                font-family: var(--font-family-base);
-                background-color: var(--color-background);
-                color: var(--color-text);
-                font-size: 0.9375rem;
-                line-height: 1.55;
-                -webkit-font-smoothing: antialiased;
-            }
+        <title>Randevular | VetCare</title>
 
-            img, svg {
-                display: block;
-                max-width: 100%;
-            }
 
-            button {
-                font: inherit;
-                color: inherit;
-                background: none;
-                border: none;
-                padding: 0;
-                cursor: pointer;
-            }
+        <!-- =========================================================
+         FONT AWESOME
+         ========================================================= -->
 
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
 
-            ul {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
+        <style>
+                /* =========================================================
+                   MANAGER APPOINTMENT PAGE
+                   ========================================================= */
 
-            :focus-visible {
-                outline: 2px solid var(--color-primary);
-                outline-offset: 2px;
-                border-radius: var(--radius-sm);
-            }
-
-            h1, h2 {
-                margin: 0;
-                font-weight: 600;
-                line-height: 1.25;
-            }
-
-            .text-page-title {
-                font-size: 1.85rem;
-                font-weight: 700;
-                letter-spacing: -0.01em;
-            }
-
-            .text-section-title {
-                font-size: 1.1rem;
-                font-weight: 600;
-            }
-
-            .text-card-title {
-                font-size: 1.05rem;
-                font-weight: 600;
-            }
-
-            .text-small {
-                font-size: 0.8125rem;
-            }
-
-            .text-tiny {
-                font-size: 0.75rem;
-            }
-
-            .text-muted {
-                color: var(--color-muted) !important;
-            }
-
-            .text-muted-light {
-                color: var(--color-muted-light) !important;
-            }
-
-            .app-content {
-                max-width: 1320px;
-                margin: 0 auto;
-                padding: 2rem 2.5rem 4rem;
-            }
-
-            .app-content-inner {
-                display: flex;
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            /* ---- Reused global components ---- */
-
-            .breadcrumb-ui {
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 6px;
-                font-size: 0.8125rem;
-            }
-
-            .breadcrumb-ui-item {
-                color: var(--color-muted);
-                font-weight: 500;
-            }
-
-                .breadcrumb-ui-item a:hover {
-                    color: var(--color-primary-dark);
+                .manager-appointment-page {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 28px;
+                    padding: 4px 0 32px;
+                    color: var(--color-text);
                 }
 
-                .breadcrumb-ui-item.is-current {
+
+                    /* =========================================================
+                   PAGE HEADER
+                   ========================================================= */
+
+                    .manager-appointment-page .manager-appointment-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 24px;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-header-left {
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-header-icon {
+                        width: 54px;
+                        height: 54px;
+                        min-width: 54px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 16px;
+                        background: var(--color-primary-light);
+                        color: var(--color-primary);
+                        font-size: 1.25rem;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-title {
+                        margin: 0;
+                        font-size: 1.65rem;
+                        font-weight: 700;
+                        line-height: 1.2;
+                        color: var(--color-text);
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-subtitle {
+                        margin: 6px 0 0;
+                        font-size: 0.84rem;
+                        line-height: 1.5;
+                        color: var(--color-muted);
+                    }
+
+
+                    /* =========================================================
+                   STATISTICS
+                   ========================================================= */
+
+                    .manager-appointment-page .manager-appointment-stat-grid {
+                        width: 100%;
+                        display: grid;
+                        grid-template-columns: repeat(4, minmax(0, 1fr));
+                        gap: 16px;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-stat-card {
+                        position: relative;
+                        min-height: 132px;
+                        padding: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        background: var(--color-surface);
+                        border: 1px solid var(--color-border);
+                        border-radius: 16px;
+                        box-shadow: var(--shadow-sm);
+                        overflow: hidden;
+                    }
+
+
+                        .manager-appointment-page .manager-appointment-stat-card::after {
+                            content: "";
+                            position: absolute;
+                            width: 90px;
+                            height: 90px;
+                            right: -30px;
+                            bottom: -35px;
+                            border-radius: 50%;
+                            background: var(--color-primary-light);
+                            opacity: 0.45;
+                        }
+
+
+                    .manager-appointment-page .manager-appointment-stat-top {
+                        position: relative;
+                        z-index: 1;
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: space-between;
+                        gap: 12px;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-stat-label {
+                        display: block;
+                        font-size: 0.76rem;
+                        font-weight: 600;
+                        color: var(--color-muted);
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-stat-value {
+                        display: block;
+                        margin-top: 10px;
+                        font-size: 1.75rem;
+                        font-weight: 700;
+                        line-height: 1;
+                        color: var(--color-text);
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-stat-icon {
+                        width: 42px;
+                        height: 42px;
+                        min-width: 42px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 12px;
+                        font-size: 0.95rem;
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-stat-icon.primary {
+                            background: var(--color-primary-light);
+                            color: var(--color-primary);
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-stat-icon.info {
+                            background: #eef6fb;
+                            color: var(--color-info);
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-stat-icon.success {
+                            background: #eef8f1;
+                            color: var(--color-success);
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-stat-icon.danger {
+                            background: #fdf0f2;
+                            color: var(--color-danger);
+                        }
+
+
+                    .manager-appointment-page .manager-appointment-stat-description {
+                        position: relative;
+                        z-index: 1;
+                        font-size: 0.7rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    /* =========================================================
+                   SECTION
+                   ========================================================= */
+
+                    .manager-appointment-page .manager-appointment-section {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 16px;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-section-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 16px;
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-section-title {
+                        margin: 0;
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: var(--color-text);
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-section-description {
+                        margin: 4px 0 0;
+                        font-size: 0.74rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    .manager-appointment-page .manager-appointment-section-action {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        color: var(--color-primary);
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        text-decoration: none;
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-section-action:hover {
+                            color: var(--color-primary-dark);
+                        }
+
+
+                    /* =========================================================
+                   UPCOMING APPOINTMENT SLIDER
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-slider {
+                        position: relative;
+                        width: 100%;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-slider-viewport {
+                        width: 100%;
+                        overflow: hidden;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-cards {
+                        display: flex;
+                        gap: 16px;
+                        width: 100%;
+                        transition: transform 0.35s ease;
+                    }
+
+
+                    /* =========================================================
+                   UPCOMING APPOINTMENT CARD
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-card {
+                        position: relative;
+                        flex: 0 0 calc((100% - 48px) / 4);
+                        width: calc((100% - 48px) / 4);
+                        min-width: 0;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 18px;
+                        background: var(--color-surface);
+                        border: 1px solid var(--color-border);
+                        border-radius: 16px;
+                        box-shadow: var(--shadow-sm);
+                        overflow: hidden;
+                        transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-card:hover {
+                            transform: translateY(-2px);
+                            border-color: var(--color-border-strong);
+                            box-shadow: var(--shadow-md);
+                        }
+
+
+                    /* =========================================================
+                   CARD STATUS
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-card-status {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+                        margin-bottom: 16px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-status-date {
+                        font-size: 0.68rem;
+                        font-weight: 600;
+                        color: var(--color-muted);
+                    }
+
+
+                    /* =========================================================
+                   CARD ANIMAL
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-card-animal {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        margin-bottom: 16px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-animal-image {
+                        width: 48px;
+                        height: 48px;
+                        min-width: 48px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                        border-radius: 50%;
+                        background: var(--color-primary-light);
+                        color: var(--color-primary);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-card-animal-image img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                        }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-animal-name {
+                        display: block;
+                        font-size: 0.9rem;
+                        font-weight: 700;
+                        color: var(--color-text);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-type {
+                        display: block;
+                        margin-top: 4px;
+                        font-size: 0.7rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    /* =========================================================
+                   CARD INFO
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-card-info {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 12px;
+                        padding: 12px 0;
+                        margin-bottom: 14px;
+                        border-top: 1px solid var(--color-border);
+                        border-bottom: 1px solid var(--color-border);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-info-item {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-info-label {
+                        font-size: 0.63rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-appointment-card-info-value {
+                        font-size: 0.72rem;
+                        font-weight: 600;
+                        color: var(--color-text);
+                    }
+
+
+                    /* =========================================================
+                   CARD CUSTOMER
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-card-customer {
+                        display: flex;
+                        align-items: center;
+                        gap: 7px;
+                        margin-bottom: 16px;
+                        font-size: 0.7rem;
+                        color: var(--color-muted);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-card-customer i {
+                            color: var(--color-primary);
+                        }
+
+
+                    /* =========================================================
+                   CARD ACTIONS
+                   ========================================================= */
+
+                   .manager-appointment-card-actions {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 0.5rem;
+                    }
+
+                    /* Genel action */
+                    .manager-appointment-card-action {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.45rem;
+
+                        min-height: 36px;
+                        padding: 0.55rem 0.8rem;
+
+                        border: 1px solid var(--color-border);
+                        border-radius: var(--radius-md);
+
+                        background-color: transparent;
+                        color: var(--color-muted);
+
+                        font-size: 0.78rem;
+                        font-weight: 600;
+                        text-decoration: none;
+
+                        transition:
+                            background-color var(--transition-fast),
+                            border-color var(--transition-fast),
+                            color var(--transition-fast);
+                    }
+
+                    .manager-appointment-card-action:hover {
+                        background-color: var(--color-surface-alt);
+                        color: var(--color-text);
+                    }
+
+                    /* Düzenle */
+                    .manager-appointment-card-action.primary {
+                        background-color: var(--color-primary);
+                        border-color: var(--color-primary);
+                        color: #ffffff;
+                    }
+
+                    .manager-appointment-card-action.primary:hover {
+                        background-color: var(--color-primary-dark);
+                        border-color: var(--color-primary-dark);
+                        color: #ffffff;
+                    }
+
+                    /* İptal Et */
+                    .manager-appointment-card-action.cancel {
+                        grid-column: 1 / -1;
+
+                        background-color: transparent;
+                        border-color: var(--color-danger);
+                        color: var(--color-danger);
+                    }
+
+                    .manager-appointment-card-action.cancel:hover {
+                        background-color: #fff1f3;
+                        border-color: var(--color-danger);
+                        color: var(--color-danger);
+                    }
+
+
+                    /* =========================================================
+                   SLIDER ARROWS
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-appointment-slider-arrow {
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        z-index: 10;
+                        width: 38px;
+                        height: 38px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 1px solid var(--color-border);
+                        border-radius: 50%;
+                        background: var(--color-surface);
+                        color: var(--color-text);
+                        box-shadow: var(--shadow-sm);
+                        cursor: pointer;
+                        transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-slider-arrow:hover {
+                            background: var(--color-primary);
+                            border-color: var(--color-primary);
+                            color: #ffffff;
+                            transform: translateY(-50%) scale(1.05);
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-slider-arrow:disabled {
+                            opacity: 0.35;
+                            cursor: default;
+                            pointer-events: none;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-slider-arrow.prev {
+                            left: -18px;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-slider-arrow.next {
+                            right: -18px;
+                        }
+
+
+                    /* =========================================================
+                   TODAY'S APPOINTMENTS
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-today-wrapper {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        padding: 18px;
+                        background: var(--color-surface);
+                        border: 1px solid var(--color-border);
+                        border-radius: 16px;
+                        box-shadow: var(--shadow-sm);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-row {
+                        display: grid;
+                        grid-template-columns: 72px minmax(170px, 1fr) minmax(150px, 0.8fr) 140px 100px 110px;
+                        align-items: center;
+                        gap: 16px;
+                        min-height: 72px;
+                        padding: 12px 14px;
+                        border: 1px solid transparent;
+                        border-radius: 12px;
+                        transition: background-color var(--transition-fast), border-color var(--transition-fast);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-today-row:hover {
+                            background: var(--color-surface-alt);
+                            border-color: var(--color-border);
+                        }
+
+
+                    /* =========================================================
+                   TODAY TIME
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-today-time {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-today-time strong {
+                            font-size: 0.84rem;
+                            color: var(--color-text);
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-today-time span {
+                            font-size: 0.64rem;
+                            color: var(--color-muted);
+                        }
+
+
+                    /* =========================================================
+                   TODAY ANIMAL
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-today-animal {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-avatar {
+                        width: 38px;
+                        height: 38px;
+                        min-width: 38px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                        border-radius: 50%;
+                        background: var(--color-primary-light);
+                        color: var(--color-primary);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-today-avatar img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+
+
+                    .manager-appointment-page
+                    .manager-today-animal-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-animal-name {
+                        font-size: 0.78rem;
+                        font-weight: 700;
+                        color: var(--color-text);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-animal-meta {
+                        font-size: 0.64rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    /* =========================================================
+                   TODAY OWNER
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-today-owner {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-owner-label {
+                        font-size: 0.62rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-owner-name {
+                        font-size: 0.73rem;
+                        font-weight: 600;
+                        color: var(--color-text);
+                    }
+
+
+                    /* =========================================================
+                   TODAY TYPE
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-today-type {
+                        font-size: 0.7rem;
+                        color: var(--color-muted);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-status {
+                        display: flex;
+                        justify-content: flex-start;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-today-action {
+                        display: flex;
+                        justify-content: flex-end;
+                    }
+
+
+                    /* =========================================================
+                   TODAY VIEW BUTTON
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-today-view {
+                        width: 34px;
+                        height: 34px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 1px solid var(--color-border);
+                        border-radius: var(--radius-sm);
+                        background: var(--color-surface);
+                        color: var(--color-muted);
+                        text-decoration: none;
+                        transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-today-view:hover {
+                            color: var(--color-primary);
+                            border-color: var(--color-primary);
+                            background: var(--color-primary-light);
+                        }
+
+
+                    /* =========================================================
+                   ALL APPOINTMENTS
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-all-appointments {
+                        display: flex;
+                        flex-direction: column;
+                        background: var(--color-surface);
+                        border: 1px solid var(--color-border);
+                        border-radius: 16px;
+                        box-shadow: var(--shadow-sm);
+                        overflow: hidden;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-all-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 16px;
+                        padding: 18px 20px;
+                        border-bottom: 1px solid var(--color-border);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-all-header-left {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-all-header-title {
+                        margin: 0;
+                        font-size: 0.92rem;
+                        font-weight: 700;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-all-filter {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-all-select {
+                        height: 36px;
+                        padding: 0 10px;
+                        border: 1px solid var(--color-border-strong);
+                        border-radius: var(--radius-sm);
+                        background: var(--color-surface);
+                        color: var(--color-text);
+                        font-family: inherit;
+                        font-size: 0.7rem;
+                        outline: none;
+                    }
+
+
+                    /* =========================================================
+                   ALL APPOINTMENTS TABLE
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-all-table-wrapper {
+                        width: 100%;
+                        overflow-x: auto;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-all-table {
+                        width: 100%;
+                        min-width: 900px;
+                        border-collapse: collapse;
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-all-table th {
+                            padding: 12px 16px;
+                            background: var(--color-surface-alt);
+                            border-bottom: 1px solid var(--color-border);
+                            color: var(--color-muted);
+                            font-size: 0.67rem;
+                            font-weight: 700;
+                            text-align: left;
+                            white-space: nowrap;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-all-table td {
+                            padding: 14px 16px;
+                            border-bottom: 1px solid var(--color-border);
+                            font-size: 0.72rem;
+                            vertical-align: middle;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-all-table tr:last-child td {
+                            border-bottom: 0;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-all-table tbody tr:hover {
+                            background: var(--color-surface-alt);
+                        }
+
+
+                    /* =========================================================
+                   TABLE DATE
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-table-date {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 3px;
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-table-date strong {
+                            font-size: 0.73rem;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-table-date span {
+                            font-size: 0.64rem;
+                            color: var(--color-muted);
+                        }
+
+
+                    /* =========================================================
+                   TABLE PET
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-table-pet {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-table-pet-icon {
+                        width: 32px;
+                        height: 32px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 50%;
+                        background: var(--color-primary-light);
+                        color: var(--color-primary);
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-table-pet-name {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-table-pet-name strong {
+                            font-size: 0.72rem;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-table-pet-name span {
+                            font-size: 0.62rem;
+                            color: var(--color-muted);
+                        }
+
+
+                    /* =========================================================
+                   TABLE ACTIONS
+                   ========================================================= */
+
+                    .manager-appointment-page
+                    .manager-table-actions {
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 6px;
+                    }
+
+
+                    .manager-appointment-page
+                    .manager-table-action {
+                        width: 32px;
+                        height: 32px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        border: 1px solid var(--color-border);
+                        border-radius: var(--radius-sm);
+                        background: var(--color-surface);
+                        color: var(--color-muted);
+                        text-decoration: none;
+                        transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+                    }
+
+
+                        .manager-appointment-page
+                        .manager-table-action:hover {
+                            color: var(--color-primary);
+                            border-color: var(--color-primary);
+                            background: var(--color-primary-light);
+                        }
+
+
+                /* =========================================================
+                   RESPONSIVE - TABLET
+                   ========================================================= */
+
+                @@media (max-width: 1200px) {
+                    /* Statistics */
+
+                    .manager-appointment-page
+                    .manager-appointment-stat-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                    /* Slider */
+
+                    .manager-appointment-page
+                    .manager-appointment-card {
+                        flex: 0 0 calc((100% - 16px) / 2);
+                        width: calc((100% - 16px) / 2);
+                    }
+                    /* Today's appointments */
+
+                    .manager-appointment-page
+                    .manager-today-row {
+                        grid-template-columns: 70px minmax(150px, 1fr) minmax(130px, 0.8fr) 120px 100px 50px;
+                    }
+                }
+
+
+                /* =========================================================
+                   RESPONSIVE - MOBILE
+                   ========================================================= */
+
+                @@media (max-width: 768px) {
+
+
+                    .manager-appointment-page {
+                        gap: 22px;
+                    }
+                        /* Header */
+
+                        .manager-appointment-page
+                        .manager-appointment-header {
+                            align-items: flex-start;
+                            flex-direction: column;
+                        }
+
+
+                            .manager-appointment-page
+                            .manager-appointment-header
+                            .btn-ui {
+                                width: 100%;
+                            }
+                        /* Statistics */
+
+                        .manager-appointment-page
+                        .manager-appointment-stat-grid {
+                            grid-template-columns: 1fr;
+                        }
+                        /* Slider */
+
+                        .manager-appointment-page
+                        .manager-appointment-card {
+                            flex: 0 0 100%;
+                            width: 100%;
+                        }
+                        /* Slider arrows */
+
+                        .manager-appointment-page
+                        .manager-appointment-slider-arrow.prev {
+                            left: 8px;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-appointment-slider-arrow.next {
+                            right: 8px;
+                        }
+                        /* Section header */
+
+                        .manager-appointment-page
+                        .manager-appointment-section-header {
+                            align-items: flex-start;
+                            flex-direction: column;
+                        }
+                        /* All appointments header */
+
+                        .manager-appointment-page
+                        .manager-all-header {
+                            align-items: flex-start;
+                            flex-direction: column;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-all-filter {
+                            width: 100%;
+                            flex-direction: column;
+                        }
+
+
+                        .manager-appointment-page
+                        .manager-all-select {
+                            width: 100%;
+                        }
+                }
+        </style>
+
+    </head>
+
+
+    <body>
+
+
+        <main class="manager-appointment-page">
+
+
+            <!-- =========================================================
+         PAGE HEADER
+         ========================================================= -->
+
+            <section class="manager-appointment-header">
+
+                <div class="manager-appointment-header-left">
+
+                    <div class="manager-appointment-header-icon">
+
+                        <i class="fa-solid fa-calendar-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h1 class="manager-appointment-title">
+                            Randevular
+                        </h1>
+
+                        <p class="manager-appointment-subtitle">
+                            Kliniğinizdeki randevuları görüntüleyin,
+                            yönetin ve takip edin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href="/Appointment/Create"
+                   class="btn-ui btn-ui--primary">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Yeni Randevu
+
+                </a>
+
+            </section>
+
+
+            <!-- =========================================================
+         STATISTICS
+         ========================================================= -->
+            @await Component.InvokeAsync("_ManagerAppointmentIndexStatisticsComponentPartial")
+
+
+            <!-- =========================================================
+         UPCOMING APPOINTMENTS
+         ========================================================= -->
+            @await Component.InvokeAsync("_ManagerAppointmentIndexUpcomingAppointmentsComponentPartial")
+
+
+
+            <!-- =========================================================
+         TODAY
+         ========================================================= -->
+            @await Component.InvokeAsync("_ManagerAppointmentTodayAppointmentsComponentPartial")
+
+
+
+            <!-- =========================================================
+         ALL APPOINTMENTS
+         ========================================================= -->
+            @await Component.InvokeAsync("_ManagerAppointmentAllAppointmentsComponentPartial")
+
+        </main>
+
+
+        <!-- =========================================================
+     SIMPLE TAB / DEMO INTERACTION
+     ========================================================= -->
+
+        <script>
+
+                // =========================================================
+                // UPCOMING APPOINTMENTS SLIDER
+                // =========================================================
+
+                const upcomingSlider =
+                    document.querySelector(".manager-appointment-slider");
+
+                const upcomingTrack =
+                    document.getElementById("upcomingAppointmentTrack");
+
+                const upcomingPrev =
+                    document.getElementById("upcomingPrev");
+
+                const upcomingNext =
+                    document.getElementById("upcomingNext");
+
+
+                // Gerekli elementler yoksa JS'i çalıştırma
+                if (
+                    upcomingSlider &&
+                    upcomingTrack &&
+                    upcomingPrev &&
+                    upcomingNext
+                ) {
+
+                    let upcomingCurrentIndex = 0;
+
+
+                    // ---------------------------------------------------------
+                    // Ekrana göre kaç kart gösterilecek?
+                    // ---------------------------------------------------------
+
+                    function getVisibleCards() {
+
+                        if (window.innerWidth <= 768) {
+                            return 1;
+                        }
+
+                        if (window.innerWidth <= 1200) {
+                            return 2;
+                        }
+
+                        return 4;
+                    }
+
+
+                    // ---------------------------------------------------------
+                    // Kartlar arasındaki boşluk
+                    // ---------------------------------------------------------
+
+                    function getCardGap() {
+
+                        return 16;
+
+                    }
+
+
+                    // ---------------------------------------------------------
+                    // Slider güncelle
+                    // ---------------------------------------------------------
+
+                    function updateUpcomingSlider() {
+
+                        const cards =
+                            upcomingTrack.querySelectorAll(
+                                ".manager-appointment-card"
+                            );
+
+
+                        const visibleCards =
+                            getVisibleCards();
+
+
+                        const totalCards =
+                            cards.length;
+
+
+                        const maxIndex =
+                            Math.max(
+                                0,
+                                totalCards - visibleCards
+                            );
+
+
+                        if (upcomingCurrentIndex > maxIndex) {
+
+                            upcomingCurrentIndex =
+                                maxIndex;
+
+                        }
+
+
+                        const card =
+                            cards[0];
+
+
+                        if (!card) {
+
+                            upcomingPrev.disabled = true;
+                            upcomingNext.disabled = true;
+
+                            return;
+
+                        }
+
+
+                        const cardWidth =
+                            card.getBoundingClientRect().width;
+
+
+                        const gap =
+                            getCardGap();
+
+
+                        const translateX =
+                            upcomingCurrentIndex *
+                            (cardWidth + gap);
+
+
+                        upcomingTrack.style.transform =
+                            `translateX(-${translateX}px)`;
+
+
+                        // -----------------------------------------------------
+                        // Okların aktif/pasif durumu
+                        // -----------------------------------------------------
+
+                        upcomingPrev.disabled =
+                            upcomingCurrentIndex === 0;
+
+
+                        upcomingNext.disabled =
+                            upcomingCurrentIndex >= maxIndex;
+
+                    }
+
+
+                    // ---------------------------------------------------------
+                    // SAĞ OK
+                    // ---------------------------------------------------------
+
+                    upcomingNext.addEventListener(
+                        "click",
+                        function () {
+
+                            const cards =
+                                upcomingTrack.querySelectorAll(
+                                    ".manager-appointment-card"
+                                );
+
+
+                            const visibleCards =
+                                getVisibleCards();
+
+
+                            const maxIndex =
+                                Math.max(
+                                    0,
+                                    cards.length - visibleCards
+                                );
+
+
+                            if (
+                                upcomingCurrentIndex <
+                                maxIndex
+                            ) {
+
+                                upcomingCurrentIndex++;
+
+                                updateUpcomingSlider();
+
+                            }
+
+                        }
+                    );
+
+
+                    // ---------------------------------------------------------
+                    // SOL OK
+                    // ---------------------------------------------------------
+
+                    upcomingPrev.addEventListener(
+                        "click",
+                        function () {
+
+                            if (
+                                upcomingCurrentIndex >
+                                0
+                            ) {
+
+                                upcomingCurrentIndex--;
+
+                                updateUpcomingSlider();
+
+                            }
+
+                        }
+                    );
+
+
+                    // ---------------------------------------------------------
+                    // EKRAN BOYUTU DEĞİŞİNCE
+                    // ---------------------------------------------------------
+
+                    window.addEventListener(
+                        "resize",
+                        function () {
+
+                            updateUpcomingSlider();
+
+                        }
+                    );
+
+
+                    // ---------------------------------------------------------
+                    // İLK ÇALIŞTIRMA
+                    // ---------------------------------------------------------
+
+                    updateUpcomingSlider();
+
+                }
+
+        </script>
+
+    </body>
+
+</html>
+}
+
+@if (User.IsInRole("Customer"))
+{
+
+        <style>
+
+                :root {
+                    --color-primary: #6C63A8;
+                    --color-primary-dark: #554C91;
+                    --color-primary-light: #EDEBF7;
+                    --color-secondary: #8FC9B5;
+                    --color-secondary-light: #E7F4EF;
+                    --color-accent: #F3B7A5;
+                    --color-accent-light: #FDEEE9;
+                    --color-background: #F8F7FC;
+                    --color-surface: #FFFFFF;
+                    --color-surface-alt: #FBFAFD;
+                    --color-border: #E7E4F2;
+                    --color-border-strong: #D8D3EC;
+                    --color-text: #303044;
+                    --color-muted: #7B7B90;
+                    --color-muted-light: #A6A4B8;
+                    --color-success: #71B58A;
+                    --color-success-light: #E7F5EC;
+                    --color-warning: #E8B86A;
+                    --color-warning-light: #FBF0DE;
+                    --color-danger: #DF7C89;
+                    --color-danger-light: #FBE9EB;
+                    --color-info: #7FAFD0;
+                    --color-info-light: #E9F2F8;
+                    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+                    --font-family-base: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    --radius-sm: 8px;
+                    --radius-md: 12px;
+                    --radius-lg: 16px;
+                    --radius-pill: 999px;
+                    --shadow-xs: 0 1px 2px rgba(48, 48, 68, 0.05);
+                    --shadow-sm: 0 2px 8px rgba(48, 48, 68, 0.06);
+                    --shadow-md: 0 8px 24px rgba(48, 48, 68, 0.08);
+                    --shadow-primary-glow: 0 8px 20px rgba(108, 99, 168, 0.28);
+                    --transition-fast: 150ms ease;
+                    --transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+                    --transition-slow: 360ms cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    margin: 0;
+                    font-family: var(--font-family-base);
+                    background-color: var(--color-background);
                     color: var(--color-text);
+                    font-size: 0.9375rem;
+                    line-height: 1.55;
+                    -webkit-font-smoothing: antialiased;
+                }
+
+                img, svg {
+                    display: block;
+                    max-width: 100%;
+                }
+
+                button {
+                    font: inherit;
+                    color: inherit;
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    cursor: pointer;
+                }
+
+                a {
+                    text-decoration: none;
+                    color: inherit;
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                :focus-visible {
+                    outline: 2px solid var(--color-primary);
+                    outline-offset: 2px;
+                    border-radius: var(--radius-sm);
+                }
+
+                h1, h2 {
+                    margin: 0;
+                    font-weight: 600;
+                    line-height: 1.25;
+                }
+
+                .text-page-title {
+                    font-size: 1.85rem;
+                    font-weight: 700;
+                    letter-spacing: -0.01em;
+                }
+
+                .text-section-title {
+                    font-size: 1.1rem;
                     font-weight: 600;
                 }
 
-            .breadcrumb-ui-sep {
-                color: var(--color-muted-light);
-                font-size: 0.7rem;
-            }
-
-            .section-header {
-                display: flex;
-                align-items: flex-start;
-                justify-content: space-between;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-
-            .section-header-desc {
-                color: var(--color-muted);
-                font-size: 0.875rem;
-                margin-top: 4px;
-            }
-
-            .card-ui {
-                background-color: var(--color-surface);
-                border: 1px solid var(--color-border);
-                border-radius: var(--radius-lg);
-                padding: 1.5rem;
-                box-shadow: var(--shadow-xs);
-            }
-
-            .btn-ui {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-                border-radius: var(--radius-md);
-                font-weight: 600;
-                font-size: 0.85rem;
-                line-height: 1;
-                white-space: nowrap;
-                border: 1px solid transparent;
-                padding: 0.65rem 1.1rem;
-                transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-            }
-
-                .btn-ui:active {
-                    transform: scale(0.98);
+                .text-card-title {
+                    font-size: 1.05rem;
+                    font-weight: 600;
                 }
 
-            .btn-ui--sm {
-                padding: 0.4rem 0.75rem;
-                font-size: 0.75rem;
-                border-radius: var(--radius-sm);
-            }
-
-            .btn-ui--primary {
-                background: var(--gradient-primary);
-                color: #fff;
-                box-shadow: var(--shadow-primary-glow);
-            }
-
-                .btn-ui--primary:hover {
-                    filter: brightness(1.06);
+                .text-small {
+                    font-size: 0.8125rem;
                 }
 
-            .btn-ui--ghost {
-                background-color: transparent;
-                border: 1px solid var(--color-border-strong);
-                color: var(--color-text);
-            }
-
-                .btn-ui--ghost:hover {
-                    border-color: var(--color-primary);
-                    color: var(--color-primary-dark);
-                    background-color: var(--color-primary-light);
+                .text-tiny {
+                    font-size: 0.75rem;
                 }
 
-            .btn-ui--danger-ghost {
-                background-color: transparent;
-                border: 1px solid var(--color-danger-light);
-                color: var(--color-danger);
-            }
-
-                .btn-ui--danger-ghost:hover {
-                    background-color: var(--color-danger-light);
+                .text-muted {
+                    color: var(--color-muted) !important;
                 }
 
-            .badge-ui {
-                display: inline-flex;
-                align-items: center;
-                gap: 5px;
-                padding: 0.3rem 0.65rem;
-                border-radius: var(--radius-pill);
-                font-size: 0.7rem;
-                font-weight: 600;
-                line-height: 1;
-                white-space: nowrap;
-            }
-
-                .badge-ui::before {
-                    content: "";
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                    background-color: currentColor;
+                .text-muted-light {
+                    color: var(--color-muted-light) !important;
                 }
 
-            .badge-ui--neutral {
-                background-color: var(--color-surface-alt);
-                color: var(--color-muted);
-                border: 1px solid var(--color-border);
-            }
-
-            .badge-ui--success {
-                background-color: var(--color-success-light);
-                color: #3f7d5c;
-            }
-
-            .badge-ui--danger {
-                background-color: var(--color-danger-light);
-                color: #b8495a;
-            }
-
-            .badge-ui--info {
-                background-color: var(--color-info-light);
-                color: #3d76a0;
-            }
-
-            .card-icon-tile {
-                flex: 0 0 auto;
-                width: 40px;
-                height: 40px;
-                border-radius: var(--radius-md);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.05rem;
-            }
-
-                .card-icon-tile.is-primary {
-                    background-color: var(--color-primary-light);
-                    color: var(--color-primary);
+                .app-content {
+                    max-width: 1320px;
+                    margin: 0 auto;
+                    padding: 2rem 2.5rem 4rem;
                 }
 
-                .card-icon-tile.is-secondary {
-                    background-color: var(--color-secondary-light);
-                    color: #3f7d64;
+                .app-content-inner {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.5rem;
                 }
 
-                .card-icon-tile.is-info {
-                    background-color: var(--color-info-light);
-                    color: var(--color-info);
+                /* ---- Reused global components ---- */
+
+                .breadcrumb-ui {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 6px;
+                    font-size: 0.8125rem;
                 }
 
-                .card-icon-tile.is-success {
-                    background-color: var(--color-success-light);
-                    color: var(--color-success);
+                .breadcrumb-ui-item {
+                    color: var(--color-muted);
+                    font-weight: 500;
                 }
 
-                .card-icon-tile.is-danger {
-                    background-color: var(--color-danger-light);
+                    .breadcrumb-ui-item a:hover {
+                        color: var(--color-primary-dark);
+                    }
+
+                    .breadcrumb-ui-item.is-current {
+                        color: var(--color-text);
+                        font-weight: 600;
+                    }
+
+                .breadcrumb-ui-sep {
+                    color: var(--color-muted-light);
+                    font-size: 0.7rem;
+                }
+
+                .section-header {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                }
+
+                .section-header-desc {
+                    color: var(--color-muted);
+                    font-size: 0.875rem;
+                    margin-top: 4px;
+                }
+
+                .card-ui {
+                    background-color: var(--color-surface);
+                    border: 1px solid var(--color-border);
+                    border-radius: var(--radius-lg);
+                    padding: 1.5rem;
+                    box-shadow: var(--shadow-xs);
+                }
+
+                .btn-ui {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    border-radius: var(--radius-md);
+                    font-weight: 600;
+                    font-size: 0.85rem;
+                    line-height: 1;
+                    white-space: nowrap;
+                    border: 1px solid transparent;
+                    padding: 0.65rem 1.1rem;
+                    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+                }
+
+                    .btn-ui:active {
+                        transform: scale(0.98);
+                    }
+
+                .btn-ui--sm {
+                    padding: 0.4rem 0.75rem;
+                    font-size: 0.75rem;
+                    border-radius: var(--radius-sm);
+                }
+
+                .btn-ui--primary {
+                    background: var(--gradient-primary);
+                    color: #fff;
+                    box-shadow: var(--shadow-primary-glow);
+                }
+
+                    .btn-ui--primary:hover {
+                        filter: brightness(1.06);
+                    }
+
+                .btn-ui--ghost {
+                    background-color: transparent;
+                    border: 1px solid var(--color-border-strong);
+                    color: var(--color-text);
+                }
+
+                    .btn-ui--ghost:hover {
+                        border-color: var(--color-primary);
+                        color: var(--color-primary-dark);
+                        background-color: var(--color-primary-light);
+                    }
+
+                .btn-ui--danger-ghost {
+                    background-color: transparent;
+                    border: 1px solid var(--color-danger-light);
                     color: var(--color-danger);
                 }
 
-            .link-action {
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                font-size: 0.8125rem;
-                font-weight: 600;
-                color: var(--color-primary);
-            }
+                    .btn-ui--danger-ghost:hover {
+                        background-color: var(--color-danger-light);
+                    }
 
-                .link-action:hover {
-                    color: var(--color-primary-dark);
-                }
-
-            .form-control-ui {
-                width: 100%;
-                height: 44px;
-                padding: 0 1rem;
-                background-color: var(--color-surface-alt);
-                border: 1.5px solid var(--color-border);
-                border-radius: var(--radius-md);
-                font-size: 0.85rem;
-                font-family: inherit;
-                color: var(--color-text);
-                transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
-            }
-
-                .form-control-ui:focus {
-                    outline: none;
-                    border-color: var(--color-primary);
-                    background-color: var(--color-surface);
-                    box-shadow: 0 0 0 4px rgba(108, 99, 168, 0.15);
-                }
-
-            .input-icon-wrap {
-                position: relative;
-            }
-
-                .input-icon-wrap .form-control-ui {
-                    padding-left: 2.6rem;
-                }
-
-            .input-icon-wrap-icon {
-                position: absolute;
-                left: 1rem;
-                top: 50%;
-                transform: translateY(-50%);
-                color: var(--color-muted-light);
-                font-size: 1rem;
-                pointer-events: none;
-            }
-
-            /* ==========================================================================
-                                         PAGE HEADER
-                                         ========================================================================== */
-
-            .appointment-page-header .btn-ui--primary {
-                flex: 0 0 auto;
-            }
-
-            /* ==========================================================================
-                                         STATISTICS — bu sayfaya özel: pastel tonlu arka planlı istatistik kartları
-                                         ========================================================================== */
-
-            .appointment-stats {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 1.25rem;
-            }
-
-            .appointment-stat-card {
-                display: flex;
-                align-items: center;
-                gap: 0.9rem;
-                padding: 1.1rem 1.25rem;
-                border-radius: var(--radius-lg);
-                border: 1px solid transparent;
-            }
-
-                .appointment-stat-card.is-primary {
-                    background-color: var(--color-primary-light);
-                }
-
-                .appointment-stat-card.is-info {
-                    background-color: var(--color-info-light);
-                }
-
-                .appointment-stat-card.is-success {
-                    background-color: var(--color-success-light);
-                }
-
-                .appointment-stat-card.is-danger {
-                    background-color: var(--color-danger-light);
-                }
-
-            .appointment-stat-icon {
-                flex: 0 0 auto;
-                width: 46px;
-                height: 46px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.15rem;
-                background-color: rgba(255, 255, 255, 0.7);
-            }
-
-            .appointment-stat-card.is-primary .appointment-stat-icon {
-                color: var(--color-primary);
-            }
-
-            .appointment-stat-card.is-info .appointment-stat-icon {
-                color: var(--color-info);
-            }
-
-            .appointment-stat-card.is-success .appointment-stat-icon {
-                color: var(--color-success);
-            }
-
-            .appointment-stat-card.is-danger .appointment-stat-icon {
-                color: var(--color-danger);
-            }
-
-            .appointment-stat-value {
-                font-size: 1.5rem;
-                font-weight: 700;
-                line-height: 1.1;
-                color: var(--color-text);
-            }
-
-            .appointment-stat-label {
-                font-size: 0.78125rem;
-                color: var(--color-muted);
-                font-weight: 500;
-                margin-top: 2px;
-            }
-
-            /* ==========================================================================
-                                         FILTER BAR
-                                         ========================================================================== */
-
-            .appointment-filter-bar {
-                display: flex;
-                align-items: center;
-                gap: 0.85rem;
-                flex-wrap: wrap;
-            }
-
-            .appointment-filter-search {
-                flex: 2 1 260px;
-                min-width: 200px;
-            }
-
-            .appointment-filter-select {
-                flex: 1 1 170px;
-                min-width: 150px;
-            }
-
-                .appointment-filter-select .form-control-ui {
-                    padding-left: 2.6rem;
-                }
-
-            /* ==========================================================================
-                                         SECTION TITLE ROW (Yaklaşan / Geçmiş)
-                                         ========================================================================== */
-
-            .appointment-section-title-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-                flex-wrap: wrap;
-            }
-
-            .appointment-section-title {
-                display: flex;
-                align-items: center;
-                gap: 0.6rem;
-            }
-
-                .appointment-section-title .card-icon-tile {
-                    width: 34px;
-                    height: 34px;
-                    font-size: 0.9rem;
-                }
-
-            .appointment-upcoming-list,
-            .appointment-history-list {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            /* ==========================================================================
-                                         UPCOMING APPOINTMENT CARD
-                                         ========================================================================== */
-
-            .appointment-card {
-                display: flex;
-                align-items: stretch;
-                gap: 1.25rem;
-                padding: 1.1rem 1.25rem;
-                overflow: hidden;
-            }
-
-            .appointment-card-date {
-                flex: 0 0 auto;
-                width: 108px;
-                background-color: var(--color-info-light);
-                border-radius: var(--radius-md);
-                padding: 0.75rem 0.5rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                gap: 6px;
-            }
-
-            .appointment-card-date-day {
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: var(--color-text);
-                line-height: 1;
-            }
-
-            .appointment-card-date-month {
-                font-size: 0.7rem;
-                font-weight: 600;
-                color: var(--color-muted);
-                margin-top: 2px;
-            }
-
-            .appointment-card-date-weekday {
-                font-size: 0.7rem;
-                color: var(--color-muted-light);
-                font-weight: 500;
-            }
-
-            .appointment-card-time-chip {
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-                background-color: rgba(255, 255, 255, 0.75);
-                color: var(--color-text);
-                font-size: 0.72rem;
-                font-weight: 600;
-                padding: 3px 9px;
-                border-radius: var(--radius-pill);
-            }
-
-            .appointment-card-media {
-                position: relative;
-                flex: 0 0 auto;
-                width: 76px;
-                height: 76px;
-                border-radius: 50%;
-                overflow: hidden;
-                background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                align-self: center;
-            }
-
-                .appointment-card-media img {
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    z-index: 2;
-                }
-
-            .appointment-card-media-fallback {
-                display: none;
-                position: absolute;
-                inset: 0;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.6rem;
-                color: var(--color-primary);
-                opacity: 0.6;
-                z-index: 1;
-            }
-
-            .appointment-card-body {
-                flex: 1 1 auto;
-                min-width: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                gap: 8px;
-            }
-
-            .appointment-card-animal {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .appointment-species-icon {
-                flex: 0 0 auto;
-                width: 26px;
-                height: 26px;
-                border-radius: 50%;
-                background-color: var(--color-secondary-light);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.85rem;
-            }
-
-            .appointment-card-animal-name {
-                font-size: 0.95rem;
-                font-weight: 700;
-            }
-
-            .appointment-card-animal-breed {
-                font-size: 0.75rem;
-                color: var(--color-muted);
-                margin-left: 4px;
-            }
-
-            .appointment-card-notes {
-                display: flex;
-                align-items: flex-start;
-                gap: 8px;
-            }
-
-                .appointment-card-notes i {
-                    color: var(--color-primary);
-                    font-size: 0.9rem;
-                    margin-top: 2px;
-                }
-
-                .appointment-card-notes span {
-                    font-size: 0.8125rem;
-                    color: var(--color-text);
-                    line-height: 1.5;
-                }
-
-            .appointment-card-status {
-                flex: 0 0 auto;
-                display: flex;
-                align-items: center;
-            }
-
-            .appointment-card-location {
-                flex: 0 0 auto;
-                width: 200px;
-                display: flex;
-                align-items: flex-start;
-                gap: 6px;
-                padding-left: 1.25rem;
-                border-left: 1px solid var(--color-border);
-            }
-
-                .appointment-card-location i {
-                    color: var(--color-muted-light);
-                    font-size: 0.85rem;
-                    margin-top: 2px;
-                }
-
-            .appointment-card-location-name {
-                font-size: 0.8125rem;
-                font-weight: 600;
-                color: var(--color-text);
-            }
-
-            .appointment-card-location-room {
-                font-size: 0.75rem;
-                color: var(--color-muted);
-                margin-top: 1px;
-            }
-
-            .appointment-card-actions {
-                flex: 0 0 auto;
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-                justify-content: center;
-                width: 118px;
-            }
-
-                .appointment-card-actions .btn-ui {
-                    width: 100%;
-                    justify-content: flex-start;
-                }
-
-            /* ==========================================================================
-                                         PAST APPOINTMENTS — table-benzeri liste (gerçek &lt;table&gt; değil)
-                                         ========================================================================== */
-
-            .appointment-history-card {
-                padding: 0;
-                overflow: hidden;
-            }
-
-            .appointment-history-header,
-            .appointment-history-row {
-                display: grid;
-                grid-template-columns: 1.1fr 1.4fr 1.2fr 1fr 0.9fr;
-                gap: 1rem;
-                align-items: center;
-                padding: 0.9rem 1.5rem;
-            }
-
-            .appointment-history-header {
-                background-color: var(--color-surface-alt);
-                border-bottom: 1px solid var(--color-border);
-            }
-
-                .appointment-history-header span {
+                .badge-ui {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 0.3rem 0.65rem;
+                    border-radius: var(--radius-pill);
                     font-size: 0.7rem;
                     font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.04em;
-                    color: var(--color-muted-light);
+                    line-height: 1;
+                    white-space: nowrap;
                 }
 
-            .appointment-history-row {
-                border-bottom: 1px solid var(--color-border);
-            }
+                    .badge-ui::before {
+                        content: "";
+                        width: 6px;
+                        height: 6px;
+                        border-radius: 50%;
+                        background-color: currentColor;
+                    }
 
-                .appointment-history-row:last-child {
-                    border-bottom: none;
-                }
-
-            .appointment-history-cell-label {
-                display: none;
-                font-size: 0.65rem;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.03em;
-                color: var(--color-muted-light);
-                margin-bottom: 3px;
-            }
-
-            .appointment-history-date-day {
-                font-size: 0.85rem;
-                font-weight: 600;
-                color: var(--color-text);
-            }
-
-            .appointment-history-date-time {
-                font-size: 0.75rem;
-                color: var(--color-muted-light);
-                margin-top: 1px;
-            }
-
-            .appointment-history-animal {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                min-width: 0;
-            }
-
-            .appointment-history-avatar {
-                flex: 0 0 auto;
-                width: 38px;
-                height: 38px;
-                border-radius: 50%;
-                overflow: hidden;
-                background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-            }
-
-            .appointment-history-avatar img {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                z-index: 2;
-            }
-
-            .appointment-history-avatar-fallback {
-                display: none;
-                position: absolute;
-                inset: 0;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.9rem;
-                color: var(--color-primary);
-                opacity: 0.6;
-                z-index: 1;
-            }
-
-            .appointment-history-animal-name {
-                font-size: 0.85rem;
-                font-weight: 600;
-            }
-
-            .appointment-history-animal-breed {
-                font-size: 0.72rem;
-                color: var(--color-muted);
-            }
-
-            .appointment-history-type {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 0.8125rem;
-                color: var(--color-text);
-            }
-
-                .appointment-history-type i {
-                    color: var(--color-primary);
-                    font-size: 0.9rem;
-                }
-
-            /* ==========================================================================
-                                         EMPTY STATE (paylaşılan blok — hem yaklaşan hem geçmiş liste için)
-                                         ========================================================================== */
-
-            .appointment-empty-state {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 0.5rem;
-                padding: 2.5rem 1rem;
-            }
-
-                .appointment-empty-state.is-visible {
-                    display: flex;
-                }
-
-                .appointment-empty-state i {
-                    font-size: 2rem;
-                    color: var(--color-muted-light);
-                    margin-bottom: 0.25rem;
-                }
-
-            /* ==========================================================================
-                                         REMINDER CARD
-                                         ========================================================================== */
-
-            .appointment-reminder-card {
-                display: flex;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .appointment-reminder-close {
-                flex: 0 0 auto;
-                width: 30px;
-                height: 30px;
-                border-radius: var(--radius-sm);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--color-muted-light);
-                font-size: 0.9rem;
-                transition: background-color var(--transition-fast), color var(--transition-fast);
-            }
-
-                .appointment-reminder-close:hover {
+                .badge-ui--neutral {
                     background-color: var(--color-surface-alt);
+                    color: var(--color-muted);
+                    border: 1px solid var(--color-border);
+                }
+
+                .badge-ui--success {
+                    background-color: var(--color-success-light);
+                    color: #3f7d5c;
+                }
+
+                .badge-ui--danger {
+                    background-color: var(--color-danger-light);
+                    color: #b8495a;
+                }
+
+                .badge-ui--info {
+                    background-color: var(--color-info-light);
+                    color: #3d76a0;
+                }
+
+                .card-icon-tile {
+                    flex: 0 0 auto;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: var(--radius-md);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.05rem;
+                }
+
+                    .card-icon-tile.is-primary {
+                        background-color: var(--color-primary-light);
+                        color: var(--color-primary);
+                    }
+
+                    .card-icon-tile.is-secondary {
+                        background-color: var(--color-secondary-light);
+                        color: #3f7d64;
+                    }
+
+                    .card-icon-tile.is-info {
+                        background-color: var(--color-info-light);
+                        color: var(--color-info);
+                    }
+
+                    .card-icon-tile.is-success {
+                        background-color: var(--color-success-light);
+                        color: var(--color-success);
+                    }
+
+                    .card-icon-tile.is-danger {
+                        background-color: var(--color-danger-light);
+                        color: var(--color-danger);
+                    }
+
+                .link-action {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.8125rem;
+                    font-weight: 600;
+                    color: var(--color-primary);
+                }
+
+                    .link-action:hover {
+                        color: var(--color-primary-dark);
+                    }
+
+                .form-control-ui {
+                    width: 100%;
+                    height: 44px;
+                    padding: 0 1rem;
+                    background-color: var(--color-surface-alt);
+                    border: 1.5px solid var(--color-border);
+                    border-radius: var(--radius-md);
+                    font-size: 0.85rem;
+                    font-family: inherit;
+                    color: var(--color-text);
+                    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+                }
+
+                    .form-control-ui:focus {
+                        outline: none;
+                        border-color: var(--color-primary);
+                        background-color: var(--color-surface);
+                        box-shadow: 0 0 0 4px rgba(108, 99, 168, 0.15);
+                    }
+
+                .input-icon-wrap {
+                    position: relative;
+                }
+
+                    .input-icon-wrap .form-control-ui {
+                        padding-left: 2.6rem;
+                    }
+
+                .input-icon-wrap-icon {
+                    position: absolute;
+                    left: 1rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--color-muted-light);
+                    font-size: 1rem;
+                    pointer-events: none;
+                }
+
+                /* ==========================================================================
+                                                                                                         PAGE HEADER
+                                                                                                         ========================================================================== */
+
+                .appointment-page-header .btn-ui--primary {
+                    flex: 0 0 auto;
+                }
+
+                /* ==========================================================================
+                                                                                                         STATISTICS — bu sayfaya özel: pastel tonlu arka planlı istatistik kartları
+                                                                                                         ========================================================================== */
+
+                .appointment-stats {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 1.25rem;
+                }
+
+                .appointment-stat-card {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.9rem;
+                    padding: 1.1rem 1.25rem;
+                    border-radius: var(--radius-lg);
+                    border: 1px solid transparent;
+                }
+
+                    .appointment-stat-card.is-primary {
+                        background-color: var(--color-primary-light);
+                    }
+
+                    .appointment-stat-card.is-info {
+                        background-color: var(--color-info-light);
+                    }
+
+                    .appointment-stat-card.is-success {
+                        background-color: var(--color-success-light);
+                    }
+
+                    .appointment-stat-card.is-danger {
+                        background-color: var(--color-danger-light);
+                    }
+
+                .appointment-stat-icon {
+                    flex: 0 0 auto;
+                    width: 46px;
+                    height: 46px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.15rem;
+                    background-color: rgba(255, 255, 255, 0.7);
+                }
+
+                .appointment-stat-card.is-primary .appointment-stat-icon {
+                    color: var(--color-primary);
+                }
+
+                .appointment-stat-card.is-info .appointment-stat-icon {
+                    color: var(--color-info);
+                }
+
+                .appointment-stat-card.is-success .appointment-stat-icon {
+                    color: var(--color-success);
+                }
+
+                .appointment-stat-card.is-danger .appointment-stat-icon {
+                    color: var(--color-danger);
+                }
+
+                .appointment-stat-value {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    line-height: 1.1;
                     color: var(--color-text);
                 }
 
-            /* ---- Toast (self-contained demo feedback) ---- */
-
-            .appointment-toast-stack {
-                position: fixed;
-                top: 1.5rem;
-                right: 1.5rem;
-                z-index: 999;
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-                width: min(340px, calc(100vw - 3rem));
-            }
-
-            .appointment-toast {
-                background-color: var(--color-surface);
-                border-radius: var(--radius-md);
-                box-shadow: var(--shadow-md);
-                border: 1px solid var(--color-border);
-                padding: 0.9rem 1rem;
-                display: flex;
-                align-items: flex-start;
-                gap: 0.65rem;
-                position: relative;
-                overflow: hidden;
-                animation: appointment-toast-in var(--transition-slow);
-            }
-
-                .appointment-toast.is-leaving {
-                    animation: appointment-toast-out var(--transition-base) forwards;
+                .appointment-stat-label {
+                    font-size: 0.78125rem;
+                    color: var(--color-muted);
+                    font-weight: 500;
+                    margin-top: 2px;
                 }
 
-                .appointment-toast::before {
-                    content: "";
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    bottom: 0;
-                    width: 4px;
-                    background-color: var(--color-primary);
+                /* ==========================================================================
+                                                                                                         FILTER BAR
+                                                                                                         ========================================================================== */
+
+                .appointment-filter-bar {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.85rem;
+                    flex-wrap: wrap;
                 }
 
-            .appointment-toast-icon {
-                color: var(--color-primary);
-                font-size: 1.05rem;
-            }
-
-            .appointment-toast-message {
-                font-size: 0.8125rem;
-                color: var(--color-text);
-            }
-
-            @@keyframes appointment-toast-in {
-                from {
-                    opacity: 0;
-                    transform: translateX(20px);
+                .appointment-filter-search {
+                    flex: 2 1 260px;
+                    min-width: 200px;
                 }
 
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-
-            @@keyframes appointment-toast-out {
-                from {
-                    opacity: 1;
-                    transform: translateX(0);
+                .appointment-filter-select {
+                    flex: 1 1 170px;
+                    min-width: 150px;
                 }
 
-                to {
-                    opacity: 0;
-                    transform: translateX(20px);
-                }
-            }
+                    .appointment-filter-select .form-control-ui {
+                        padding-left: 2.6rem;
+                    }
 
-            /* ==========================================================================
-                                         RESPONSIVE
-                                         ========================================================================== */
+                /* ==========================================================================
+                                                                                                         SECTION TITLE ROW (Yaklaşan / Geçmiş)
+                                                                                                         ========================================================================== */
 
-            @@media (max-width: 1199.98px) {
-                .app-content {
-                    padding: 1.75rem;
-                }
-
-                .appointment-stats {
-                    grid-template-columns: repeat(2, 1fr);
+                .appointment-section-title-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 1rem;
+                    flex-wrap: wrap;
                 }
 
-                .appointment-card-location {
-                    display: none;
-                }
-            }
-
-            @@media (max-width: 991.98px) {
-                .appointment-history-header {
-                    display: none;
-                }
-
-                .appointment-history-row {
-                    grid-template-columns: 1fr;
+                .appointment-section-title {
+                    display: flex;
+                    align-items: center;
                     gap: 0.6rem;
-                    padding: 1rem 1.25rem;
                 }
 
-                .appointment-history-cell-label {
-                    display: block;
+                    .appointment-section-title .card-icon-tile {
+                        width: 34px;
+                        height: 34px;
+                        font-size: 0.9rem;
+                    }
+
+                .appointment-upcoming-list,
+                .appointment-history-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
                 }
 
-                .appointment-history-status,
-                .appointment-history-actions {
+                /* ==========================================================================
+                                                                                                         UPCOMING APPOINTMENT CARD
+                                                                                                         ========================================================================== */
+
+                .appointment-card {
+                    display: flex;
+                    align-items: stretch;
+                    gap: 1.25rem;
+                    padding: 1.1rem 1.25rem;
+                    overflow: hidden;
+                }
+
+                .appointment-card-date {
+                    flex: 0 0 auto;
+                    width: 108px;
+                    background-color: var(--color-info-light);
+                    border-radius: var(--radius-md);
+                    padding: 0.75rem 0.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    gap: 6px;
+                }
+
+                .appointment-card-date-day {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--color-text);
+                    line-height: 1;
+                }
+
+                .appointment-card-date-month {
+                    font-size: 0.7rem;
+                    font-weight: 600;
+                    color: var(--color-muted);
+                    margin-top: 2px;
+                }
+
+                .appointment-card-date-weekday {
+                    font-size: 0.7rem;
+                    color: var(--color-muted-light);
+                    font-weight: 500;
+                }
+
+                .appointment-card-time-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    background-color: rgba(255, 255, 255, 0.75);
+                    color: var(--color-text);
+                    font-size: 0.72rem;
+                    font-weight: 600;
+                    padding: 3px 9px;
+                    border-radius: var(--radius-pill);
+                }
+
+                .appointment-card-media {
+                    position: relative;
+                    flex: 0 0 auto;
+                    width: 76px;
+                    height: 76px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    align-self: center;
+                }
+
+                    .appointment-card-media img {
+                        position: absolute;
+                        inset: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        z-index: 2;
+                    }
+
+                .appointment-card-media-fallback {
+                    display: none;
+                    position: absolute;
+                    inset: 0;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.6rem;
+                    color: var(--color-primary);
+                    opacity: 0.6;
+                    z-index: 1;
+                }
+
+                .appointment-card-body {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 8px;
+                }
+
+                .appointment-card-animal {
                     display: flex;
                     align-items: center;
                     gap: 8px;
                 }
-            }
 
-            @@media (max-width: 767.98px) {
-                .app-content {
-                    padding: 1.25rem;
+                .appointment-species-icon {
+                    flex: 0 0 auto;
+                    width: 26px;
+                    height: 26px;
+                    border-radius: 50%;
+                    background-color: var(--color-secondary-light);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.85rem;
                 }
 
-                .appointment-stats {
-                    grid-template-columns: 1fr 1fr;
-                    gap: 0.85rem;
+                .appointment-card-animal-name {
+                    font-size: 0.95rem;
+                    font-weight: 700;
                 }
 
-                .appointment-page-header {
-                    flex-direction: column;
-                    align-items: stretch;
+                .appointment-card-animal-breed {
+                    font-size: 0.75rem;
+                    color: var(--color-muted);
+                    margin-left: 4px;
                 }
 
-                    .appointment-page-header .btn-ui--primary {
-                        width: 100%;
+                .appointment-card-notes {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+
+                    .appointment-card-notes i {
+                        color: var(--color-primary);
+                        font-size: 0.9rem;
+                        margin-top: 2px;
                     }
 
-                .appointment-filter-bar {
-                    flex-direction: column;
-                    align-items: stretch;
+                    .appointment-card-notes span {
+                        font-size: 0.8125rem;
+                        color: var(--color-text);
+                        line-height: 1.5;
+                    }
+
+                .appointment-card-status {
+                    flex: 0 0 auto;
+                    display: flex;
+                    align-items: center;
                 }
 
-                .appointment-filter-search, .appointment-filter-select {
-                    flex: 1 1 auto;
-                    width: 100%;
+                .appointment-card-location {
+                    flex: 0 0 auto;
+                    width: 200px;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 6px;
+                    padding-left: 1.25rem;
+                    border-left: 1px solid var(--color-border);
                 }
 
-                .appointment-card {
-                    flex-direction: column;
-                    align-items: stretch;
+                    .appointment-card-location i {
+                        color: var(--color-muted-light);
+                        font-size: 0.85rem;
+                        margin-top: 2px;
+                    }
+
+                .appointment-card-location-name {
+                    font-size: 0.8125rem;
+                    font-weight: 600;
+                    color: var(--color-text);
                 }
 
-                .appointment-card-date {
-                    flex-direction: row;
-                    justify-content: flex-start;
-                    width: 100%;
-                    gap: 0.75rem;
-                }
-
-                .appointment-card-media {
-                    align-self: flex-start;
-                }
-
-                .appointment-card-animal {
-                    flex-wrap: wrap;
+                .appointment-card-location-room {
+                    font-size: 0.75rem;
+                    color: var(--color-muted);
+                    margin-top: 1px;
                 }
 
                 .appointment-card-actions {
-                    flex-direction: row;
-                    width: 100%;
+                    flex: 0 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                    justify-content: center;
+                    width: 118px;
                 }
 
                     .appointment-card-actions .btn-ui {
-                        justify-content: center;
+                        width: 100%;
+                        justify-content: flex-start;
                     }
-            }
 
-            @@media (max-width: 575.98px) {
-                .appointment-stats {
-                    grid-template-columns: 1fr;
+                /* ==========================================================================
+                                                                                                         PAST APPOINTMENTS — table-benzeri liste (gerçek &lt;table&gt; değil)
+                                                                                                         ========================================================================== */
+
+                .appointment-history-card {
+                    padding: 0;
+                    overflow: hidden;
                 }
 
-                .appointment-card-actions {
+                .appointment-history-header,
+                .appointment-history-row {
+                    display: grid;
+                    grid-template-columns: 1.1fr 1.4fr 1.2fr 1fr 0.9fr;
+                    gap: 1rem;
+                    align-items: center;
+                    padding: 0.9rem 1.5rem;
+                }
+
+                .appointment-history-header {
+                    background-color: var(--color-surface-alt);
+                    border-bottom: 1px solid var(--color-border);
+                }
+
+                    .appointment-history-header span {
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 0.04em;
+                        color: var(--color-muted-light);
+                    }
+
+                .appointment-history-row {
+                    border-bottom: 1px solid var(--color-border);
+                }
+
+                    .appointment-history-row:last-child {
+                        border-bottom: none;
+                    }
+
+                .appointment-history-cell-label {
+                    display: none;
+                    font-size: 0.65rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.03em;
+                    color: var(--color-muted-light);
+                    margin-bottom: 3px;
+                }
+
+                .appointment-history-date-day {
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    color: var(--color-text);
+                }
+
+                .appointment-history-date-time {
+                    font-size: 0.75rem;
+                    color: var(--color-muted-light);
+                    margin-top: 1px;
+                }
+
+                .appointment-history-animal {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    min-width: 0;
+                }
+
+                .appointment-history-avatar {
+                    flex: 0 0 auto;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    background: linear-gradient(135deg, var(--color-secondary-light) 0%, var(--color-primary-light) 100%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                }
+
+                    .appointment-history-avatar img {
+                        position: absolute;
+                        inset: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        z-index: 2;
+                    }
+
+                .appointment-history-avatar-fallback {
+                    display: none;
+                    position: absolute;
+                    inset: 0;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.9rem;
+                    color: var(--color-primary);
+                    opacity: 0.6;
+                    z-index: 1;
+                }
+
+                .appointment-history-animal-name {
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                }
+
+                .appointment-history-animal-breed {
+                    font-size: 0.72rem;
+                    color: var(--color-muted);
+                }
+
+                .appointment-history-type {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 0.8125rem;
+                    color: var(--color-text);
+                }
+
+                    .appointment-history-type i {
+                        color: var(--color-primary);
+                        font-size: 0.9rem;
+                    }
+
+                /* ==========================================================================
+                                                                                                         EMPTY STATE (paylaşılan blok — hem yaklaşan hem geçmiş liste için)
+                                                                                                         ========================================================================== */
+
+                .appointment-empty-state {
+                    display: none;
                     flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    gap: 0.5rem;
+                    padding: 2.5rem 1rem;
                 }
-            }
 
-    </style>
-</head>
-<body>
+                    .appointment-empty-state.is-visible {
+                        display: flex;
+                    }
 
-    <main class="app-content">
-        <div class="app-content-inner">
+                    .appointment-empty-state i {
+                        font-size: 2rem;
+                        color: var(--color-muted-light);
+                        margin-bottom: 0.25rem;
+                    }
 
-            <!-- ==================================================================
+                /* ==========================================================================
+                                                                                                         REMINDER CARD
+                                                                                                         ========================================================================== */
+
+                .appointment-reminder-card {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1rem;
+                }
+
+                .appointment-reminder-close {
+                    flex: 0 0 auto;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: var(--radius-sm);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--color-muted-light);
+                    font-size: 0.9rem;
+                    transition: background-color var(--transition-fast), color var(--transition-fast);
+                }
+
+                    .appointment-reminder-close:hover {
+                        background-color: var(--color-surface-alt);
+                        color: var(--color-text);
+                    }
+
+                /* ---- Toast (self-contained demo feedback) ---- */
+
+                .appointment-toast-stack {
+                    position: fixed;
+                    top: 1.5rem;
+                    right: 1.5rem;
+                    z-index: 999;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                    width: min(340px, calc(100vw - 3rem));
+                }
+
+                .appointment-toast {
+                    background-color: var(--color-surface);
+                    border-radius: var(--radius-md);
+                    box-shadow: var(--shadow-md);
+                    border: 1px solid var(--color-border);
+                    padding: 0.9rem 1rem;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.65rem;
+                    position: relative;
+                    overflow: hidden;
+                    animation: appointment-toast-in var(--transition-slow);
+                }
+
+                    .appointment-toast.is-leaving {
+                        animation: appointment-toast-out var(--transition-base) forwards;
+                    }
+
+                    .appointment-toast::before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 4px;
+                        background-color: var(--color-primary);
+                    }
+
+                .appointment-toast-icon {
+                    color: var(--color-primary);
+                    font-size: 1.05rem;
+                }
+
+                .appointment-toast-message {
+                    font-size: 0.8125rem;
+                    color: var(--color-text);
+                }
+
+                @@keyframes appointment-toast-in {
+                    from {
+                        opacity: 0;
+                        transform: translateX(20px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+                @@keyframes appointment-toast-out {
+                    from {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+
+                    to {
+                        opacity: 0;
+                        transform: translateX(20px);
+                    }
+                }
+
+                /* ==========================================================================
+                                                                                                         RESPONSIVE
+                                                                                                         ========================================================================== */
+
+                @@media (max-width: 1199.98px) {
+                    .app-content {
+                        padding: 1.75rem;
+                    }
+
+                    .appointment-stats {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+
+                    .appointment-card-location {
+                        display: none;
+                    }
+                }
+
+                @@media (max-width: 991.98px) {
+                    .appointment-history-header {
+                        display: none;
+                    }
+
+                    .appointment-history-row {
+                        grid-template-columns: 1fr;
+                        gap: 0.6rem;
+                        padding: 1rem 1.25rem;
+                    }
+
+                    .appointment-history-cell-label {
+                        display: block;
+                    }
+
+                    .appointment-history-status,
+                    .appointment-history-actions {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                }
+
+                @@media (max-width: 767.98px) {
+                    .app-content {
+                        padding: 1.25rem;
+                    }
+
+                    .appointment-stats {
+                        grid-template-columns: 1fr 1fr;
+                        gap: 0.85rem;
+                    }
+
+                    .appointment-page-header {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                        .appointment-page-header .btn-ui--primary {
+                            width: 100%;
+                        }
+
+                    .appointment-filter-bar {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                    .appointment-filter-search, .appointment-filter-select {
+                        flex: 1 1 auto;
+                        width: 100%;
+                    }
+
+                    .appointment-card {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                    .appointment-card-date {
+                        flex-direction: row;
+                        justify-content: flex-start;
+                        width: 100%;
+                        gap: 0.75rem;
+                    }
+
+                    .appointment-card-media {
+                        align-self: flex-start;
+                    }
+
+                    .appointment-card-animal {
+                        flex-wrap: wrap;
+                    }
+
+                    .appointment-card-actions {
+                        flex-direction: row;
+                        width: 100%;
+                    }
+
+                        .appointment-card-actions .btn-ui {
+                            justify-content: center;
+                        }
+                }
+
+                @@media (max-width: 575.98px) {
+                    .appointment-stats {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .appointment-card-actions {
+                        flex-direction: column;
+                    }
+                }
+
+        </style>
+
+
+        <main class="app-content">
+            <div class="app-content-inner">
+
+                <!-- ==================================================================
            BREADCRUMB
            ================================================================== -->
-            <nav class="breadcrumb-ui" aria-label="Breadcrumb">
-                <span class="breadcrumb-ui-item"><a href="#">Ana Sayfa</a></span>
-                <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
-                <span class="breadcrumb-ui-item is-current">Randevularım</span>
-            </nav>
+                <nav class="breadcrumb-ui" aria-label="Breadcrumb">
+                    <span class="breadcrumb-ui-item"><a href="#">Ana Sayfa</a></span>
+                    <span class="breadcrumb-ui-sep"><i class="bi bi-chevron-right"></i></span>
+                    <span class="breadcrumb-ui-item is-current">Randevularım</span>
+                </nav>
 
-            <!-- ==================================================================
+                <!-- ==================================================================
            1) SAYFA HEADER
            ================================================================== -->
-            <div class="section-header appointment-page-header">
-                <div class="section-header-text">
-                    <h1 class="text-page-title">Randevularım</h1>
-                    <p class="section-header-desc">Evcil dostlarınızın randevularını buradan takip edin.</p>
+                <div class="section-header appointment-page-header">
+                    <div class="section-header-text">
+                        <h1 class="text-page-title">Randevularım</h1>
+                        <p class="section-header-desc">Evcil dostlarınızın randevularını buradan takip edin.</p>
+                    </div>
+                    <a href="/appointment/create" class="btn-ui btn-ui--primary">
+                        <i class="bi bi-plus-lg"></i> Yeni Randevu Oluştur
+                    </a>
                 </div>
-                <a href="/appointment/create" class="btn-ui btn-ui--primary" id="createAppointmentBtn">
-                    <i class="bi bi-plus-lg"></i> Yeni Randevu Oluştur
-                </a>
-            </div>
 
-            <!-- ==================================================================
+                <!-- ==================================================================
            2) İSTATİSTİK KARTLARI — örnek/placeholder değerler
            ================================================================== -->
-            @await Component.InvokeAsync("_AppointmentIndexStatisticsComponentPartial")
+                @await Component.InvokeAsync("_AppointmentIndexStatisticsComponentPartial")
 
-            <!-- ==================================================================
+                <!-- ==================================================================
            3) FİLTRE VE ARAMA
            ================================================================== -->
-            <section class="card-ui appointment-filter-bar" aria-label="Randevu filtreleri">
-                <div class="input-icon-wrap appointment-filter-search">
-                    <i class="bi bi-search input-icon-wrap-icon" aria-hidden="true"></i>
-                    <input type="search" id="appointmentSearchInput" class="form-control-ui" placeholder="Randevu ara..." aria-label="Randevu ara">
-                </div>
-                <div class="appointment-filter-select">
-                    <select id="appointmentStatusFilter" class="form-control-ui" aria-label="Durum filtrele">
-                        <option value="all">Tüm Durumlar</option>
-                        <option value="Scheduled">Planlandı</option>
-                        <option value="Completed">Tamamlandı</option>
-                        <option value="Cancelled">İptal Edildi</option>
-                    </select>
-                </div>
-                <div class="input-icon-wrap appointment-filter-select">
-                    <i class="bi bi-calendar3 input-icon-wrap-icon" aria-hidden="true"></i>
-                    <select id="appointmentDateFilter" class="form-control-ui" aria-label="Tarihe göre filtrele">
-                        <option value="all">Tüm Tarihler</option>
-                        <option value="week">Bu Hafta</option>
-                        <option value="month">Bu Ay</option>
-                        <option value="past">Geçmiş</option>
-                    </select>
-                </div>
-                <div class="appointment-filter-select">
-                    <select id="appointmentSortSelect" class="form-control-ui" aria-label="Sırala">
-                        <option value="date-asc">Tarihe Göre (Yakın)</option>
-                        <option value="date-desc">Tarihe Göre (Uzak)</option>
-                        <option value="status">Duruma Göre</option>
-                    </select>
-                </div>
-            </section>
+                <section class="card-ui appointment-filter-bar" aria-label="Randevu filtreleri">
+                    <div class="input-icon-wrap appointment-filter-search">
+                        <i class="bi bi-search input-icon-wrap-icon" aria-hidden="true"></i>
+                        <input type="search" id="appointmentSearchInput" class="form-control-ui" placeholder="Randevu ara..." aria-label="Randevu ara">
+                    </div>
+                    <div class="appointment-filter-select">
+                        <select id="appointmentStatusFilter" class="form-control-ui" aria-label="Durum filtrele">
+                            <option value="all">Tüm Durumlar</option>
+                            <option value="Scheduled">Planlandı</option>
+                            <option value="Completed">Tamamlandı</option>
+                            <option value="Cancelled">İptal Edildi</option>
+                        </select>
+                    </div>
+                    <div class="input-icon-wrap appointment-filter-select">
+                        <i class="bi bi-calendar3 input-icon-wrap-icon" aria-hidden="true"></i>
+                        <select id="appointmentDateFilter" class="form-control-ui" aria-label="Tarihe göre filtrele">
+                            <option value="all">Tüm Tarihler</option>
+                            <option value="week">Bu Hafta</option>
+                            <option value="month">Bu Ay</option>
+                            <option value="past">Geçmiş</option>
+                        </select>
+                    </div>
+                    <div class="appointment-filter-select">
+                        <select id="appointmentSortSelect" class="form-control-ui" aria-label="Sırala">
+                            <option value="date-asc">Tarihe Göre (Yakın)</option>
+                            <option value="date-desc">Tarihe Göre (Uzak)</option>
+                            <option value="status">Duruma Göre</option>
+                        </select>
+                    </div>
+                </section>
 
-            <!-- ==================================================================
+                <!-- ==================================================================
            4) YAKLAŞAN RANDEVULAR
            ================================================================== -->
-            @await Component.InvokeAsync("_AppointmentIndexUpcomingAppointmentsComponentPartial")
+                @await Component.InvokeAsync("_AppointmentIndexUpcomingAppointmentsComponentPartial")
 
 
-            <!-- ==================================================================
+                <!-- ==================================================================
            5) GEÇMİŞ RANDEVULAR
            Her ".appointment-history-row" bir randevu öğesidir — gerçek veri
            bağlanırken bu blok bir foreach şablonu olarak kullanılmalı.
            ================================================================== -->
-            @await Component.InvokeAsync("_AppointmentIndexPastAppointmentsComponentPartial")
+                @await Component.InvokeAsync("_AppointmentIndexPastAppointmentsComponentPartial")
 
-            <!-- ==================================================================
+                <!-- ==================================================================
            6) ALT BİLGİ / HATIRLATMA
            ================================================================== -->
-            <div class="card-ui appointment-reminder-card" id="reminderCard">
-                <div class="card-icon-tile is-primary"><i class="bi bi-suit-heart"></i></div>
-                <div style="flex: 1 1 auto;">
-                    <h3 class="text-card-title">Hatırlatma</h3>
-                    <p class="text-small text-muted" style="margin-top: 4px;">Randevunuzdan önce evcil hayvanınızın temel bilgilerini güncel tutmayı unutmayın. Bu, daha doğru bir değerlendirme yapılmasına yardımcı olur.</p>
+                <div class="card-ui appointment-reminder-card" id="reminderCard">
+                    <div class="card-icon-tile is-primary"><i class="bi bi-suit-heart"></i></div>
+                    <div style="flex: 1 1 auto;">
+                        <h3 class="text-card-title">Hatırlatma</h3>
+                        <p class="text-small text-muted" style="margin-top: 4px;">Randevunuzdan önce evcil hayvanınızın temel bilgilerini güncel tutmayı unutmayın. Bu, daha doğru bir değerlendirme yapılmasına yardımcı olur.</p>
+                    </div>
+                    <button type="button" class="appointment-reminder-close" id="reminderCloseBtn" aria-label="Hatırlatmayı kapat">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
-                <button type="button" class="appointment-reminder-close" id="reminderCloseBtn" aria-label="Hatırlatmayı kapat">
-                    <i class="bi bi-x-lg"></i>
-                </button>
+
             </div>
+        </main>
 
-        </div>
-    </main>
+        <div class="appointment-toast-stack" id="appointmentToastStack" aria-live="polite"></div>
 
-    <div class="appointment-toast-stack" id="appointmentToastStack" aria-live="polite"></div>
+        <script>
+                /* ==========================================================================
+                   JAVASCRIPT — yalnızca sayfaya özel prototip davranışları.
+                   Gerçek API çağrısı / silme / iptal işlemi yoktur.
+                   ========================================================================== */
 
-    <script>
-            /* ==========================================================================
-               JAVASCRIPT — yalnızca sayfaya özel prototip davranışları.
-               Gerçek API çağrısı / silme / iptal işlemi yoktur.
-               ========================================================================== */
+                (function () {
+                  'use strict';
 
-            (function () {
-              'use strict';
+                  /* ---- Kırık görsel geri dönüşü (thumbnail'ler için ek güvence) ---- */
+                  document.querySelectorAll('.appointment-card-media img, .appointment-history-avatar img').forEach(function (img) {
+                    img.addEventListener('error', function () { img.remove(); }, { once: true });
+                  });
 
-              /* ---- Kırık görsel geri dönüşü (thumbnail'ler için ek güvence) ---- */
-              document.querySelectorAll('.appointment-card-media img, .appointment-history-avatar img').forEach(function (img) {
-                img.addEventListener('error', function () { img.remove(); }, { once: true });
-              });
+                  /* ---- Basit self-contained toast ---- */
+                  var toastStack = document.getElementById('appointmentToastStack');
 
-              /* ---- Basit self-contained toast ---- */
-              var toastStack = document.getElementById('appointmentToastStack');
+                  function showToast(message) {
+                    var toast = document.createElement('div');
+                    toast.className = 'appointment-toast';
+                    toast.setAttribute('role', 'status');
+                    toast.innerHTML = '<i class="bi bi-info-circle-fill appointment-toast-icon"></i><span class="appointment-toast-message"></span>';
+                    toast.querySelector('.appointment-toast-message').textContent = message;
+                    toastStack.appendChild(toast);
+                    var timer = setTimeout(function () { dismissToast(toast); }, 3200);
+                    toast.dataset.timer = timer;
+                  }
 
-              function showToast(message) {
-                var toast = document.createElement('div');
-                toast.className = 'appointment-toast';
-                toast.setAttribute('role', 'status');
-                toast.innerHTML = '<i class="bi bi-info-circle-fill appointment-toast-icon"></i><span class="appointment-toast-message"></span>';
-                toast.querySelector('.appointment-toast-message').textContent = message;
-                toastStack.appendChild(toast);
-                var timer = setTimeout(function () { dismissToast(toast); }, 3200);
-                toast.dataset.timer = timer;
-              }
+                  function dismissToast(toast) {
+                    if (!toast || toast.classList.contains('is-leaving')) return;
+                    clearTimeout(toast.dataset.timer);
+                    toast.classList.add('is-leaving');
+                    toast.addEventListener('animationend', function () { toast.remove(); }, { once: true });
+                  }
 
-              function dismissToast(toast) {
-                if (!toast || toast.classList.contains('is-leaving')) return;
-                clearTimeout(toast.dataset.timer);
-                toast.classList.add('is-leaving');
-                toast.addEventListener('animationend', function () { toast.remove(); }, { once: true });
-              }
+                  document.getElementById('createAppointmentBtn').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    showToast('Yeni randevu oluşturma bu prototipte pasif durumdadır.');
+                  });
 
-              document.getElementById('createAppointmentBtn').addEventListener('click', function (e) {
-                e.preventDefault();
-                showToast('Yeni randevu oluşturma bu prototipte pasif durumdadır.');
-              });
+                  document.querySelectorAll('[data-cancel-appointment]').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                      showToast('Randevu iptali bu prototipte pasif durumdadır.');
+                    });
+                  });
 
-              document.querySelectorAll('[data-cancel-appointment]').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                  showToast('Randevu iptali bu prototipte pasif durumdadır.');
-                });
-              });
+                  /* ---- Hatırlatma kartını kapatma ---- */
+                  var reminderCard = document.getElementById('reminderCard');
+                  document.getElementById('reminderCloseBtn').addEventListener('click', function () {
+                    reminderCard.style.display = 'none';
+                  });
 
-              /* ---- Hatırlatma kartını kapatma ---- */
-              var reminderCard = document.getElementById('reminderCard');
-              document.getElementById('reminderCloseBtn').addEventListener('click', function () {
-                reminderCard.style.display = 'none';
-              });
+                  /* ---- Arama / filtre / sıralama (yalnızca yaklaşan randevu listesi üzerinde demo) ---- */
+                  var searchInput = document.getElementById('appointmentSearchInput');
+                  var statusFilter = document.getElementById('appointmentStatusFilter');
+                  var sortSelect = document.getElementById('appointmentSortSelect');
+                  var upcomingList = document.getElementById('upcomingAppointmentList');
 
-              /* ---- Arama / filtre / sıralama (yalnızca yaklaşan randevu listesi üzerinde demo) ---- */
-              var searchInput = document.getElementById('appointmentSearchInput');
-              var statusFilter = document.getElementById('appointmentStatusFilter');
-              var sortSelect = document.getElementById('appointmentSortSelect');
-              var upcomingList = document.getElementById('upcomingAppointmentList');
+                  function normalize(value) {
+                    return (value || '').toLocaleLowerCase('tr-TR').trim();
+                  }
 
-              function normalize(value) {
-                return (value || '').toLocaleLowerCase('tr-TR').trim();
-              }
+                  function applyUpcomingFilters() {
+                    if (!upcomingList) return;
+                    var query = normalize(searchInput.value);
+                    var status = statusFilter.value;
 
-              function applyUpcomingFilters() {
-                if (!upcomingList) return;
-                var query = normalize(searchInput.value);
-                var status = statusFilter.value;
+                    upcomingList.querySelectorAll('.appointment-card').forEach(function (card) {
+                      var matchesQuery = !query || normalize(card.dataset.name).indexOf(query) !== -1;
+                      var matchesStatus = status === 'all' || card.dataset.status === status;
+                      card.hidden = !(matchesQuery && matchesStatus);
+                    });
+                  }
 
-                upcomingList.querySelectorAll('.appointment-card').forEach(function (card) {
-                  var matchesQuery = !query || normalize(card.dataset.name).indexOf(query) !== -1;
-                  var matchesStatus = status === 'all' || card.dataset.status === status;
-                  card.hidden = !(matchesQuery && matchesStatus);
-                });
-              }
+                  function applyUpcomingSort() {
+                    if (!upcomingList) return;
+                    var cards = Array.prototype.slice.call(upcomingList.querySelectorAll('.appointment-card'));
+                    var mode = sortSelect.value;
 
-              function applyUpcomingSort() {
-                if (!upcomingList) return;
-                var cards = Array.prototype.slice.call(upcomingList.querySelectorAll('.appointment-card'));
-                var mode = sortSelect.value;
+                    cards.sort(function (a, b) {
+                      if (mode === 'date-desc') return b.dataset.date.localeCompare(a.dataset.date);
+                      if (mode === 'status') return a.dataset.status.localeCompare(b.dataset.status);
+                      return a.dataset.date.localeCompare(b.dataset.date);
+                    });
 
-                cards.sort(function (a, b) {
-                  if (mode === 'date-desc') return b.dataset.date.localeCompare(a.dataset.date);
-                  if (mode === 'status') return a.dataset.status.localeCompare(b.dataset.status);
-                  return a.dataset.date.localeCompare(b.dataset.date);
-                });
+                    cards.forEach(function (card) { upcomingList.appendChild(card); });
+                  }
 
-                cards.forEach(function (card) { upcomingList.appendChild(card); });
-              }
+                  if (searchInput) searchInput.addEventListener('input', applyUpcomingFilters);
+                  if (statusFilter) statusFilter.addEventListener('change', applyUpcomingFilters);
+                  if (sortSelect) sortSelect.addEventListener('change', applyUpcomingSort);
+                })();
+        </script>
+}
 
-              if (searchInput) searchInput.addEventListener('input', applyUpcomingFilters);
-              if (statusFilter) statusFilter.addEventListener('change', applyUpcomingFilters);
-              if (sortSelect) sortSelect.addEventListener('change', applyUpcomingSort);
-            })();
-    </script>
-</body>
-</html>

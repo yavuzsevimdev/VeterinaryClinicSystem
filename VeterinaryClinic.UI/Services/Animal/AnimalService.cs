@@ -13,6 +13,7 @@ namespace VeterinaryClinic.UI.Services.Animal
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+
         public AnimalService(IConfiguration configuration, HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
@@ -27,7 +28,6 @@ namespace VeterinaryClinic.UI.Services.Animal
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(token);
             var ownerId = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            dto.OwnerId = ownerId;
 
             var baseUrl = _configuration["ApiSettings:BaseUrl"];
             var url = $"{baseUrl}/api/animals";
@@ -66,7 +66,6 @@ namespace VeterinaryClinic.UI.Services.Animal
                 return null;
             var json = await response.Content.ReadAsStringAsync();
             var animals = JsonConvert.DeserializeObject<List<AnimalDto>>(json);
-            animals = animals.OrderByDescending(x => x.Id).Take(8).ToList();
             return animals;
         }
 

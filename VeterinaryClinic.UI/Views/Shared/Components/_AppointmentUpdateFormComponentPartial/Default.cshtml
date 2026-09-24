@@ -10,7 +10,6 @@
 
     <div class="card-ui appointment-create-card">
 
-        <!-- ==================== 1) EVCİL HAYVAN BİLGİLERİ ==================== -->
         <section class="appointment-create-section" aria-labelledby="auSection1">
 
             <div class="appointment-create-section-head">
@@ -38,12 +37,10 @@
                             Evcil Hayvan
                         </label>
 
-                        <!-- AnimalId API'ye gönderilecek -->
                         <input asp-for="AnimalId"
                                type="hidden"
                                id="AnimalId" />
 
-                        <!-- Kullanıcıya AnimalId yerine bilgi gösteriyoruz -->
                         @{
                             var selectedAnimal = ((IEnumerable<dynamic>)ViewBag.Animals)
                                 .FirstOrDefault(x => x.Id == Model.AnimalId);
@@ -107,7 +104,6 @@
         </section>
 
 
-        <!-- ==================== 2) RANDEVU BİLGİLERİ ==================== -->
         <section class="appointment-create-section"
                  aria-labelledby="auSection2">
 
@@ -135,10 +131,8 @@
 
             <div class="appointment-create-details-grid">
 
-                <!-- ================= SOL KOLON ================= -->
                 <div class="appointment-create-col">
 
-                    <!-- TARİH -->
                     <div class="form-group-ui"
                          id="dateGroup">
 
@@ -202,7 +196,6 @@
                     </div>
 
 
-                    <!-- SAAT -->
                     <div class="form-group-ui"
                          id="timeGroup">
 
@@ -219,11 +212,9 @@
                              id="timeSlots"
                              role="radiogroup"
                              aria-labelledby="timeLabel">
-
                         </div>
 
 
-                        <!-- Model.Time buraya gelecek -->
                         <input asp-for="Time"
                                type="hidden"
                                id="Time" />
@@ -242,10 +233,8 @@
                 </div>
 
 
-                <!-- ================= SAĞ KOLON ================= -->
                 <div class="appointment-create-col">
 
-                    <!-- RANDEVU TÜRÜ -->
                     <div class="form-group-ui"
                          id="typeGroup">
 
@@ -352,7 +341,6 @@
                     </div>
 
 
-                    <!-- STATUS -->
                     <div class="appointment-create-status">
 
                         <span>
@@ -382,7 +370,6 @@
             </div>
 
 
-            <!-- ================= NOTLAR ================= -->
 
             <div class="form-group-ui appointment-create-notes">
 
@@ -410,7 +397,6 @@
         </section>
 
 
-        <!-- ==================== 3) ONAY ==================== -->
 
         <section class="appointment-create-section"
                  aria-labelledby="auSection3">
@@ -441,7 +427,6 @@
             </div>
 
 
-            <!-- BİLGİLENDİRME -->
 
             <div class="appointment-create-info">
 
@@ -472,7 +457,6 @@
             </div>
 
 
-            <!-- ÖZET -->
 
             <div class="appointment-create-summary"
                  id="appointmentSummary"
@@ -522,7 +506,6 @@
             </div>
 
 
-            <!-- BUTONLAR -->
 
             <div class="form-actions appointment-create-actions">
 

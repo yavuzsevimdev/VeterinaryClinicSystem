@@ -1,0 +1,1564 @@
+﻿@model AppointmentDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <style>
+
+        /* =========================================================
+           ROOT
+        ========================================================== */
+
+        :root {
+            --color-primary: #6C63A8;
+            --color-primary-dark: #554C91;
+            --color-primary-light: #F0EDFF;
+
+            --color-secondary: #8FC9B5;
+            --color-secondary-light: #EAF7EF;
+
+            --color-accent: #F3B7A5;
+            --color-accent-light: #FFF0EC;
+
+            --color-success: #71B58A;
+            --color-success-light: #EAF7EF;
+
+            --color-warning: #E8B86A;
+            --color-warning-light: #FFF7E8;
+
+            --color-danger: #DF7C89;
+            --color-danger-light: #FFF0F2;
+
+            --color-info: #7FAFD0;
+            --color-info-light: #EEF6FC;
+
+            --color-background: #F8F7FC;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F5F4F9;
+
+            --color-text: #303044;
+            --color-text-dark: #202033;
+            --color-muted: #7B7B90;
+            --color-border: #E8E6EF;
+            --color-border-strong: #D9D6E4;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --shadow-sm: 0 3px 12px rgba(48, 48, 68, 0.05);
+            --shadow-md: 0 8px 25px rgba(48, 48, 68, 0.07);
+
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+
+        /* =========================================================
+           RESET
+        ========================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--color-background);
+            color: var(--color-text);
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* =========================================================
+           PAGE
+        ========================================================== */
+
+        .payment-pay-page {
+            min-height: 100vh;
+            padding: 28px;
+        }
+
+        .payment-pay-container {
+            width: min(1500px, 100%);
+            margin: 0 auto;
+        }
+
+
+        /* =========================================================
+           PAGE HEADER
+        ========================================================== */
+
+        .payment-pay-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 26px;
+        }
+
+        .payment-pay-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .payment-pay-header-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .payment-pay-title {
+            margin: 0;
+            color: var(--color-text-dark);
+            font-size: 1.55rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .payment-pay-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            color: var(--color-muted);
+            font-size: 0.78rem;
+        }
+
+        .payment-pay-breadcrumb i {
+            font-size: 0.65rem;
+            color: #AAA7B8;
+        }
+
+        .payment-pay-breadcrumb .active {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           HEADER BUTTON
+        ========================================================== */
+
+        .payment-pay-back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            min-height: 44px;
+            padding: 0 17px;
+
+            border: 1px solid var(--color-border-strong);
+            border-radius: var(--radius-md);
+
+            background: var(--color-surface);
+            color: var(--color-text);
+
+            font-size: 0.82rem;
+            font-weight: 600;
+
+            transition:
+                background-color var(--transition-fast),
+                border-color var(--transition-fast),
+                color var(--transition-fast),
+                transform var(--transition-fast);
+        }
+
+        .payment-pay-back-btn:hover {
+            background: var(--color-primary-light);
+            border-color: var(--color-primary);
+            color: var(--color-primary-dark);
+        }
+
+        .payment-pay-back-btn:active {
+            transform: scale(0.98);
+        }
+
+
+        /* =========================================================
+           MAIN GRID
+        ========================================================== */
+
+        .payment-pay-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(380px, 1fr);
+            gap: 16px;
+            align-items: start;
+        }
+
+        .payment-pay-left {
+            min-width: 0;
+        }
+
+        .payment-pay-right {
+            min-width: 0;
+            position: sticky;
+            top: 20px;
+        }
+
+
+        /* =========================================================
+           CARD
+        ========================================================== */
+
+        .payment-pay-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .payment-pay-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .payment-pay-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 22px 16px;
+        }
+
+        .payment-pay-card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .payment-pay-card-icon.primary {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        .payment-pay-card-icon.info {
+            background: var(--color-info-light);
+            color: #5D9BEF;
+        }
+
+        .payment-pay-card-icon.accent {
+            background: var(--color-accent-light);
+            color: #D6816B;
+        }
+
+        .payment-pay-card-icon.success {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .payment-pay-card-title {
+            margin: 0;
+            color: var(--color-text-dark);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .payment-pay-card-description {
+            margin: 3px 0 0;
+            color: var(--color-muted);
+            font-size: 0.72rem;
+        }
+
+
+        /* =========================================================
+           CUSTOMER + ANIMAL
+        ========================================================== */
+
+        .payment-pay-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .payment-pay-person {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 4px 22px 22px;
+        }
+
+        .payment-pay-avatar {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: linear-gradient(
+                135deg,
+                #E6F0FC,
+                #EEF5FD
+            );
+
+            color: #356C9F;
+            font-size: 1.25rem;
+            font-weight: 700;
+
+            flex-shrink: 0;
+        }
+
+        .payment-pay-person-content {
+            min-width: 0;
+        }
+
+        .payment-pay-person-name {
+            margin: 0 0 7px;
+            color: var(--color-text-dark);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .payment-pay-person-meta {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--color-muted);
+            font-size: 0.72rem;
+            margin-top: 4px;
+        }
+
+        .payment-pay-person-meta i {
+            width: 14px;
+            color: var(--color-primary);
+        }
+
+        .payment-pay-customer-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            margin-left: 5px;
+            border-radius: 7px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-size: 0.62rem;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           ANIMAL
+        ========================================================== */
+
+        .payment-pay-animal-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #EDF7F3;
+            flex-shrink: 0;
+        }
+
+        .payment-pay-animal-placeholder {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--color-success-light);
+            color: var(--color-success);
+
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .payment-pay-animal-name-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 7px;
+        }
+
+        .payment-pay-animal-name {
+            color: var(--color-text-dark);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .payment-pay-animal-species {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 7px;
+            background: var(--color-success-light);
+            color: #4D9B72;
+            font-size: 0.62rem;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           APPOINTMENT
+        ========================================================== */
+
+        .payment-pay-appointment {
+            display: grid;
+            grid-template-columns: 120px minmax(0, 1fr);
+            gap: 18px;
+            padding: 4px 22px 22px;
+            align-items: center;
+        }
+
+        .payment-pay-date-box {
+            min-height: 92px;
+            border-radius: 10px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--color-danger-light);
+            color: var(--color-danger);
+            text-align: center;
+        }
+
+        .payment-pay-date-day {
+            font-size: 1.55rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .payment-pay-date-month {
+            margin-top: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .payment-pay-appointment-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-bottom: 9px;
+        }
+
+        .payment-pay-appointment-title strong {
+            color: var(--color-text-dark);
+            font-size: 1rem;
+        }
+
+        .payment-pay-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 8px;
+            border-radius: 7px;
+
+            background: var(--color-success-light);
+            color: #4D9B72;
+
+            font-size: 0.64rem;
+            font-weight: 600;
+        }
+
+        .payment-pay-appointment-meta {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--color-muted);
+            font-size: 0.74rem;
+            margin-top: 5px;
+        }
+
+        .payment-pay-appointment-meta i {
+            width: 15px;
+            color: var(--color-primary);
+        }
+
+
+        /* =========================================================
+           TREATMENT TABLE
+        ========================================================== */
+
+        .payment-pay-table-wrapper {
+            padding: 0 22px 22px;
+            overflow-x: auto;
+        }
+
+        .payment-pay-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        .payment-pay-table thead th {
+            padding: 11px 12px;
+            background: var(--color-surface-alt);
+            color: var(--color-muted);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .payment-pay-table thead th:first-child {
+            border-radius: 7px 0 0 7px;
+        }
+
+        .payment-pay-table thead th:last-child {
+            border-radius: 0 7px 7px 0;
+            text-align: right;
+        }
+
+        .payment-pay-table tbody td {
+            padding: 11px 12px;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+            font-size: 0.73rem;
+        }
+
+        .payment-pay-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .payment-pay-table tbody td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .payment-pay-treatment-name {
+            color: var(--color-text-dark);
+            font-weight: 600;
+        }
+
+        .payment-pay-treatment-description {
+            color: var(--color-muted);
+            font-size: 0.66rem;
+            margin-top: 2px;
+        }
+
+        .payment-pay-total-row td {
+            background: #F0F6FF;
+            border-bottom: none !important;
+            color: #244B87 !important;
+            font-weight: 700 !important;
+            font-size: 0.82rem !important;
+        }
+
+        .payment-pay-total-row td:last-child {
+            color: #2473D8 !important;
+            font-size: 0.95rem !important;
+        }
+
+
+        /* =========================================================
+           PREVIOUS PAYMENTS
+        ========================================================== */
+
+        .payment-pay-history-table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        .payment-pay-history-table th {
+            padding: 11px 12px;
+            background: var(--color-surface-alt);
+            color: var(--color-muted);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .payment-pay-history-table td {
+            padding: 11px 12px;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.72rem;
+        }
+
+        .payment-pay-history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .payment-pay-history-amount {
+            color: var(--color-text-dark);
+            font-weight: 600;
+        }
+
+        .payment-pay-method {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 5px 8px;
+            border-radius: 7px;
+
+            font-size: 0.64rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .payment-pay-method.card {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        .payment-pay-method.cash {
+            background: var(--color-success-light);
+            color: #4D9B72;
+        }
+
+        .payment-pay-method.transfer {
+            background: var(--color-info-light);
+            color: #5D88AC;
+        }
+
+        .payment-pay-method.other {
+            background: var(--color-accent-light);
+            color: #D6816B;
+        }
+
+
+        /* =========================================================
+           RIGHT - PAYMENT PANEL
+        ========================================================== */
+
+        .payment-pay-form-card {
+            border-radius: var(--radius-lg);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .payment-pay-form-header {
+            padding: 24px 24px 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #EFFBF7 0%,
+                    #F7FFFC 100%
+                );
+
+            border-bottom: 1px solid #DDF0E9;
+        }
+
+        .payment-pay-form-header-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .payment-pay-form-header-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #35B88C;
+            color: white;
+
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .payment-pay-form-title {
+            margin: 0;
+            color: var(--color-text-dark);
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .payment-pay-form-description {
+            margin: 4px 0 0;
+            color: var(--color-muted);
+            font-size: 0.72rem;
+        }
+
+
+        /* =========================================================
+           PAYMENT SUMMARY
+        ========================================================== */
+
+        .payment-pay-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+
+            padding: 22px 24px 0;
+        }
+
+        .payment-pay-summary-item {
+            padding: 13px;
+            border-radius: 10px;
+            background: var(--color-surface-alt);
+        }
+
+        .payment-pay-summary-item-label {
+            display: block;
+            color: var(--color-muted);
+            font-size: 0.62rem;
+            line-height: 1.4;
+        }
+
+        .payment-pay-summary-item-value {
+            display: block;
+            margin-top: 5px;
+            color: var(--color-text-dark);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .payment-pay-summary-item.total {
+            background: #F0F6FF;
+        }
+
+        .payment-pay-summary-item.total .payment-pay-summary-item-value {
+            color: #2473D8;
+        }
+
+        .payment-pay-summary-item.paid {
+            background: var(--color-success-light);
+        }
+
+        .payment-pay-summary-item.paid .payment-pay-summary-item-value {
+            color: #4D9B72;
+        }
+
+        .payment-pay-summary-item.remaining {
+            background: var(--color-danger-light);
+        }
+
+        .payment-pay-summary-item.remaining .payment-pay-summary-item-value {
+            color: var(--color-danger);
+        }
+
+
+        /* =========================================================
+           PAYMENT PROGRESS
+        ========================================================== */
+
+        .payment-pay-progress {
+            padding: 17px 24px 0;
+        }
+
+        .payment-pay-progress-track {
+            width: 100%;
+            height: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #ECEBF1;
+        }
+
+        .payment-pay-progress-bar {
+            width: 60%;
+            height: 100%;
+            border-radius: inherit;
+            background: #35B88C;
+            transition: width var(--transition-normal);
+        }
+
+        .payment-pay-progress-labels {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+
+            color: var(--color-muted);
+            font-size: 0.65rem;
+        }
+
+
+        /* =========================================================
+           FORM
+        ========================================================== */
+
+        .payment-pay-form {
+            padding: 22px 24px 24px;
+        }
+
+        .payment-pay-form-divider {
+            height: 1px;
+            background: var(--color-border);
+            margin-bottom: 22px;
+        }
+
+        .payment-pay-form-group {
+            margin-bottom: 20px;
+        }
+
+        .payment-pay-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-text-dark);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .payment-pay-required {
+            color: var(--color-danger);
+        }
+
+        .payment-pay-input-wrapper {
+            position: relative;
+        }
+
+        .payment-pay-input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            color: var(--color-muted);
+            font-size: 0.9rem;
+
+            pointer-events: none;
+        }
+
+        .payment-pay-input {
+            width: 100%;
+            min-height: 48px;
+
+            padding: 0 14px 0 42px;
+
+            border: 1px solid var(--color-border-strong);
+            border-radius: 10px;
+
+            background: var(--color-surface);
+            color: var(--color-text-dark);
+
+            font-size: 0.8rem;
+            outline: none;
+
+            transition:
+                border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+        }
+
+        .payment-pay-input::placeholder {
+            color: #AAA8B7;
+        }
+
+        .payment-pay-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 168, 0.1);
+        }
+
+        .payment-pay-input-hint {
+            display: block;
+            margin-top: 7px;
+            color: var(--color-muted);
+            font-size: 0.64rem;
+        }
+
+
+        /* =========================================================
+           PAYMENT METHOD
+        ========================================================== */
+
+        .payment-pay-method-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 9px;
+        }
+
+        .payment-pay-method-option {
+            position: relative;
+        }
+
+        .payment-pay-method-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .payment-pay-method-label {
+            min-height: 88px;
+            padding: 12px 7px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            border: 1px solid var(--color-border-strong);
+            border-radius: 10px;
+
+            background: var(--color-surface);
+            color: var(--color-text);
+
+            text-align: center;
+
+            font-size: 0.68rem;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                border-color var(--transition-fast),
+                background-color var(--transition-fast),
+                color var(--transition-fast),
+                transform var(--transition-fast);
+        }
+
+        .payment-pay-method-label i {
+            font-size: 1rem;
+        }
+
+        .payment-pay-method-label:hover {
+            border-color: var(--color-primary);
+            background: var(--color-primary-light);
+        }
+
+        .payment-pay-method-option input:checked + .payment-pay-method-label {
+            border-color: var(--color-primary);
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            box-shadow: inset 0 0 0 1px var(--color-primary);
+        }
+
+        .payment-pay-method-check {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            background: var(--color-primary);
+            color: white;
+
+            font-size: 0.5rem;
+        }
+
+        .payment-pay-method-option input:checked ~ .payment-pay-method-check {
+            display: flex;
+        }
+
+
+        /* =========================================================
+           NOTES
+        ========================================================== */
+
+        .payment-pay-textarea {
+            width: 100%;
+            min-height: 92px;
+
+            padding: 13px 14px;
+
+            border: 1px solid var(--color-border-strong);
+            border-radius: 10px;
+
+            resize: vertical;
+
+            background: var(--color-surface);
+            color: var(--color-text-dark);
+
+            font-size: 0.78rem;
+            outline: none;
+
+            transition:
+                border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+        }
+
+        .payment-pay-textarea::placeholder {
+            color: #AAA8B7;
+        }
+
+        .payment-pay-textarea:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 168, 0.1);
+        }
+
+        .payment-pay-textarea-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -23px;
+            padding-right: 10px;
+
+            color: var(--color-muted);
+            font-size: 0.6rem;
+
+            pointer-events: none;
+        }
+
+
+        /* =========================================================
+           SUBMIT BUTTON
+        ========================================================== */
+
+        .payment-pay-submit {
+            width: 100%;
+            min-height: 54px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            border: none;
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                #5D56D9,
+                #6C63E8
+            );
+
+            color: white;
+
+            font-size: 0.84rem;
+            font-weight: 600;
+
+            box-shadow: 0 8px 18px rgba(93, 86, 217, 0.2);
+
+            transition:
+                transform var(--transition-fast),
+                box-shadow var(--transition-fast),
+                opacity var(--transition-fast);
+        }
+
+        .payment-pay-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(93, 86, 217, 0.28);
+        }
+
+        .payment-pay-submit:active {
+            transform: scale(0.99);
+        }
+
+        .payment-pay-submit:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+            box-shadow: none;
+            transform: none;
+        }
+
+
+        /* =========================================================
+           WARNING
+        ========================================================== */
+
+        .payment-pay-warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+
+            margin-top: 13px;
+            padding: 11px 12px;
+
+            border-radius: 9px;
+
+            background: var(--color-warning-light);
+            color: #98743A;
+
+            font-size: 0.65rem;
+            line-height: 1.5;
+        }
+
+        .payment-pay-warning i {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================== */
+
+        @@media (max-width: 1200px) {
+
+            .payment-pay-grid {
+                grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr);
+            }
+
+            .payment-pay-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @@media (max-width: 950px) {
+
+            .payment-pay-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-pay-right {
+                position: static;
+            }
+
+        }
+
+        @@media (max-width: 650px) {
+
+            .payment-pay-page {
+                padding: 16px;
+            }
+
+            .payment-pay-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .payment-pay-back-btn {
+                width: 100%;
+            }
+
+            .payment-pay-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-pay-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-pay-method-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .payment-pay-appointment {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+
+<!-- =============================================================
+     PAGE
+============================================================== -->
+
+<div class="payment-pay-page">
+
+    <div class="payment-pay-container">
+
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
+        <header class="payment-pay-header">
+
+            <div class="payment-pay-header-left">
+
+                <div class="payment-pay-header-icon">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+
+                <div>
+
+                    <h1 class="payment-pay-title">
+                        Ödeme Yap
+                    </h1>
+
+                    <p class="payment-page-subtitle">
+                        Klinik tahsilatlarını ve finansal hareketleri takip edin. Kalan Ödemeleri tamamlayın :)
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <a href="/Payment/Index"
+               class="payment-pay-back-btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Listeye Dön
+
+            </a>
+
+        </header>
+
+
+        <!-- =====================================================
+             MAIN GRID
+        ====================================================== -->
+
+        <main class="payment-pay-grid">
+
+
+            <!-- =================================================
+                 LEFT
+            ================================================== -->
+
+            <section class="payment-pay-left">
+
+
+                <!-- =============================================
+                     CUSTOMER + ANIMAL
+                ============================================== -->
+                @await Component.InvokeAsync("_ManagerPaymentMakePaymentCustomerAnimalAppointmentInfosComponentPartial", new { dto = Model})
+                
+
+
+                <!-- =================================================
+                     TREATMENTS
+                ================================================== -->
+                @await Component.InvokeAsync("_ManagerPaymentMakePaymentTreatmentInfosComponentPartial", new { dto = Model })
+
+
+
+                <!-- =================================================
+                     PREVIOUS PAYMENTS
+                ================================================== -->
+                @await Component.InvokeAsync("_ManagerPaymentMakePreviousPaymentsComponentPartial", new { dto = Model })
+
+            </section>
+
+
+            <!-- =================================================
+                 RIGHT - PAYMENT FORM
+            ================================================== -->
+
+            <aside class="payment-pay-right">
+
+
+                <div class="payment-pay-form-card">
+
+
+                    <!-- HEADER -->
+
+                    <div class="payment-pay-form-header">
+
+                        <div class="payment-pay-form-header-top">
+
+                            <div class="payment-pay-form-header-icon">
+
+                                <i class="fa-solid fa-credit-card"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h2 class="payment-pay-form-title">
+                                    Yeni Ödeme Yap
+                                </h2>
+
+                                <p class="payment-pay-form-description">
+                                    Bu randevuya ait ödeme kaydı oluşturun.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUMMARY -->
+                    @await Component.InvokeAsync("_ManagerPaymentMakeSummaryComponentPartial", new { dto = Model })
+
+
+
+                    <!-- PROGRESS -->
+
+                    <div class="payment-pay-progress">
+
+                        <div class="payment-pay-progress-track">
+
+                            <div id="paymentProgress"
+                                 class="payment-pay-progress-bar">
+                            </div>
+
+                        </div>
+
+                        <div class="payment-pay-progress-labels">
+
+                            <span id="paidPercentage">
+                                %60 ödendi
+                            </span>
+
+                            <span id="remainingPercentage">
+                                %40 kaldı
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FORM -->
+                    @await Component.InvokeAsync("_ManagerPaymentMakePaymentFormComponentPartial", new {appointmentId = Model.Id})
+
+
+                </div>
+
+            </aside>
+
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     JAVASCRIPT
+============================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* =====================================================
+           PAYMENT VALUES
+        ====================================================== */
+
+        const totalTreatmentAmount = parseFloat(document.getElementById("totalTreatmentAmount").textContent);
+
+        const alreadyPaidAmount = parseFloat(document.getElementById("alreadyPaidAmount").textContent);
+
+        let remainingAmount = Math.max(0, totalTreatmentAmount - alreadyPaidAmount);
+
+
+
+        /* =====================================================
+           ELEMENTS
+        ====================================================== */
+
+        const paymentAmount =
+            document.getElementById("paymentAmount");
+        paymentAmount.max = remainingAmount;
+
+        const paymentAmountValue =
+            document.getElementById("paymentAmountValue");
+        if (paymentAmountValue) {
+            paymentAmountValue.textContent =
+                remainingAmount.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+        }
+        const remainingAmountElement =
+            document.getElementById("remainingAmount");
+
+        const paymentProgress =
+            document.getElementById("paymentProgress");
+
+        const paidPercentage =
+            document.getElementById("paidPercentage");
+
+        const remainingPercentage =
+            document.getElementById("remainingPercentage");
+
+        const submitPayment =
+            document.getElementById("submitPayment");
+
+        const paymentForm =
+            document.getElementById("paymentForm");
+
+        const paymentNote =
+            document.getElementById("paymentNote");
+
+        const noteCounter =
+            document.getElementById("noteCounter");
+
+
+        /* =====================================================
+           FORMAT MONEY
+        ====================================================== */
+
+        function formatMoney(value) {
+
+            return value.toLocaleString("tr-TR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " ₺";
+
+        }
+
+
+        /* =====================================================
+           UPDATE PAYMENT SUMMARY
+        ====================================================== */
+
+        function updatePaymentSummary() {
+
+            const currentPayment =
+                parseFloat(paymentAmount.value) || 0;
+
+
+            const newRemaining =
+                Math.max(
+                    0,
+                    remainingAmount - currentPayment
+                );
+
+
+            const newPaid =
+                alreadyPaidAmount + currentPayment;
+
+
+            const paidPercent =
+                totalTreatmentAmount === 0
+                    ? 0
+                    : (newPaid / totalTreatmentAmount) * 100;
+
+
+            const remainingPercent =
+                100 - paidPercent;
+
+
+            remainingAmountElement.textContent =
+                formatMoney(newRemaining);
+
+
+            paymentProgress.style.width =
+                Math.min(100, Math.max(0, paidPercent)) + "%";
+
+
+            paidPercentage.textContent =
+                "%" + Math.round(paidPercent) + " ödendi";
+
+
+            remainingPercentage.textContent =
+                "%" + Math.round(Math.max(0, remainingPercent)) + " kaldı";
+
+
+            if (currentPayment > remainingAmount) {
+
+                paymentAmount.style.borderColor =
+                    "var(--color-danger)";
+
+                submitPayment.disabled = true;
+
+            }
+            else {
+
+                paymentAmount.style.borderColor =
+                    "";
+
+                submitPayment.disabled =
+                    currentPayment <= 0;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PAYMENT INPUT
+        ====================================================== */
+
+        paymentAmount.addEventListener(
+            "input",
+            updatePaymentSummary
+        );
+
+
+        /* =====================================================
+           NOTE COUNTER
+        ====================================================== */
+
+        paymentNote.addEventListener(
+            "input",
+            function () {
+
+                noteCounter.textContent =
+                    paymentNote.value.length;
+
+            }
+        );
+
+
+        /* =====================================================
+           FORM SUBMIT
+        ====================================================== */
+
+        paymentForm.addEventListener(
+            "submit",
+            function (event) {
+
+                const amount =
+                    parseFloat(paymentAmount.value) || 0;
+
+                if (amount <= 0) {
+
+                    event.preventDefault();
+
+                    alert("Lütfen geçerli bir ödeme tutarı giriniz.");
+
+                    return;
+                }
+
+                if (amount > remainingAmount) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Ödeme tutarı kalan borçtan fazla olamaz."
+                    );
+
+                    return;
+                }
+            }
+        );
+
+        /* =====================================================
+           INITIAL STATE
+        ====================================================== */
+
+        submitPayment.disabled = true;
+
+        updatePaymentSummary();
+
+    });
+
+</script>

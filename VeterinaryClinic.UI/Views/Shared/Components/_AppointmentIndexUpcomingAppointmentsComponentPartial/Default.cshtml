@@ -83,10 +83,14 @@
     </div>
 
     <!-- Model boşsa yukarıdaki liste yerine bu blok gösterilmeli (class="is-visible" ekle) -->
-    <div class="card-ui appointment-empty-state" id="upcomingEmptyState">
+    @if(Model == null)
+    {
+            <div class="card-ui appointment-empty-state" id="upcomingEmptyState">
         <i class="bi bi-calendar2-week"></i>
         <h3 class="text-card-title">Yaklaşan randevunuz bulunmuyor</h3>
         <p class="text-small text-muted">Evcil dostunuz için yeni bir randevu oluşturarak başlayabilirsiniz.</p>
         <a href="#" class="btn-ui btn-ui--primary" style="margin-top: 0.5rem;"><i class="bi bi-plus-lg"></i> Yeni Randevu Oluştur</a>
     </div>
+    }
+
 </section>

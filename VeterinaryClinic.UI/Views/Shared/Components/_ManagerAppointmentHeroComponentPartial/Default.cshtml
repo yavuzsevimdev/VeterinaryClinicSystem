@@ -1,0 +1,131 @@
+﻿@model AppointmentDto
+@{
+    var animal = (AnimalDto)ViewBag.Animal;
+
+    var statusText = Model.Status switch
+    {
+        "Scheduled" => "Planlandı",
+        "Completed" => "Tamamlandı",
+        "Cancelled" => "İptal Edildi",
+        _ => Model.Status
+    };
+
+    var statusClass = Model.Status switch
+    {
+        "Scheduled" => "badge-ui--info",
+        "Completed" => "badge-ui--success",
+        "Cancelled" => "badge-ui--danger",
+        _ => "badge-ui--neutral"
+    };
+
+    var statusIcon = Model.Status switch
+    {
+        "Scheduled" => "fa-calendar-check",
+        "Completed" => "fa-circle-check",
+        "Cancelled" => "fa-calendar-xmark",
+        _ => "fa-calendar"
+    };
+}
+
+<section class="card-ui manager-appointment-detail-hero">
+
+    <div class="manager-appointment-detail-hero-left">
+
+        <div class="manager-appointment-detail-animal-avatar">
+
+            @if (!string.IsNullOrEmpty(animal?.ImageUrl))
+            {
+                <img src="@animal.ImageUrl"
+                     alt="@animal.Name">
+            }
+            else
+            {
+                <i class="fa-solid fa-paw"></i>
+            }
+
+        </div>
+
+        <div class="manager-appointment-detail-hero-info">
+
+            <div class="manager-appointment-detail-hero-title-row">
+
+                <h2>
+                    @(animal?.Name ?? "Hayvan")
+                </h2>
+
+                <span class="badge-ui @statusClass">
+
+                    <i class="fa-solid @statusIcon"></i>
+
+                    @statusText
+
+                </span>
+
+            </div>
+
+            <p class="manager-appointment-detail-animal-meta">
+
+                @(animal?.Species ?? "-")
+                <span>•</span>
+                @(animal?.Breed ?? "-")
+
+                @if (animal != null)
+                {
+                    <span>•</span>
+                    <span>@animal.Age yaş</span>
+                }
+
+            </p>
+
+            <div class="manager-appointment-detail-hero-date">
+
+                <div class="manager-appointment-detail-mini-info">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <div>
+                        <span>Tarih</span>
+                        <strong>
+                            @Model.Date.ToString("dd MMMM yyyy")
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="manager-appointment-detail-mini-info">
+
+                    <i class="fa-regular fa-clock"></i>
+
+                    <div>
+                        <span>Saat</span>
+                        <strong>
+                            @Model.Time.ToString(@"hh\:mm")
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="manager-appointment-detail-hero-right">
+
+        <span class="manager-appointment-detail-reference">
+            Randevu No
+        </span>
+
+        <strong>
+            #@Model.Id
+        </strong>
+
+        <span class="manager-appointment-detail-type">
+            @Model.AppointmentType
+        </span>
+
+    </div>
+
+</section>

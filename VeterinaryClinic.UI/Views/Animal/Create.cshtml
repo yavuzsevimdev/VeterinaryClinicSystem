@@ -2,13 +2,857 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@await Component.InvokeAsync("_AnimalCreateStyleComponentPartial")
-<div class="animal-page animal-create-page">
-    @await Component.InvokeAsync("_AnimalCreateHeaderComponentPartial")
-    <div class="animal-create-grid">
-        @await Component.InvokeAsync("_AnimalCreateFormComponentPartial")
-        @await Component.InvokeAsync("_AnimalCreateLivePreviewComponentPartial")
+@if (User.IsInRole("Manager"))
+{
+    <!DOCTYPE html>
+    <html lang="tr">
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Yeni Hayvan Ekle | VetCare</title>
+
+        <style>
+
+                /* =========================================================
+                                                           PAGE
+                                                           ========================================================= */
+
+                .animal-create-page {
+                    max-width: 1440px;
+                    margin: 0 auto;
+                    padding: 0 0 32px;
+                }
+
+
+                /* =========================================================
+                                                           BREADCRUMB
+                                                           ========================================================= */
+
+                .animal-create-breadcrumb {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 18px;
+                    font-size: 0.82rem;
+                    color: var(--color-muted);
+                }
+
+                    .animal-create-breadcrumb a {
+                        color: var(--color-muted);
+                        text-decoration: none;
+                        transition: color 0.2s ease;
+                    }
+
+                        .animal-create-breadcrumb a:hover {
+                            color: var(--color-primary);
+                        }
+
+                    .animal-create-breadcrumb .separator {
+                        color: #b7b4c7;
+                        font-size: 0.7rem;
+                    }
+
+                    .animal-create-breadcrumb .current {
+                        color: var(--color-primary-dark);
+                        font-weight: 600;
+                    }
+
+
+                /* =========================================================
+                                                           PAGE HEADER
+                                                           ========================================================= */
+
+                .animal-create-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 20px;
+                    margin-bottom: 22px;
+                }
+
+                .animal-create-header-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                }
+
+                .animal-create-header-icon {
+                    width: 58px;
+                    height: 58px;
+                    border-radius: 17px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--color-primary-light);
+                    color: var(--color-primary);
+                    font-size: 26px;
+                }
+
+                .animal-create-header-content h1 {
+                    margin: 0 0 5px;
+                    font-size: 1.65rem;
+                    font-weight: 700;
+                    color: var(--color-text);
+                }
+
+                .animal-create-header-content p {
+                    margin: 0;
+                    color: var(--color-muted);
+                    font-size: 0.9rem;
+                }
+
+
+                /* =========================================================
+                                                           BACK BUTTON
+                                                           ========================================================= */
+
+                .animal-create-back {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 0.65rem 1rem;
+                    border: 1px solid var(--color-border-strong);
+                    border-radius: var(--radius-md);
+                    background: transparent;
+                    color: var(--color-text);
+                    text-decoration: none;
+                    font-size: 0.82rem;
+                    font-weight: 600;
+                    transition: all 0.2s ease;
+                }
+
+                    .animal-create-back:hover {
+                        color: var(--color-primary-dark);
+                        border-color: var(--color-primary);
+                        background: var(--color-primary-light);
+                    }
+
+
+                /* =========================================================
+                                                           MAIN GRID
+                                                           ========================================================= */
+
+                .animal-create-grid {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) 330px;
+                    gap: 20px;
+                    align-items: start;
+                }
+
+
+                /* =========================================================
+                                                           CARD
+                                                           ========================================================= */
+
+                .animal-create-card {
+                    background: var(--color-surface);
+                    border: 1px solid var(--color-border);
+                    border-radius: var(--radius-lg);
+                    box-shadow: var(--shadow-sm);
+                    overflow: hidden;
+                }
+
+                    .animal-create-card + .animal-create-card {
+                        margin-top: 20px;
+                    }
+
+                .animal-create-card-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 20px 24px;
+                    border-bottom: 1px solid var(--color-border);
+                }
+
+                .animal-create-card-icon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--color-primary-light);
+                    color: var(--color-primary);
+                    font-size: 18px;
+                    flex-shrink: 0;
+                }
+
+                .animal-create-card-header h2 {
+                    margin: 0 0 3px;
+                    color: var(--color-text);
+                    font-size: 1.05rem;
+                    font-weight: 700;
+                }
+
+                .animal-create-card-header p {
+                    margin: 0;
+                    color: var(--color-muted);
+                    font-size: 0.78rem;
+                }
+
+                .animal-create-card-body {
+                    padding: 24px;
+                }
+
+
+                /* =========================================================
+                                                           BASIC INFO LAYOUT
+                                                           ========================================================= */
+
+                .animal-create-basic-grid {
+                    display: grid;
+                    grid-template-columns: 270px minmax(0, 1fr);
+                    gap: 26px;
+                }
+
+                .animal-create-fields {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 18px;
+                    align-content: start;
+                }
+
+
+                /* =========================================================
+                                                           PHOTO
+                                                           ========================================================= */
+
+                .animal-photo-area {
+                    min-width: 0;
+                }
+
+                .animal-photo-label {
+                    display: block;
+                    margin-bottom: 9px;
+                    color: var(--color-text);
+                    font-size: 0.82rem;
+                    font-weight: 600;
+                }
+
+                .animal-photo-preview {
+                    width: 100%;
+                    height: 245px;
+                    border: 1px dashed #cbc7df;
+                    border-radius: 15px;
+                    background: var(--color-background);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    position: relative;
+                }
+
+                    .animal-photo-preview img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: none;
+                    }
+
+                .animal-photo-placeholder {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 9px;
+                    color: var(--color-muted);
+                    text-align: center;
+                    padding: 20px;
+                }
+
+                    .animal-photo-placeholder i {
+                        width: 54px;
+                        height: 54px;
+                        border-radius: 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: var(--color-primary-light);
+                        color: var(--color-primary);
+                        font-size: 25px;
+                    }
+
+                    .animal-photo-placeholder strong {
+                        color: var(--color-text);
+                        font-size: 0.85rem;
+                    }
+
+                    .animal-photo-placeholder span {
+                        font-size: 0.72rem;
+                        line-height: 1.5;
+                    }
+
+
+                /* =========================================================
+                                                           FORM
+                                                           ========================================================= */
+
+                .animal-form-group {
+                    min-width: 0;
+                }
+
+                .animal-form-label {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    margin-bottom: 8px;
+                    color: var(--color-text);
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                }
+
+                .animal-required {
+                    color: var(--color-danger);
+                }
+
+                .animal-input-wrap {
+                    position: relative;
+                }
+
+                .animal-input-icon {
+                    position: absolute;
+                    left: 13px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--color-muted);
+                    font-size: 15px;
+                    pointer-events: none;
+                    z-index: 2;
+                }
+
+                .animal-form-input,
+                .animal-form-select,
+                .animal-form-textarea {
+                    width: 100%;
+                    border: 1px solid var(--color-border-strong);
+                    border-radius: var(--radius-md);
+                    background: var(--color-surface);
+                    color: var(--color-text);
+                    font-family: inherit;
+                    font-size: 0.82rem;
+                    outline: none;
+                    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+                    box-sizing: border-box;
+                }
+
+                .animal-form-input,
+                .animal-form-select {
+                    height: 44px;
+                    padding: 0 13px 0 40px;
+                }
+
+                .animal-form-select {
+                    cursor: pointer;
+                }
+
+                .animal-form-textarea {
+                    min-height: 145px;
+                    padding: 13px 14px;
+                    resize: vertical;
+                    line-height: 1.55;
+                }
+
+                    .animal-form-input::placeholder,
+                    .animal-form-textarea::placeholder {
+                        color: #aaa7ba;
+                    }
+
+                    .animal-form-input:focus,
+                    .animal-form-select:focus,
+                    .animal-form-textarea:focus {
+                        border-color: var(--color-primary);
+                        box-shadow: 0 0 0 3px rgba(108, 99, 168, 0.10);
+                    }
+
+
+                /* =========================================================
+                                                           INPUT WITH UNIT
+                                                           ========================================================= */
+
+                .animal-input-with-unit {
+                    display: flex;
+                    align-items: stretch;
+                }
+
+                    .animal-input-with-unit .animal-form-input {
+                        border-radius: var(--radius-md) 0 0 var(--radius-md);
+                        flex: 1;
+                    }
+
+                .animal-input-unit {
+                    min-width: 50px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 10px;
+                    border: 1px solid var(--color-border-strong);
+                    border-left: 0;
+                    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+                    background: var(--color-surface-alt);
+                    color: var(--color-muted);
+                    font-size: 0.76rem;
+                    font-weight: 600;
+                }
+
+
+                /* =========================================================
+                                                           URL FIELD
+                                                           ========================================================= */
+
+                .animal-photo-url {
+                    margin-top: 12px;
+                }
+
+                .animal-photo-url-label {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    margin-bottom: 7px;
+                    color: var(--color-text);
+                    font-size: 0.76rem;
+                    font-weight: 600;
+                }
+
+                .animal-photo-url-input {
+                    width: 100%;
+                    height: 40px;
+                    box-sizing: border-box;
+                    padding: 0 12px;
+                    border: 1px solid var(--color-border-strong);
+                    border-radius: var(--radius-md);
+                    font-family: inherit;
+                    font-size: 0.76rem;
+                    color: var(--color-text);
+                    outline: none;
+                }
+
+                    .animal-photo-url-input:focus {
+                        border-color: var(--color-primary);
+                        box-shadow: 0 0 0 3px rgba(108, 99, 168, 0.10);
+                    }
+
+                .animal-photo-help {
+                    margin: 7px 0 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 5px;
+                    color: var(--color-muted);
+                    font-size: 0.68rem;
+                    line-height: 1.5;
+                }
+
+
+                /* =========================================================
+                                                           HEALTH SECTION
+                                                           ========================================================= */
+
+                .animal-health-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 18px;
+                }
+
+                .animal-health-full {
+                    grid-column: 1 / -1;
+                }
+
+                .animal-textarea-footer {
+                    display: flex;
+                    justify-content: flex-end;
+                    margin-top: 5px;
+                    color: var(--color-muted);
+                    font-size: 0.68rem;
+                }
+
+
+                /* =========================================================
+                                                           INFO CARD
+                                                           ========================================================= */
+
+                .animal-create-info {
+                    background: linear-gradient( 145deg, #f5f2ff 0%, #fbfaff 100% );
+                    border: 1px solid #e6e1f5;
+                    border-radius: var(--radius-lg);
+                    padding: 22px;
+                }
+
+                .animal-create-info-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 11px;
+                    margin-bottom: 16px;
+                }
+
+                .animal-create-info-icon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #e7e1ff;
+                    color: var(--color-primary);
+                    font-size: 17px;
+                }
+
+                .animal-create-info-header h3 {
+                    margin: 0;
+                    color: var(--color-primary-dark);
+                    font-size: 0.94rem;
+                    font-weight: 700;
+                }
+
+                .animal-create-info > p {
+                    margin: 0 0 18px;
+                    color: #67657a;
+                    font-size: 0.78rem;
+                    line-height: 1.65;
+                }
+
+                .animal-create-info-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 14px;
+                }
+
+                .animal-create-info-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 10px;
+                }
+
+                .animal-create-info-check {
+                    width: 22px;
+                    height: 22px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    background: #ddd7fa;
+                    color: var(--color-primary);
+                    font-size: 11px;
+                }
+
+                .animal-create-info-item span {
+                    color: #66647a;
+                    font-size: 0.75rem;
+                    line-height: 1.5;
+                }
+
+
+                /* =========================================================
+                                                           ACTION BAR
+                                                           ========================================================= */
+
+                .animal-create-actions {
+                    margin-top: 20px;
+                    padding: 17px 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 10px;
+                    background: var(--color-surface);
+                    border: 1px solid var(--color-border);
+                    border-radius: var(--radius-lg);
+                    box-shadow: var(--shadow-sm);
+                }
+
+                .animal-create-action {
+                    min-height: 40px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 0.65rem 1rem;
+                    border-radius: var(--radius-md);
+                    font-family: inherit;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+                }
+
+                .animal-create-action-cancel {
+                    border: 1px solid var(--color-border-strong);
+                    background: transparent;
+                    color: var(--color-muted);
+                }
+
+                    .animal-create-action-cancel:hover {
+                        background: var(--color-surface-alt);
+                        color: var(--color-text);
+                    }
+
+                .animal-create-action-save {
+                    border: 1px solid var(--color-primary);
+                    background: var(--color-primary);
+                    color: #ffffff;
+                    min-width: 110px;
+                }
+
+                    .animal-create-action-save:hover {
+                        background: var(--color-primary-dark);
+                        border-color: var(--color-primary-dark);
+                        transform: translateY(-1px);
+                        box-shadow: 0 5px 14px rgba(108, 99, 168, 0.20);
+                    }
+
+
+                /* =========================================================
+                                                           RESPONSIVE
+                                                           ========================================================= */
+
+                @@media (max-width: 1100px) {
+
+                    .animal-create-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .animal-create-info {
+                        order: 2;
+                    }
+                }
+
+
+                @@media (max-width: 800px) {
+
+                    .animal-create-basic-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .animal-photo-area {
+                        max-width: 360px;
+                    }
+
+                    .animal-create-header {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+                }
+
+
+                @@media (max-width: 600px) {
+
+                    .animal-create-page {
+                        padding-bottom: 20px;
+                    }
+
+                    .animal-create-header-icon {
+                        width: 48px;
+                        height: 48px;
+                        font-size: 21px;
+                    }
+
+                    .animal-create-header-content h1 {
+                        font-size: 1.35rem;
+                    }
+
+                    .animal-create-card-body {
+                        padding: 17px;
+                    }
+
+                    .animal-create-fields,
+                    .animal-health-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .animal-health-full {
+                        grid-column: auto;
+                    }
+
+                    .animal-create-actions {
+                        flex-direction: column-reverse;
+                    }
+
+                    .animal-create-action {
+                        width: 100%;
+                    }
+                }
+
+        </style>
+    </head>
+    <body>
+
+        <main class="animal-create-page">
+
+            <nav class="animal-create-breadcrumb"
+                 aria-label="Breadcrumb">
+
+                <a href="/Home/Dashboard">
+                    <i class="bi bi-house-door"></i>
+                </a>
+
+                <span class="separator">
+                    <i class="bi bi-chevron-right"></i>
+                </span>
+
+                <a href="/Animal/Index">
+                    Hayvanlar
+                </a>
+
+                <span class="separator">
+                    <i class="bi bi-chevron-right"></i>
+                </span>
+
+                <span class="current">
+                    Yeni Hayvan Ekle
+                </span>
+
+            </nav>
+
+
+            <header class="animal-create-header">
+
+                <div class="animal-create-header-left">
+
+                    <div class="animal-create-header-icon">
+                        <i class="fa-solid fa-paw"></i>
+                    </div>
+
+                    <div class="animal-create-header-content">
+
+                        <h1>
+                            Yeni Hayvan Ekle
+                        </h1>
+
+                        <p>
+                            Kliniğe yeni bir hayvan kaydı oluşturun.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href="/Animal/Index"
+                   class="animal-create-back">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Hayvan Yönetimine Dön
+
+                </a>
+
+            </header>
+
+            @await Component.InvokeAsync("_ManagerAnimalCreateFormComponentPartial")
+
+        </main>
+
+
+        <script>
+
+                const imageUrlInput =
+                    document.getElementById("animalImageUrl");
+
+                const previewImage =
+                    document.getElementById("animalPreviewImage");
+
+                const photoPlaceholder =
+                    document.getElementById("animalPhotoPlaceholder");
+
+
+                imageUrlInput.addEventListener("input", function () {
+
+                    const url = this.value.trim();
+
+                    if (!url) {
+
+                        previewImage.style.display = "none";
+                        previewImage.src = "";
+
+                        photoPlaceholder.style.display = "flex";
+
+                        return;
+                    }
+
+
+                    previewImage.onload = function () {
+
+                        previewImage.style.display = "block";
+                        photoPlaceholder.style.display = "none";
+
+                    };
+
+
+                    previewImage.onerror = function () {
+
+                        previewImage.style.display = "none";
+                        photoPlaceholder.style.display = "flex";
+
+                    };
+
+
+                    previewImage.src = url;
+
+                });
+
+
+                // =========================================================
+                // MEDICAL HISTORY COUNTER
+                // =========================================================
+
+                const medicalHistory =
+                    document.getElementById("medicalHistory");
+
+                const medicalHistoryCount =
+                    document.getElementById("medicalHistoryCount");
+
+
+                medicalHistory.addEventListener("input", function () {
+
+                    medicalHistoryCount.textContent =
+                        `${this.value.length} / 1000`;
+
+                });
+
+                const speciesSelect = document.getElementById("animalSpeciesSelect");
+
+                const otherSpeciesContainer = document.getElementById("otherSpeciesContainer");
+
+                const otherSpeciesInput = document.getElementById("otherSpeciesInput");
+
+
+                speciesSelect.addEventListener("change", function () {
+
+                    if (this.value === "Diğer") {
+
+                        otherSpeciesContainer.style.display = "block";
+
+                        otherSpeciesInput.focus();
+
+                    }
+                    else {
+
+                        otherSpeciesContainer.style.display = "none";
+
+                        otherSpeciesInput.value = "";
+
+                    }
+
+                });
+        </script>
+
+    </body>
+</html>
+
+}
+@if (User.IsInRole("Customer"))
+{
+    @await Component.InvokeAsync("_AnimalCreateStyleComponentPartial")
+    <div class="animal-page animal-create-page">
+        @await Component.InvokeAsync("_AnimalCreateHeaderComponentPartial")
+        <div class="animal-create-grid">
+            @await Component.InvokeAsync("_AnimalCreateFormComponentPartial")
+            @await Component.InvokeAsync("_AnimalCreateLivePreviewComponentPartial")
+        </div>
+        @await Component.InvokeAsync("_AnimalCreateInformationCardComponentPartial")
     </div>
-    @await Component.InvokeAsync("_AnimalCreateInformationCardComponentPartial")
-</div>
-@await Component.InvokeAsync("_AnimalCreateScriptsComponentPartial")
+
+    @await Component.InvokeAsync("_AnimalCreateScriptsComponentPartial")
+}
+

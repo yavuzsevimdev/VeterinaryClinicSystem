@@ -30,7 +30,7 @@
 
                     <li>
                         <a href="/home/dashboard"
-                       class="sidebar-link @(currentController == "Home" && currentAction == "Dashboard" ? "is-active" : "")"
+                       class="sidebar-link @(currentController == "Home" ? "is-active" : "")"
                            data-sidebar-link
                            data-page-title="Dashboard"
                            data-label="Dashboard">
@@ -48,14 +48,14 @@
 
                     <li>
                         <a href="/animal/index"
-                       class="sidebar-link @(currentController == "Animal" && currentAction == "Index" ? "is-active" : "")"
+                       class="sidebar-link @(currentController == "Animal" ? "is-active" : "")"
                            data-sidebar-link
                            data-page-title="Animals"
                            data-label="Animals">
 
-<span class="sidebar-link-icon">
-    <i class="bi bi-heart-pulse-fill"></i>
-</span>
+                            <span class="sidebar-link-icon">
+                            <i class="fa-solid fa-paw"></i>
+                            </span>
 
                             <span class="sidebar-link-text">
                                 Hayvanlar
@@ -67,7 +67,7 @@
 
                     <li>
                         <a href="/appointment/index"
-                       class="sidebar-link @(currentController == "Appointment" && currentAction == "Index" ? "is-active" : "")"
+                       class="sidebar-link @(currentController == "Appointment" ? "is-active" : "")"
                            data-sidebar-link
                            data-page-title="Appointments"
                            data-label="Appointments">
@@ -86,7 +86,7 @@
 
                     <li>
                         <a href="/treatment/index"
-                       class="sidebar-link @(currentController == "Treatment" && currentAction == "Index" ? "is-active" : "")    "
+                       class="sidebar-link @(currentController == "Treatment" ? "is-active" : "")    "
                            data-sidebar-link
                            data-page-title="Treatments"
                            data-label="Treatments">
@@ -97,25 +97,6 @@
 
                             <span class="sidebar-link-text">
                                 Tedaviler
-                            </span>
-
-                        </a>
-                    </li>
-
-
-                    <li>
-                        <a href="/payment/index"
-                       class="sidebar-link @(currentController == "Payment" && currentAction == "Index" ? "is-active" : "")"
-                           data-sidebar-link
-                           data-page-title="Payments"
-                           data-label="Payments">
-
-                            <span class="sidebar-link-icon">
-                                <i class="bi bi-credit-card-2-back"></i>
-                            </span>
-
-                            <span class="sidebar-link-text">
-                                Ödemeler
                             </span>
 
                         </a>

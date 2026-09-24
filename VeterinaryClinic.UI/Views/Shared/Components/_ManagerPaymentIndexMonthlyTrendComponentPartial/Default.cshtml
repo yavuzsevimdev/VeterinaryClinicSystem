@@ -1,0 +1,214 @@
+﻿@{
+    var paymentMonth1 = (List<PaymentDto>)ViewBag.PaymentMonth1;
+    var paymentMonth2 = (List<PaymentDto>)ViewBag.PaymentMonth2;
+    var paymentMonth3 = (List<PaymentDto>)ViewBag.PaymentMonth3;
+    var paymentMonth4 = (List<PaymentDto>)ViewBag.PaymentMonth4;
+    var paymentMonth5 = (List<PaymentDto>)ViewBag.PaymentMonth5;
+    var paymentMonth6 = (List<PaymentDto>)ViewBag.PaymentMonth6;
+
+    var month1Total = paymentMonth1.Sum(x => x.AmountPaid);
+    var month2Total = paymentMonth2.Sum(x => x.AmountPaid);
+    var month3Total = paymentMonth3.Sum(x => x.AmountPaid);
+    var month4Total = paymentMonth4.Sum(x => x.AmountPaid);
+    var month5Total = paymentMonth5.Sum(x => x.AmountPaid);
+    var month6Total = paymentMonth6.Sum(x => x.AmountPaid);
+
+    var maxPaymentAmount = new[]
+    {
+        month1Total,
+        month2Total,
+        month3Total,
+        month4Total,
+        month5Total,
+        month6Total
+    }.Max();
+
+    var paymentMonth6Height = Math.Round(maxPaymentAmount == 0 ? 0 : (month6Total / maxPaymentAmount) * 100);
+    var paymentMonth5Height = Math.Round(maxPaymentAmount == 0 ? 0 : (month5Total / maxPaymentAmount) * 100);
+    var paymentMonth4Height = Math.Round(maxPaymentAmount == 0 ? 0 : (month4Total / maxPaymentAmount) * 100);
+    var paymentMonth3Height = Math.Round(maxPaymentAmount == 0 ? 0 : (month3Total / maxPaymentAmount) * 100);
+    var paymentMonth2Height = Math.Round(maxPaymentAmount == 0 ? 0 : (month2Total / maxPaymentAmount) * 100);
+    var paymentMonth1Height = Math.Round(maxPaymentAmount == 0 ? 0 : (month1Total / maxPaymentAmount) * 100);
+}
+<div class="payment-card payment-chart-card">
+
+    <div class="payment-card-header">
+
+        <div>
+
+            <h2 class="payment-card-title">
+                Aylık Tahsilat Trendi
+            </h2>
+
+            <p class="payment-card-description">
+                Son 6 ayın tahsilat grafiği
+            </p>
+
+        </div>
+
+
+        <select class="payment-filter-select">
+
+            <option>
+                Son 6 Ay
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="payment-bar-chart">
+        <div class="payment-chart-column">
+
+            <span class="payment-chart-value">
+                @if (paymentMonth1.Count() == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    <span> @paymentMonth1.Sum(x => x.AmountPaid).ToString("0,0") ₺</span>
+                }
+            </span>
+
+            <div class="payment-chart-bar-wrapper">
+
+                <div class="payment-chart-bar"
+                     style="height: @paymentMonth1Height%;"></div>
+
+            </div>
+
+            <span class="payment-chart-month">
+                <span> @DateTime.Today.AddMonths(-5).ToString("MMM yyyy")</span>
+            </span>
+
+        </div>
+        <div class="payment-chart-column">
+
+            <span class="payment-chart-value">
+                @if (paymentMonth2.Count() == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    <span> @paymentMonth2.Sum(x => x.AmountPaid).ToString("0,0") ₺</span>
+                }
+            </span>
+
+            <div class="payment-chart-bar-wrapper">
+
+                <div class="payment-chart-bar"
+                     style="height: @paymentMonth2Height%;"></div>
+
+            </div>
+
+            <span class="payment-chart-month">
+                <span> @DateTime.Today.AddMonths(-4).ToString("MMM yyyy")</span>
+            </span>
+
+        </div>
+        <div class="payment-chart-column">
+
+            <span class="payment-chart-value">
+                @if (paymentMonth3.Count() == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    <span> @paymentMonth3.Sum(x => x.AmountPaid).ToString("0,0") ₺</span>
+                }
+            </span>
+
+            <div class="payment-chart-bar-wrapper">
+
+                <div class="payment-chart-bar"
+                     style="height: @paymentMonth3Height%;"></div>
+
+            </div>
+
+            <span class="payment-chart-month">
+                <span> @DateTime.Today.AddMonths(-3).ToString("MMM yyyy")</span>
+            </span>
+
+        </div>
+        <div class="payment-chart-column">
+
+            <span class="payment-chart-value">
+                @if (paymentMonth4.Count() == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    <span> @paymentMonth4.Sum(x => x.AmountPaid).ToString("0,0") ₺</span>
+                }
+            </span>
+
+            <div class="payment-chart-bar-wrapper">
+
+                <div class="payment-chart-bar"
+                     style="height: @paymentMonth4Height%;"></div>
+
+            </div>
+
+            <span class="payment-chart-month">
+                <span> @DateTime.Today.AddMonths(-2).ToString("MMM yyyy")</span>
+            </span>
+
+        </div>
+        <div class="payment-chart-column">
+
+            <span class="payment-chart-value">
+                @if (paymentMonth5.Count() == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    <span> @paymentMonth5.Sum(x => x.AmountPaid).ToString("0,0") ₺</span>
+                }
+            </span>
+
+            <div class="payment-chart-bar-wrapper">
+
+                <div class="payment-chart-bar"
+                     style="height: @paymentMonth5Height%;"></div>
+
+            </div>
+
+            <span class="payment-chart-month">
+                <span> @DateTime.Today.AddMonths(-1).ToString("MMM yyyy")</span>
+            </span>
+
+        </div>
+        <div class="payment-chart-column">
+
+            <span class="payment-chart-value">
+                @if (paymentMonth6.Count() == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    <span> @paymentMonth6.Sum(x => x.AmountPaid).ToString("0,0") ₺</span>
+                }
+            </span>
+
+            <div class="payment-chart-bar-wrapper">
+
+                <div class="payment-chart-bar"
+                     style="height: @paymentMonth6Height%;"></div>
+
+            </div>
+
+            <span class="payment-chart-month">
+                <span> @DateTime.Today.ToString("MMM yyyy")</span>
+            </span>
+
+        </div>
+    </div>
+
+</div>

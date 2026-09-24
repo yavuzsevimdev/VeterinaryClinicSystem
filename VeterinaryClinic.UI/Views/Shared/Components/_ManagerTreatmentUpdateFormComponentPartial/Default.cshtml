@@ -1,0 +1,587 @@
+﻿@model TreatmentDto
+
+<form asp-action="Update"
+      asp-controller="Treatment"
+      method="post"
+      id="createTreatmentForm">
+
+    <div class="manager-treatment-create-grid">
+
+        <section class="card-ui manager-treatment-create-card">
+
+            <div class="manager-treatment-create-card-header">
+
+                <div class="manager-treatment-create-card-icon primary">
+
+                    <i class="bi bi-calendar-check"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        Randevu ve Hayvan Bilgileri
+                    </h2>
+
+                    <p>
+                        Tedavinin bağlı olduğu randevuyu seçin.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="manager-treatment-form-field">
+
+                <label for="ownerSelect">
+
+                    Sahip
+
+                    <span>*</span>
+
+                </label>
+
+
+                <div class="manager-treatment-select-wrapper">
+
+                    <i class="bi bi-person"></i>
+
+                    <select id="ownerSelect"
+                            class="form-control-ui">
+
+                        <option value="">
+                            Sahip seçin...
+                        </option>
+
+                        @if (ViewBag.Owners != null)
+                        {
+                            foreach (var owner in ViewBag.Owners)
+                            {
+                                <option value="@owner.Id">
+
+                                    @owner.FullName
+                                    -
+                                    @owner.Email
+
+                                </option>
+                            }
+                        }
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="manager-treatment-form-field">
+
+                <label for="animalSelect">
+
+                    Hayvan
+
+                    <span>*</span>
+
+                </label>
+
+
+                <div class="manager-treatment-select-wrapper">
+
+                    <i class="bi bi-heart-pulse"></i>
+
+                    <select id="animalSelect"
+                            class="form-control-ui"
+                            disabled>
+
+                        <option value="">
+                            Önce sahip seçin...
+                        </option>
+
+                        @if (ViewBag.Animals != null)
+                        {
+                            foreach (var animal in ViewBag.Animals)
+                            {
+                                <option value="@animal.Id"
+                                        data-owner-id="@animal.OwnerId"
+                                        data-name="@animal.Name"
+                                        data-species="@animal.Species"
+                                        data-breed="@animal.Breed"
+                                        data-image="@animal.ImageUrl">
+
+                                    @animal.Name
+                                    -
+                                    @animal.Species
+                                    -
+                                    @animal.Breed
+
+                                </option>
+                            }
+                        }
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="manager-treatment-form-field">
+
+                <label asp-for="AppointmentId">
+
+                    Randevu
+
+                    <span>*</span>
+
+                </label>
+
+
+                <div class="manager-treatment-select-wrapper">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <select asp-for="AppointmentId"
+                            id="appointmentSelect"
+                            class="form-control-ui"
+                            disabled
+                            required>
+
+                        <option value="">
+                            Önce hayvan seçin...
+                        </option>
+
+                        @if (ViewBag.Appointments != null)
+                        {
+                            foreach (var appointment in ViewBag.Appointments)
+                            {
+                                <option value="@appointment.Id"
+                                        data-animal-id="@appointment.AnimalId"
+                                        data-date="@appointment.Date.ToString("dd.MM.yyyy")"
+                                        data-time="@appointment.Time.ToString(@"hh\:mm")"
+                                        data-status="@appointment.Status">
+
+                                    #AP-@appointment.Id
+                                    -
+                                    @appointment.Date.ToString("dd.MM.yyyy")
+                                    -
+                                    @appointment.Time.ToString(@"hh\:mm")
+
+                                </option>
+                            }
+                        }
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="manager-treatment-selection-summary"
+                 id="treatmentSelectionSummary">
+
+
+                <div class="manager-treatment-summary-animal">
+
+                    <div class="manager-treatment-summary-animal-image">
+
+                        <i class="bi bi-heart-pulse"
+                           id="summaryAnimalIcon"></i>
+
+                        <img id="summaryAnimalImage"
+                             src=""
+                             alt="Hayvan"
+                             style="display:none;">
+
+                    </div>
+
+
+                    <div class="manager-treatment-summary-animal-info">
+
+                        <span>
+                            Seçilen Hayvan
+                        </span>
+
+                        <strong id="summaryAnimalName">
+                            Henüz seçilmedi
+                        </strong>
+
+                        <small id="summaryAnimalDetails">
+                            Hayvan bilgileri burada görüntülenecek.
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="manager-treatment-summary-appointment">
+
+                    <div class="manager-treatment-summary-appointment-icon">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Aktif Randevu
+                        </span>
+
+                        <strong id="summaryAppointmentInfo">
+                            Henüz seçilmedi
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <div class="manager-treatment-summary-owner">
+
+                    <i class="bi bi-person"></i>
+
+                    <div>
+
+                        <span>
+                            Hayvan Sahibi
+                        </span>
+
+                        <strong id="summaryOwnerName">
+                            Henüz seçilmedi
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="card-ui manager-treatment-create-card">
+
+            <div class="manager-treatment-create-card-header">
+
+                <div class="manager-treatment-create-card-icon secondary">
+
+                    <i class="bi bi-heart-pulse-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        Tedavi Bilgileri
+                    </h2>
+
+                    <p>
+                        Uygulanan tedaviye ait bilgileri girin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-treatment-form-two-column">
+
+                <div class="manager-treatment-form-field">
+
+                    <label asp-for="TreatmentType">
+
+                        Tedavi Türü
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="manager-treatment-select-wrapper">
+
+                        <i class="bi bi-clipboard2-pulse"></i>
+
+                        <select asp-for="TreatmentType"
+                                class="form-control-ui"
+                                required>
+
+                            <option value="">
+                                Tedavi türü seçin...
+                            </option>
+
+                            @if (ViewBag.TreatmentTypes != null)
+                            {
+                                foreach (var treatmentType in ViewBag.TreatmentTypes)
+                                {
+                                    <option value="@treatmentType">
+                                        @treatmentType
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="manager-treatment-form-field">
+
+                    <label asp-for="Date">
+
+                        Tedavi Tarihi ve Saati
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="manager-treatment-input-icon-wrapper">
+
+                        <i class="bi bi-calendar3"></i>
+
+                        <input asp-for="Date"
+                               type="datetime-local"
+                               class="form-control-ui"
+                               required />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-treatment-form-field manager-treatment-notes-field">
+
+                <div class="manager-treatment-label-row">
+
+                    <label asp-for="Notes">
+
+                        Tedavi Açıklaması
+
+                    </label>
+
+                    <span>
+                        İsteğe bağlı
+                    </span>
+
+                </div>
+
+
+                <textarea asp-for="Notes"
+                          class="form-control-ui manager-treatment-textarea"
+                          rows="6"
+                          maxlength="500"
+                          placeholder="Uygulanan tedavi, gözlemler, öneriler veya diğer önemli notları yazın..."></textarea>
+
+
+                <div class="manager-treatment-character-count">
+
+                    <span id="notesCounter">
+                        0
+                    </span>
+
+                    / 500
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="card-ui manager-treatment-create-card manager-treatment-payment-card">
+
+            <div class="manager-treatment-create-card-header">
+
+                <div class="manager-treatment-create-card-icon accent">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        Ödeme Bilgileri
+                    </h2>
+
+                    <p>
+                        Bu tedavi için ödenecek tutarı belirleyin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="manager-treatment-cost-box">
+
+                <div class="manager-treatment-cost-label">
+
+                    <div class="manager-treatment-cost-icon">
+
+                        <i class="bi bi-currency-exchange"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Ödenecek Tutar
+                        </strong>
+
+                        <span>
+                            Tedavi ücretini girin.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="manager-treatment-cost-input">
+
+                    <input asp-for="Cost"
+                           type="number"
+                           step="0.01"
+                           min="0"
+                           placeholder="0,00"
+                           required />
+
+                    <span>
+                        ₺
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="manager-treatment-payment-info">
+
+                <div class="manager-treatment-payment-info-icon">
+
+                    <i class="bi bi-info-circle"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Ödeme daha sonra alınabilir.
+                    </strong>
+
+                    <p>
+                        Bu alanda yalnızca tedavi ücretini belirliyorsunuz.
+                        Ödeme işlemi Payment modülündeki
+                        <strong>Ödeme Yap</strong> ekranından gerçekleştirilecektir.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="card-ui manager-treatment-create-card manager-treatment-summary-card">
+
+            <div class="manager-treatment-create-card-header">
+
+                <div class="manager-treatment-create-card-icon info">
+
+                    <i class="bi bi-file-medical"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        Tedavi Özeti
+                    </h2>
+
+                    <p>
+                        Kaydetmeden önce bilgileri kontrol edin.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="manager-treatment-summary-list">
+
+
+                <div class="manager-treatment-summary-item">
+
+                    <span>
+                        Randevu
+                    </span>
+
+                    <strong id="summaryAppointment">
+                        Seçilmedi
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-treatment-summary-item">
+
+                    <span>
+                        Hayvan
+                    </span>
+
+                    <strong id="summaryAnimal">
+                        Seçilmedi
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-treatment-summary-item">
+
+                    <span>
+                        Tedavi
+                    </span>
+
+                    <strong id="summaryTreatment">
+                        Girilmedi
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-treatment-summary-item">
+
+                    <span>
+                        Tarih
+                    </span>
+
+                    <strong id="summaryDate">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="manager-treatment-summary-total">
+
+                    <span>
+                        Ödenecek Tutar
+                    </span>
+
+                    <strong id="summaryCost">
+                        0,00 ₺
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</form>

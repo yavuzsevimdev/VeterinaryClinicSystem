@@ -36,7 +36,7 @@ namespace VeterinaryClinic.UI.Services.Appointment
             return true;
         }
 
-        public async Task<string> CreateAppointmentAsync(AppointmentDto dto)
+        public async Task<string> CreateAppointmentAsync(CreateAppointmentDto dto)
         {
             var token = _httpContextAccessor.HttpContext.User.FindFirst("AccessToken")?.Value;
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -147,7 +147,7 @@ namespace VeterinaryClinic.UI.Services.Appointment
                 return null;
             var json = await response.Content.ReadAsStringAsync();
             var appointments = JsonConvert.DeserializeObject<List<AppointmentDto>>(json);
-            var upcomingAppointments = appointments.Where(x => x.Status == "Scheduled" && x.Date >= DateTime.Today)
+            var upcomingAppointments = appointments.Where(x => x.Status == "Scheduled" && x.Date >= DateTime.Today && x.Date <= DateTime.Today.AddDays(7))
                                                   .OrderBy(x => x.Date)
                                                   .ThenBy(x => x.Time)
                                                   .ToList();

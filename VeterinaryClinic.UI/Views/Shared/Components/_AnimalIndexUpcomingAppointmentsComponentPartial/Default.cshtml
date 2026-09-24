@@ -1,12 +1,12 @@
-﻿@model List<UpcomingAppointmentDto>  
+﻿@model List<UpcomingAppointmentDto>
 
 <section class="animal-appointments card-ui" aria-label="Yaklaşan randevular">
     <div class="card-header-row">
-      <h2 class="text-card-title">Yaklaşan Randevular</h2>
-      <a href="/Appointment/Index" class="link-action">Tüm Randevuları Gör <i class="bi bi-arrow-right"></i></a>
+        <h2 class="text-card-title">Yaklaşan Randevular</h2>
+        <a href="/Appointment/Index" class="link-action">Tüm Randevuları Gör <i class="bi bi-arrow-right"></i></a>
     </div>
     <div class="animal-appointment-list">
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <div class="animal-appointment-item">
                 <div class="animal-appointment-icon"><i class="bi bi-calendar2-week"></i></div>
@@ -21,4 +21,4 @@
             </div>
         }
     </div>
-  </section>
+</section>

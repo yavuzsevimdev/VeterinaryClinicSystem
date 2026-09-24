@@ -1,0 +1,130 @@
+﻿<div class="payment-card">
+
+    <div class="payment-card-header">
+
+        <div>
+
+            <h2 class="payment-card-title">
+                Tahsilat Özeti
+            </h2>
+
+            <p class="payment-card-description">
+                Genel finansal durum
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-summary-list">
+
+
+        <div class="payment-summary-item">
+
+            <div class="payment-summary-left">
+
+                <span class="payment-summary-icon">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </span>
+
+                <span class="payment-summary-label">
+                    Toplam Tedavi Tutarı
+                </span>
+
+            </div>
+
+            <span class="payment-summary-value">
+                ₺ @ViewBag.TotalCost.ToString("0,0")
+            </span>
+
+        </div>
+
+
+        <div class="payment-summary-item">
+
+            <div class="payment-summary-left">
+
+                <span class="payment-summary-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </span>
+
+                <span class="payment-summary-label">
+                    Toplam Tahsilat
+                </span>
+
+            </div>
+
+            <span class="payment-summary-value">
+                ₺ @ViewBag.TotalAmountPaid.ToString("0,0")
+            </span>
+
+        </div>
+
+
+        <div class="payment-summary-item danger">
+
+            <div class="payment-summary-left">
+
+                <span class="payment-summary-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </span>
+
+                <span class="payment-summary-label">
+                    Kalan Tutar
+                </span>
+
+            </div>
+
+            <span class="payment-summary-value">
+                ₺ @ViewBag.RemainingAmount.ToString("0,0")
+            </span>
+
+        </div>
+
+
+        <div class="payment-summary-item success">
+
+            <div class="payment-summary-left">
+
+                <span class="payment-summary-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </span>
+
+                <span class="payment-summary-label">
+                    Tamamlanan Ödemeler
+                </span>
+
+            </div>
+
+            <span class="payment-summary-value">
+                @ViewBag.CompletedPayments
+            </span>
+
+        </div>
+
+
+        <div class="payment-summary-item">
+
+            <div class="payment-summary-left">
+
+                <span class="payment-summary-icon">
+                    <i class="fa-regular fa-clock"></i>
+                </span>
+
+                <span class="payment-summary-label">
+                    Bekleyen Ödemeler
+                </span>
+
+            </div>
+
+            <span class="payment-summary-value">
+                @ViewBag.PendingPayments
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>

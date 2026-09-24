@@ -1,0 +1,67 @@
+﻿@model AppointmentDto
+@{
+    var animal = (AnimalDto)ViewBag.Animal;
+}
+
+<section class="card-ui manager-appointment-detail-card">
+
+    <div class="manager-appointment-detail-sidebar-title">
+
+        <div class="card-icon-tile is-warning">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+
+        <div>
+            <h2 class="text-card-title">
+                Hızlı Bilgi
+            </h2>
+
+            <p class="section-header-desc">
+                Hasta özeti
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="manager-appointment-detail-quick-info">
+
+        <div>
+
+            <span>
+                Tür
+            </span>
+
+            <strong>
+                @(animal?.Species ?? "-")
+            </strong>
+
+        </div>
+
+        <div>
+
+            <span>
+                Şehir
+            </span>
+
+            <strong>
+                @(animal?.City ?? "-")
+            </strong>
+
+        </div>
+
+        <div>
+
+            <span>
+                Randevu No
+            </span>
+
+            <strong>
+                #@Model.Id
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,18 +1,1373 @@
 ﻿@model AnimalDto
 
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pamuk — Hayvan Detayı — VetCare</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+@if (User.IsInRole("Manager"))
+{
 
+    var owner = ViewBag.Owner as VeterinaryClinic.UI.Dtos.User.UserDto;
+
+    var imageUrl = string.IsNullOrWhiteSpace(Model.ImageUrl)
+        ? "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=600&q=80"
+        : Model.ImageUrl;
+
+<div class="animal-detail-page">
+
+    <div class="animal-detail-breadcrumb">
+
+        <a href="/Animal/Index">
+            <i class="fa-solid fa-paw"></i>
+            Hayvanlar
+        </a>
+
+        <i class="fa-solid fa-chevron-right"></i>
+
+        <span>Hayvan Detayı</span>
+
+    </div>
+
+
+    <div class="animal-detail-page-header">
+
+        <div class="animal-detail-title">
+
+            <div class="animal-detail-title-icon">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <div>
+                <h1>Hayvan Detayı</h1>
+
+                <p>
+                    Hayvana ait tüm bilgileri görüntüleyin.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="animal-detail-header-actions">
+
+            <a href="/Animal/Index"
+               class="btn-ui btn-ui--outline">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Hayvanlara Dön
+
+            </a>
+
+
+            <a href="/Animal/Update/@Model.Id"
+               class="btn-ui btn-ui--primary">
+
+                <i class="fa-solid fa-pen"></i>
+
+                Düzenle
+
+            </a>
+
+
+            <a href="/Animal/Delete/@Model.Id"
+               class="btn-ui animal-detail-delete-btn">
+
+                <i class="fa-solid fa-trash"></i>
+
+                Sil
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="animal-detail-layout">
+
+
+        <div class="animal-detail-main">
+
+            <section class="card-ui animal-detail-profile-card">
+
+                <div class="animal-detail-profile-image-wrapper">
+
+                    <img src="@imageUrl"
+                         alt="@Model.Name"
+                         class="animal-detail-profile-image" />
+
+                </div>
+
+
+                <div class="animal-detail-profile-content">
+
+                    <div class="animal-detail-profile-heading">
+
+                        <div>
+
+                            <div class="animal-detail-name-row">
+
+                                <h2>@Model.Name</h2>
+
+                                <span class="badge-ui badge-ui--success">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Aktif
+                                </span>
+
+                            </div>
+
+
+                            <div class="animal-detail-species">
+
+                                <span>
+                                    <i class="fa-solid fa-paw"></i>
+                                    @Model.Species
+                                </span>
+
+                                <span>•</span>
+
+                                <span>
+                                    @Model.Breed
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Statistics -->
+                    <div class="animal-detail-stats">
+
+                        <div class="animal-detail-stat">
+
+                            <div class="animal-detail-stat-icon primary">
+                                <i class="fa-solid fa-cake-candles"></i>
+                            </div>
+
+                            <div>
+
+                                <span>Yaş</span>
+
+                                <strong>@Model.Age yaş</strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="animal-detail-stat">
+
+                            <div class="animal-detail-stat-icon secondary">
+                                <i class="fa-solid fa-weight-scale"></i>
+                            </div>
+
+                            <div>
+
+                                <span>Ağırlık</span>
+
+                                <strong>@Model.Weight kg</strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="animal-detail-stat">
+
+                            <div class="animal-detail-stat-icon accent">
+                                <i class="fa-solid fa-ruler-vertical"></i>
+                            </div>
+
+                            <div>
+
+                                <span>Boy</span>
+
+                                <strong>@Model.Height cm</strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="animal-detail-stat">
+
+                            <div class="animal-detail-stat-icon info">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+                            <div>
+
+                                <span>Şehir</span>
+
+                                <strong>
+                                    @(string.IsNullOrWhiteSpace(Model.City)
+                                        ? "Belirtilmemiş"
+                                        : Model.City)
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            @await Component.InvokeAsync("_ManagerAnimalDetailOwnerInfosComponentPartial", new {animal = Model})
+
+            <section class="card-ui animal-detail-information-card">
+
+                <div class="section-header">
+
+                    <div class="section-header-content">
+
+                        <div class="card-icon-tile card-icon-tile--primary">
+                            <i class="fa-solid fa-paw"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>Hayvan Bilgileri</h3>
+
+                            <p>Temel hayvan bilgileri</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-detail-information-grid">
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Adı</span>
+
+                        <strong>@Model.Name</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Tür</span>
+
+                        <strong>@Model.Species</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Irk</span>
+
+                        <strong>@Model.Breed</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Yaş</span>
+
+                        <strong>@Model.Age yaş</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Ağırlık</span>
+
+                        <strong>@Model.Weight kg</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Boy</span>
+
+                        <strong>@Model.Height cm</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-information-item">
+
+                        <span>Şehir</span>
+
+                        <strong>
+                            @(string.IsNullOrWhiteSpace(Model.City)
+                                ? "Belirtilmemiş"
+                                : Model.City)
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+            <section class="card-ui animal-detail-medical-card">
+
+                <div class="section-header">
+
+                    <div class="section-header-content">
+
+                        <div class="card-icon-tile card-icon-tile--danger">
+                            <i class="fa-solid fa-notes-medical"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>Tıbbi Geçmiş</h3>
+
+                            <p>Hayvanın sağlık geçmişi</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-detail-medical-content">
+
+                    <div class="animal-detail-medical-icon">
+
+                        <i class="fa-solid fa-heart-pulse"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        @if (string.IsNullOrWhiteSpace(Model.MedicalHistory))
+                        {
+                            <h4>Sağlık geçmişi bulunmuyor</h4>
+
+                            <p>
+                                Bu hayvan için henüz herhangi bir tıbbi geçmiş kaydı
+                                girilmemiş.
+                            </p>
+                        }
+                        else
+                        {
+                            <h4>Sağlık Geçmişi</h4>
+
+                            <p>
+                                @Model.MedicalHistory
+                            </p>
+                        }
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <aside class="animal-detail-sidebar">
+
+            <section class="card-ui animal-detail-sidebar-card">
+
+                <div class="section-header">
+
+                    <div class="section-header-content">
+
+                        <div class="card-icon-tile card-icon-tile--primary">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>Hızlı Bilgiler</h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-detail-quick-list">
+
+                    <div class="animal-detail-quick-item">
+
+                        <div>
+                            <i class="fa-solid fa-paw"></i>
+                            <span>Tür</span>
+                        </div>
+
+                        <strong>@Model.Species</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-quick-item">
+
+                        <div>
+                            <i class="fa-solid fa-dna"></i>
+                            <span>Irk</span>
+                        </div>
+
+                        <strong>@Model.Breed</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-quick-item">
+
+                        <div>
+                            <i class="fa-solid fa-cake-candles"></i>
+                            <span>Yaş</span>
+                        </div>
+
+                        <strong>@Model.Age yaş</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-quick-item">
+
+                        <div>
+                            <i class="fa-solid fa-weight-scale"></i>
+                            <span>Ağırlık</span>
+                        </div>
+
+                        <strong>@Model.Weight kg</strong>
+
+                    </div>
+
+
+                    <div class="animal-detail-quick-item">
+
+                        <div>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Şehir</span>
+                        </div>
+
+                        <strong>
+                            @(string.IsNullOrWhiteSpace(Model.City)
+                                ? "-"
+                                : Model.City)
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="card-ui animal-detail-sidebar-card">
+
+                <div class="section-header">
+
+                    <div class="section-header-content">
+
+                        <div class="card-icon-tile card-icon-tile--info">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>Son Randevu</h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-detail-appointment-box">
+
+                    <div class="animal-detail-appointment-status">
+
+                        <span class="badge-ui badge-ui--success">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Tamamlandı
+                        </span>
+
+                    </div>
+
+
+                    <div class="animal-detail-appointment-date">
+
+                        <div class="animal-detail-appointment-date-icon">
+
+                            <i class="fa-solid fa-calendar"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Son randevu bilgisi</strong>
+
+                            <span>
+                                Randevu kayıtlarından görüntülenebilir.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <a href="/Appointment/Index"
+                       class="btn-ui btn-ui--outline animal-detail-full-btn">
+
+                        Randevuları Gör
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+            <section class="card-ui animal-detail-sidebar-card">
+
+                <div class="section-header">
+
+                    <div class="section-header-content">
+
+                        <div class="card-icon-tile card-icon-tile--warning">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>Hızlı İşlemler</h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-detail-quick-actions">
+
+
+                    <a href="/Appointment/Create?animalId=@Model.Id"
+                       class="animal-detail-quick-action">
+
+                        <span>
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </span>
+
+                        Yeni Randevu Oluştur
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+
+                    <a href="/Animal/Update/@Model.Id"
+                       class="animal-detail-quick-action">
+
+                        <span>
+                            <i class="fa-solid fa-pen"></i>
+                        </span>
+
+                        Hayvanı Düzenle
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+
+                    <a href="/Appointment/Index"
+                       class="animal-detail-quick-action">
+
+                        <span>
+                            <i class="fa-solid fa-file-medical"></i>
+                        </span>
+
+                        Randevuları Gör
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    /* ==========================================
+       ANIMAL DETAIL
+       ========================================== */
+
+    .animal-detail-page {
+        width: 100%;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+
+    /* Breadcrumb */
+
+    .animal-detail-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 1.25rem;
+
+        font-size: 0.78rem;
+        color: var(--color-muted);
+    }
+
+    .animal-detail-breadcrumb a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        color: var(--color-primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .animal-detail-breadcrumb i {
+        font-size: 0.65rem;
+        color: var(--color-border-strong);
+    }
+
+
+    /* Page Header */
+
+    .animal-detail-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+
+        margin-bottom: 1.5rem;
+    }
+
+    .animal-detail-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .animal-detail-title-icon {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: var(--radius-lg);
+
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+
+        font-size: 1.4rem;
+    }
+
+    .animal-detail-title h1 {
+        margin: 0 0 0.2rem;
+        color: var(--color-text);
+        font-size: 1.55rem;
+        font-weight: 700;
+    }
+
+    .animal-detail-title p {
+        margin: 0;
+        color: var(--color-muted);
+        font-size: 0.82rem;
+    }
+
+    .animal-detail-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .animal-detail-delete-btn {
+        border-color: var(--color-danger);
+        color: var(--color-danger);
+        background-color: transparent;
+    }
+
+    .animal-detail-delete-btn:hover {
+        background-color: #fff1f3;
+        border-color: var(--color-danger);
+        color: var(--color-danger);
+    }
+
+
+    /* Main Layout */
+
+    .animal-detail-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 350px;
+        gap: 1.25rem;
+        align-items: start;
+    }
+
+    .animal-detail-main,
+    .animal-detail-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+
+    /* Profile */
+
+    .animal-detail-profile-card {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1.25rem;
+    }
+
+    .animal-detail-profile-image-wrapper {
+        width: 210px;
+        min-width: 210px;
+        height: 210px;
+
+        overflow: hidden;
+
+        border-radius: var(--radius-lg);
+        background-color: var(--color-surface-alt);
+    }
+
+    .animal-detail-profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .animal-detail-profile-content {
+        flex: 1;
+        min-width: 0;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .animal-detail-name-row {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+    }
+
+    .animal-detail-name-row h2 {
+        margin: 0;
+
+        color: var(--color-text);
+        font-size: 1.65rem;
+        font-weight: 700;
+    }
+
+    .animal-detail-species {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        margin-top: 0.35rem;
+
+        color: var(--color-muted);
+        font-size: 0.85rem;
+    }
+
+    .animal-detail-species i {
+        color: var(--color-primary);
+    }
+
+
+    /* Stats */
+
+    .animal-detail-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+
+        margin-top: 1.5rem;
+    }
+
+    .animal-detail-stat {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+
+        padding: 0.75rem;
+
+        border-radius: var(--radius-md);
+        background-color: var(--color-surface-alt);
+    }
+
+    .animal-detail-stat-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        font-size: 0.85rem;
+    }
+
+    .animal-detail-stat-icon.primary {
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+    }
+
+    .animal-detail-stat-icon.secondary {
+        background-color: #e8f7f1;
+        color: #4b9c7c;
+    }
+
+    .animal-detail-stat-icon.accent {
+        background-color: #fff0eb;
+        color: #d7836e;
+    }
+
+    .animal-detail-stat-icon.info {
+        background-color: #edf5fb;
+        color: var(--color-info);
+    }
+
+    .animal-detail-stat div:last-child {
+        min-width: 0;
+    }
+
+    .animal-detail-stat span {
+        display: block;
+
+        margin-bottom: 0.15rem;
+
+        color: var(--color-muted);
+        font-size: 0.68rem;
+    }
+
+    .animal-detail-stat strong {
+        display: block;
+
+        color: var(--color-text);
+        font-size: 0.82rem;
+        font-weight: 700;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* Section Header */
+
+    .animal-detail-page .section-header {
+        margin-bottom: 1.15rem;
+    }
+
+    .animal-detail-page .section-header-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .animal-detail-page .section-header h3 {
+        margin: 0 0 0.15rem;
+
+        color: var(--color-text);
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .animal-detail-page .section-header p {
+        margin: 0;
+
+        color: var(--color-muted);
+        font-size: 0.72rem;
+    }
+
+
+    /* Owner */
+
+    .animal-detail-owner-card {
+        padding: 1.25rem;
+    }
+
+    .animal-detail-owner-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        padding: 1rem;
+
+        border-radius: var(--radius-md);
+        background-color: #f2faf7;
+        border: 1px solid #e0f2eb;
+    }
+
+    .animal-detail-owner-avatar {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+
+        font-size: 1.1rem;
+    }
+
+    .animal-detail-owner-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        margin-bottom: 0.45rem;
+    }
+
+    .animal-detail-owner-name strong {
+        color: var(--color-text);
+        font-size: 0.9rem;
+    }
+
+    .animal-detail-owner-contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        color: var(--color-muted);
+        font-size: 0.72rem;
+    }
+
+    .animal-detail-owner-contact span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .animal-detail-owner-contact i {
+        color: var(--color-primary);
+    }
+
+    .animal-detail-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        padding: 1.5rem;
+
+        color: var(--color-muted);
+        font-size: 0.8rem;
+    }
+
+
+    /* Information */
+
+    .animal-detail-information-card {
+        padding: 1.25rem;
+    }
+
+    .animal-detail-information-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+        border-top: 1px solid var(--color-border);
+    }
+
+    .animal-detail-information-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+
+        padding: 0.85rem 0.25rem;
+
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .animal-detail-information-item:nth-child(odd) {
+        padding-right: 1.5rem;
+    }
+
+    .animal-detail-information-item:nth-child(even) {
+        padding-left: 1.5rem;
+        border-left: 1px solid var(--color-border);
+    }
+
+    .animal-detail-information-item span {
+        color: var(--color-muted);
+        font-size: 0.76rem;
+    }
+
+    .animal-detail-information-item strong {
+        color: var(--color-text);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: right;
+    }
+
+
+    /* Medical */
+
+    .animal-detail-medical-card {
+        padding: 1.25rem;
+    }
+
+    .animal-detail-medical-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+
+        padding: 1rem;
+
+        border-radius: var(--radius-md);
+
+        background-color: #fff8ed;
+        border: 1px solid #f7e6c9;
+    }
+
+    .animal-detail-medical-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background-color: #fff0d5;
+        color: var(--color-warning);
+    }
+
+    .animal-detail-medical-content h4 {
+        margin: 0 0 0.35rem;
+
+        color: var(--color-text);
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .animal-detail-medical-content p {
+        margin: 0;
+
+        color: var(--color-muted);
+        font-size: 0.76rem;
+        line-height: 1.7;
+    }
+
+
+    /* Sidebar */
+
+    .animal-detail-sidebar-card {
+        padding: 1.15rem;
+    }
+
+
+    /* Quick Info */
+
+    .animal-detail-quick-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .animal-detail-quick-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0.75rem 0;
+
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .animal-detail-quick-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .animal-detail-quick-item:first-child {
+        padding-top: 0;
+    }
+
+    .animal-detail-quick-item > div {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+
+        color: var(--color-muted);
+        font-size: 0.74rem;
+    }
+
+    .animal-detail-quick-item i {
+        width: 18px;
+
+        color: var(--color-primary);
+        text-align: center;
+    }
+
+    .animal-detail-quick-item strong {
+        color: var(--color-text);
+        font-size: 0.77rem;
+        font-weight: 600;
+    }
+
+
+    /* Appointment */
+
+    .animal-detail-appointment-box {
+        padding-top: 0.1rem;
+    }
+
+    .animal-detail-appointment-date {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        margin: 1rem 0;
+    }
+
+    .animal-detail-appointment-date-icon {
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+    }
+
+    .animal-detail-appointment-date strong {
+        display: block;
+
+        margin-bottom: 0.2rem;
+
+        color: var(--color-text);
+        font-size: 0.78rem;
+    }
+
+    .animal-detail-appointment-date span {
+        display: block;
+
+        color: var(--color-muted);
+        font-size: 0.68rem;
+        line-height: 1.5;
+    }
+
+    .animal-detail-full-btn {
+        width: 100%;
+    }
+
+
+    /* Quick Actions */
+
+    .animal-detail-quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+    }
+
+    .animal-detail-quick-action {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+
+        min-height: 42px;
+        padding: 0.65rem 0.75rem;
+
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+
+        background-color: transparent;
+        color: var(--color-text);
+
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+
+        transition:
+            background-color var(--transition-fast),
+            border-color var(--transition-fast),
+            color var(--transition-fast);
+    }
+
+    .animal-detail-quick-action span {
+        width: 30px;
+        height: 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background-color: var(--color-primary-light);
+        color: var(--color-primary);
+    }
+
+    .animal-detail-quick-action > i {
+        margin-left: auto;
+
+        color: var(--color-muted);
+        font-size: 0.65rem;
+    }
+
+    .animal-detail-quick-action:hover {
+        border-color: var(--color-primary);
+        background-color: var(--color-primary-light);
+        color: var(--color-primary-dark);
+    }
+
+
+    /* Responsive */
+
+    @@media (max-width: 1200px) {
+
+        .animal-detail-layout {
+            grid-template-columns: minmax(0, 1fr) 300px;
+        }
+
+        .animal-detail-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+
+    @@media (max-width: 992px) {
+
+        .animal-detail-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .animal-detail-sidebar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .animal-detail-sidebar-card:last-child {
+            grid-column: 1 / -1;
+        }
+
+    }
+
+
+    @@media (max-width: 768px) {
+
+        .animal-detail-page-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .animal-detail-header-actions {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .animal-detail-profile-card {
+            flex-direction: column;
+        }
+
+        .animal-detail-profile-image-wrapper {
+            width: 100%;
+            height: 240px;
+        }
+
+        .animal-detail-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .animal-detail-sidebar {
+            display: flex;
+        }
+
+        .animal-detail-information-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .animal-detail-information-item:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+        }
+
+        .animal-detail-information-item:nth-child(odd) {
+            padding-right: 0;
+        }
+
+    }
+
+
+    @@media (max-width: 480px) {
+
+        .animal-detail-title-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .animal-detail-title h1 {
+            font-size: 1.25rem;
+        }
+
+        .animal-detail-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .animal-detail-owner-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .animal-detail-owner-contact {
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .animal-detail-header-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .animal-detail-header-actions .animal-detail-delete-btn {
+            grid-column: 1 / -1;
+        }
+
+    }
+
+</style>
+}
+
+@if (User.IsInRole("Customer"))
+{
     <style>
 
             /* ==========================================================================
@@ -1175,15 +2530,11 @@
             }
 
     </style>
-</head>
-<body>
+
 
     <main class="app-content">
         <div class="app-content-inner">
 
-            <!-- ==================================================================
-           A) BREADCRUMB / PAGE NAVIGATION
-           ================================================================== -->
             <div class="animal-detail-topbar">
                 <nav class="breadcrumb-ui" aria-label="Breadcrumb">
                     <span class="breadcrumb-ui-item"><a href="/home/dashboard">Home</a></span>
@@ -1197,12 +2548,8 @@
                 </a>
             </div>
 
-            <!-- ==================================================================
-           B) MAIN ANIMAL PROFILE
-           ================================================================== -->
             <div class="animal-profile-grid">
 
-                <!-- ---- Image card ---- -->
                 <div class="card-ui animal-profile-image-card">
                     <div class="animal-profile-media" id="profileMedia">
                         <div class="animal-profile-media-fallback" id="profileMediaFallback">
@@ -1220,7 +2567,6 @@
                     </div>
                 </div>
 
-                <!-- ---- Information card ---- -->
                 <div class="card-ui animal-profile-info-card">
                     <div>
                         <h1 class="animal-profile-name">@Model.Name </h1>
@@ -1285,7 +2631,6 @@
                     </div>
 
 
-                    <!-- ---- I) Optional quick metadata ---- -->
                     <div class="animal-profile-meta">
                         <span class="animal-profile-meta-item"><i class="bi bi-calendar-plus"></i> Kayıt Tarihi: 12 Mart 2025</span>
                         <span class="animal-profile-meta-item"><i class="bi bi-clock-history"></i> Son Güncelleme: 3 gün önce</span>
@@ -1293,7 +2638,6 @@
                 </div>
             </div>
 
-            <!-- ---- D) Medical history ---- -->
             <div class="card-ui animal-treatments-card">
 
                 <div class="card-header-row">
@@ -1325,9 +2669,6 @@
 
             </div>
 
-            <!-- ==================================================================
-           F) ACTION CARDS
-           ================================================================== -->
             <div class="animal-action-grid">
                 <button type="button" class="card-ui card-ui--interactive animal-action-card is-appointment" data-toast="Randevu oluşturma bu prototipte pasif durumdadır.">
                     <div class="card-icon-tile is-info"><i class="bi bi-calendar-plus"></i></div>
@@ -1357,9 +2698,6 @@
                 </button>
             </div>
 
-            <!-- ==================================================================
-           G) RECENT APPOINTMENTS  +  H) NOTES
-           ================================================================== -->
             @await Component.InvokeAsync("_AnimalDetailRecentAppointmentsComponentPartial", new { animalId = Model.Id })
 
         </div>
@@ -1434,5 +2772,4 @@
 
             })();
     </script>
-</body>
-</html>
+}

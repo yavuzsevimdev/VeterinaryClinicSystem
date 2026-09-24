@@ -12,7 +12,7 @@ namespace VeterinaryClinic.UI.Services.Appointment
         Task<List<AppointmentDto>> GetAnimalAppointmentsAsync(int id);
         Task<byte[]> DownloadPdfAsync(int appointmentId);
         Task<bool> CancelAppointmentAsync(int appointmentId);
-        Task<string> CreateAppointmentAsync(AppointmentDto dto);
+        Task<string> CreateAppointmentAsync(CreateAppointmentDto dto);
         Task<bool> UpdateAppointmentAsync(AppointmentDto dto);
     }
 }

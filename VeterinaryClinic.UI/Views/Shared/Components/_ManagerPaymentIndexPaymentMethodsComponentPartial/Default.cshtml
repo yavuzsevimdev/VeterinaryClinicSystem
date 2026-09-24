@@ -1,0 +1,142 @@
+﻿@{
+    var totalPayment = (decimal)ViewBag.TotalPayment;
+
+    var cardPercentage = Math.Round((decimal)ViewBag.CreditCardPercentage);
+    var cashPercentage = Math.Round((decimal)ViewBag.CashPercentage);
+    var transferPercentage = Math.Round((decimal)ViewBag.EFTTransferPercentage);
+    var otherPercentage = Math.Round((decimal)ViewBag.OtherPercentage);
+
+    var cardEnd = cardPercentage;
+    var cashEnd = cardPercentage + cashPercentage;
+    var transferEnd = cashPercentage + transferPercentage;
+}
+
+<div class="payment-card">
+
+    <div class="payment-card-header">
+
+        <div>
+
+            <h2 class="payment-card-title">
+                Ödeme Yöntemlerinin Dağılımı
+            </h2>
+
+            <p class="payment-card-description">
+                Toplam tahsilatın ödeme yöntemlerine göre dağılımı
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-method-layout">
+
+        <div class="payment-donut" style="background: conic-gradient(
+            var(--color-primary) 0% @cardEnd%,
+            var(--color-secondary) @cardEnd% @cashEnd%,
+            #F08A46 @cashEnd% @transferEnd%,
+            #5D9BEF @transferEnd% 100%);">
+            <div class="payment-donut-content">
+
+                <div class="payment-donut-total">
+                    @totalPayment.ToString("0,0") ₺
+                </div>
+
+                <div class="payment-donut-label">
+                    Toplam Tahsilat
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-method-list">
+
+
+            <div class="payment-method-item">
+
+                <span class="payment-method-dot"
+                      style="background:#6C63A8;"></span>
+
+                <span class="payment-method-name">
+                    Kredi Kartı
+                </span>
+
+                <span class="payment-method-percent">
+                    %@ViewBag.CreditCardPercentage.ToString("0,0")
+                </span>
+
+                <span class="payment-method-amount">
+                    ₺ @ViewBag.CreditCardPayments.ToString("0,0")
+                </span>
+
+            </div>
+
+
+            <div class="payment-method-item">
+
+                <span class="payment-method-dot"
+                      style="background:#2CA879;"></span>
+
+                <span class="payment-method-name">
+                    Nakit
+                </span>
+
+                <span class="payment-method-percent">
+                    %@ViewBag.CashPercentage.ToString("0,0")
+                </span>
+
+                <span class="payment-method-amount">
+                    ₺ @ViewBag.CashPayments.ToString("0,0")
+                </span>
+
+            </div>
+
+
+            <div class="payment-method-item">
+
+                <span class="payment-method-dot"
+                      style="background:#5D9BEF;"></span>
+
+                <span class="payment-method-name">
+                    Havale / EFT
+                </span>
+
+                <span class="payment-method-percent">
+                    %@ViewBag.EFTTransferPercentage.ToString("0,0")
+                </span>
+
+                <span class="payment-method-amount">
+                    ₺ @ViewBag.EFTTransferPayments.ToString("0,0")
+                </span>
+
+            </div>
+
+
+            <div class="payment-method-item">
+
+                <span class="payment-method-dot"
+                      style="background:#F08A46;"></span>
+
+                <span class="payment-method-name">
+                    Diğer
+                </span>
+
+                <span class="payment-method-percent">
+                    %@ViewBag.OtherPercentage.ToString("0,0")
+                </span>
+
+                <span class="payment-method-amount">
+                    ₺ @ViewBag.OtherPayments.ToString("0,0")
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>

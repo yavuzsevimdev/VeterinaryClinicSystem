@@ -2,11 +2,11 @@
     string role = "";
     if (User.IsInRole("Manager"))
     {
-        role = "Manager";
+        role = "Yönetici";
     }
     else if(User.IsInRole("Customer"))
     {
-        role = "Customer";
+        role = "Klinik Üyesi";
     }
 }
 @{
@@ -83,8 +83,6 @@
     <div class="topbar-right">
 
 
-        <!-- Search -->
-
         <div class="topbar-search hide-on-mobile">
 
             <i class="bi bi-search topbar-search-icon"></i>
@@ -95,8 +93,6 @@
 
         </div>
 
-
-        <!-- Notifications -->
 
         <div class="dropdown-anchor">
             <button type="button" class="topbar-icon-btn notif-btn" data-dropdown-trigger="notifications" aria-label="Bildirimler">
@@ -137,7 +133,7 @@
 
         <div class="dropdown-anchor">
             <button type="button" class="profile-trigger" data-dropdown-trigger="profile" aria-label="Kullanıcı menüsünü aç">
-                <span class="avatar avatar-md">EA</span>
+                <span class="avatar avatar-md">@initials</span>
                 <span class="profile-trigger-info">
                     <span class="profile-trigger-name">@User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value</span>
                     <span class="profile-trigger-role">@role</span>

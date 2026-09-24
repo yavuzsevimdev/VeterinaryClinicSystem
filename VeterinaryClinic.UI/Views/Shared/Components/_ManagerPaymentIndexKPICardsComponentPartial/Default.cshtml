@@ -1,0 +1,185 @@
+﻿@{
+    var totalAmountPaid = (decimal)ViewBag.TotalAmountPaid;
+    var totalAmountPaidChangeRate = (double)ViewBag.TotalAmountPaidChangeRate;
+    var thisMonthTotalAmountPaidViewBag = (decimal)ViewBag.ThisMonthTotalAmountPaid;
+    var thisMonthPaymentCount = (int)ViewBag.ThisMonthPaymentCount;
+    var totalTodayAmountPaid = (decimal)ViewBag.TotalTodayAmountPaid;
+    var dailyAmountPaidChangeRate = (double)ViewBag.DailyAmountPaidChangeRate;
+    var totalDebt = (decimal)ViewBag.TotalDebt;
+    var unpaidCount = (int)ViewBag.UnpaidCount;
+}
+
+<section class="payment-kpi-grid">
+
+    <div class="payment-kpi-card green">
+
+        <div class="payment-kpi-top">
+
+            <div class="payment-kpi-icon">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+
+        </div>
+
+        <div class="payment-kpi-label">
+            Toplam Tahsilat
+        </div>
+
+        <div class="payment-kpi-value">
+            ₺ @totalAmountPaid.ToString("N2")
+        </div>
+
+        <div class="payment-kpi-bottom">
+
+            @if (totalAmountPaidChangeRate > 0)
+            {
+                <span class="payment-kpi-growth">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    +%@totalAmountPaidChangeRate.ToString("0,0")
+                </span>
+            }
+            else if (totalAmountPaidChangeRate == 0)
+            {
+                <span class="payment-kpi-growth">
+                    <i class="fa-solid fa-minus"></i>
+                    %@totalAmountPaidChangeRate.ToString("0,0")
+                </span>
+            }
+            else
+            {
+                <span class="payment-kpi-growth">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                    %@totalAmountPaidChangeRate.ToString("0,0")
+                </span>
+            }
+
+                
+
+            <span class="payment-kpi-description">
+                geçen aya göre
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="payment-kpi-card blue">
+
+        <div class="payment-kpi-top">
+
+            <div class="payment-kpi-icon">
+                <i class="fa-solid fa-calendar"></i>
+            </div>
+
+        </div>
+
+        <div class="payment-kpi-label">
+            Bu Ay Tahsilat
+        </div>
+
+        <div class="payment-kpi-value">
+            ₺ @thisMonthTotalAmountPaidViewBag.ToString("0,0")
+        </div>
+
+        <div class="payment-kpi-bottom">
+
+            <span class="payment-kpi-growth">
+                <i class="fa-solid fa-receipt"></i>
+                @thisMonthPaymentCount ödeme
+            </span>
+
+            <span class="payment-kpi-description">
+                bu ay
+            </span>
+
+        </div>
+    </div>
+
+    <div class="payment-kpi-card purple">
+
+        <div class="payment-kpi-top">
+
+            <div class="payment-kpi-icon">
+                <i class="fa-solid fa-sun"></i>
+            </div>
+
+        </div>
+
+        <div class="payment-kpi-label">
+            Bugünkü Tahsilat
+        </div>
+
+        <div class="payment-kpi-value">
+            ₺ @totalTodayAmountPaid.ToString("0,0")
+        </div>
+        <div class="payment-kpi-bottom">
+            @if (dailyAmountPaidChangeRate > 0)
+            {
+                <span class="payment-kpi-growth payment-kpi-growth--positive">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    +%@dailyAmountPaidChangeRate.ToString("0,0")
+                </span>
+            }
+            else if (dailyAmountPaidChangeRate == 0)
+            {
+                <span class="payment-kpi-growth payment-kpi-growth--neutral">
+                    <i class="fa-solid fa-minus"></i>
+                    %@dailyAmountPaidChangeRate.ToString("0,0")
+                </span>
+            }
+            else
+            {
+                <span class="payment-kpi-growth payment-kpi-growth--negative">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                    -%@dailyAmountPaidChangeRate.ToString("0,0")
+                </span>
+            }
+            <span class="payment-kpi-description">
+                düne göre bugün
+            </span>
+        </div>
+
+    </div>
+
+    <div class="payment-kpi-card orange">
+
+        <div class="payment-kpi-top">
+
+            <div class="payment-kpi-icon">
+                <i class="fa-regular fa-clock"></i>
+            </div>
+
+        </div>
+
+        <div class="payment-kpi-label">
+            Kalan Ödeme
+        </div>
+
+        <div class="payment-kpi-value">
+            ₺ @totalDebt.ToString("0,0")
+        </div>
+
+        <div class="payment-kpi-bottom">
+
+            @if (unpaidCount > 0)
+            {
+                <span class="payment-kpi-growth">
+                    @unpaidCount işlem
+                </span>
+
+                <span class="payment-kpi-description">
+                    ödemeyi bekliyor
+                </span>
+            }
+            else
+            {
+                <span class="payment-kpi-description">
+                    Tüm ödemeler gerçekleşti.
+                </span>
+            }
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,63 @@
+﻿@{
+    int count = 0;
+}
+
+<div class="payment-card">
+
+    <div class="payment-card-header">
+
+        <div>
+
+            <h2 class="payment-card-title">
+                En Çok Ödeme Yapan Müşteriler
+            </h2>
+
+            <p class="payment-card-description">
+                Toplam ödeme tutarına göre ilk 5 müşteri
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="payment-customer-list">
+        @foreach (var item in ViewBag.TopCustomers)
+        {
+            count++;
+            <div class="payment-customer-row">
+                @if (count == 1)
+                {
+                    <span class="payment-customer-rank first">
+                        <i class="fa-solid fa-crown"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="payment-customer-rank first">
+                        <i class="fa-solid fa-medal"></i>
+                    </span>
+                }
+                
+                <span class="payment-customer-avatar">
+                    @count
+                </span>
+
+                <div>
+                    <div class="payment-customer-name">
+                        @item.User.FullName
+                    </div>
+                    <div class="payment-customer-count">
+                        @item.PaymentCount ödeme
+                    </div>
+                </div>
+
+                <span class="payment-customer-total">
+                    ₺ @item.TotalPayment.ToString("0,0")
+                </span>
+            </div>
+        }
+
+    </div>
+
+</div>

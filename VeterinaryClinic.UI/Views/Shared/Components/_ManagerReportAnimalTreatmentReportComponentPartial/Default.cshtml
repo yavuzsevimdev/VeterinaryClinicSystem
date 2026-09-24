@@ -1,0 +1,173 @@
+﻿<div class="manager-report-card manager-report-card--animal">
+
+    <div class="manager-report-card-header">
+
+        <div class="manager-report-card-heading">
+
+            <div class="manager-report-card-icon">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Hayvan Tedavi Raporu
+                </h2>
+
+                <p>
+                    Hayvan bazlı tedavi geçmişi ve sağlık bilgilerini görüntüleyin.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-report-date-badge">
+
+            <i class="fa-regular fa-calendar"></i>
+
+            Tüm Zamanlar
+
+        </div>
+
+    </div>
+
+    <div class="manager-report-stat-grid manager-report-stat-grid--three">
+
+        <div class="manager-report-stat">
+
+            <div class="manager-report-stat-icon manager-report-stat-icon--animal">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <div>
+
+                <span class="manager-report-stat-label">
+                    Toplam Hayvan
+                </span>
+
+                <strong>
+                    @ViewBag.TotalAnimals
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-report-stat">
+
+            <div class="manager-report-stat-icon manager-report-stat-icon--animal">
+                <i class="fa-solid fa-stethoscope"></i>
+            </div>
+
+            <div>
+
+                <span class="manager-report-stat-label">
+                    Toplam Tedavi
+                </span>
+
+                <strong>
+                    @ViewBag.TotalTreatments
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="manager-report-stat">
+
+            <div class="manager-report-stat-icon manager-report-stat-icon--animal">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+
+            <div>
+
+                <span class="manager-report-stat-label">
+                    Tedavi Maliyeti
+                </span>
+
+                <strong class="manager-report-stat-value--animal">
+                    @ViewBag.TotalCost.ToString("0,0") ₺
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="manager-report-content">
+
+        <span class="manager-report-content-title">
+            Rapor İçeriği
+        </span>
+
+        <div class="manager-report-check-grid">
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Hayvan bazlı tedavi geçmişi
+            </span>
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Sık görülen hastalıklar
+            </span>
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Tedavi türlerine göre dağılım
+            </span>
+
+            <span>
+                <i class="fa-solid fa-circle-check"></i>
+                Maliyet analizi
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="manager-report-actions">
+
+        <a href="/Report/DownloadAnimalTreatmentReportPdf"
+           class="manager-report-action manager-report-action--animal">
+
+            <i class="fa-solid fa-file-pdf"></i>
+
+            PDF İndir
+
+        </a>
+
+        <button type="button"
+                class="manager-report-action manager-report-action--outline-animal"
+                onclick="window.print()">
+
+            <i class="fa-solid fa-print"></i>
+
+            Yazdır
+
+        </button>
+
+        <form asp-controller="Report"
+              asp-action="SendAnimalTreatmentReportPdf"
+              method="post"
+              style="display:inline;">
+
+            <button type="submit"
+                    class="manager-report-action manager-report-action--soft-animal">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                Email Gönder
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

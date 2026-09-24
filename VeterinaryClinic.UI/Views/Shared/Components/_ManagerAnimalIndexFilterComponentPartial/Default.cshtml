@@ -1,0 +1,155 @@
+﻿<section class="animal-filter-card">
+
+    <div class="animal-filter-group">
+
+        <label class="animal-filter-label">
+            Hayvan Ara
+        </label>
+
+        <div class="animal-search">
+
+            <i class="bi bi-search"></i>
+
+            <input type="text"
+                   class="animal-filter-input"
+                   id="animalSearchInput"
+                   placeholder="İsim, sahip veya ırk ara...">
+
+        </div>
+
+    </div>
+
+
+
+    <div class="animal-filter-group">
+
+        <label class="animal-filter-label">
+            Tür
+        </label>
+
+        <select class="animal-filter-select" id="animalSpeciesFilter">
+
+            <option value="">
+                Tüm Türler
+            </option>
+
+            <option>
+                Köpek
+            </option>
+
+            <option>
+                Kedi
+            </option>
+
+            <option>
+                Kuş
+            </option>
+
+            <option>
+                Tavşan
+            </option>
+
+            <option>
+                Diğer
+            </option>
+
+        </select>
+
+    </div>
+
+
+
+    <div class="animal-filter-group">
+
+        <label class="animal-filter-label">
+            Durum
+        </label>
+
+        <select class="animal-filter-select" id="animalStatusFilter">
+
+            <option value="">
+                Tüm Durumlar
+            </option>
+
+            <option>
+                Taburcu
+            </option>
+
+            <option>
+                Tedavi Sürecinde
+            </option>
+
+            <option>
+                Pasif
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <button type="button" class="animal-filter-button" id="animalFilterButton">
+
+        <i class="bi bi-funnel"></i>
+
+        Filtrele
+
+    </button>
+
+
+    <button type="button" class="animal-clear-button" id="animalClearButton">
+
+        <i class="bi bi-arrow-counterclockwise"></i>
+
+        Temizle
+
+    </button>
+
+</section>
+
+<script>
+
+    const searchInput = document.getElementById("animalSearchInput");
+    const speciesFilter = document.getElementById("animalSpeciesFilter");
+    const statusFilter = document.getElementById("animalStatusFilter");
+
+    const filterButton = document.getElementById("animalFilterButton");
+    const clearButton = document.getElementById("animalClearButton");
+
+
+    filterButton.addEventListener("click", function () {
+
+        const filters = {
+            search: searchInput.value.trim(),
+            species: speciesFilter.value,
+            status: statusFilter.value
+        };
+
+        document.dispatchEvent(
+            new CustomEvent("animalFilterChanged", {
+                detail: filters
+            })
+        );
+
+    });
+
+
+    clearButton.addEventListener("click", function () {
+
+        searchInput.value = "";
+        speciesFilter.value = "";
+        statusFilter.value = "";
+
+        document.dispatchEvent(
+            new CustomEvent("animalFilterChanged", {
+                detail: {
+                    search: "",
+                    species: "",
+                    status: ""
+                }
+            })
+        );
+
+    });
+
+</script>

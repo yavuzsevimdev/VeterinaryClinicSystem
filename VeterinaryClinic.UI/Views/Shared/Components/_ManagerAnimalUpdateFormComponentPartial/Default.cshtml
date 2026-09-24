@@ -1,0 +1,516 @@
+﻿@model AnimalDto
+
+<form method="post" id="animalCreateForm">
+
+    <div class="animal-create-grid">
+
+        <div>
+
+            <section class="animal-create-card">
+
+
+                <div class="animal-create-card-header">
+
+                    <div class="animal-create-card-icon">
+                        <i class="fa-solid fa-paw"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Hayvan Bilgileri
+                        </h2>
+
+                        <p>
+                            Hayvanın temel bilgilerini girin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-create-card-body">
+
+
+                    <div class="animal-create-basic-grid">
+
+                        <div class="animal-photo-area">
+
+                            <label class="animal-photo-label">
+                                Hayvan Fotoğrafı
+                            </label>
+
+
+                            <div class="animal-photo-preview"
+                                 id="animalPhotoPreview">
+
+                                <img id="animalPreviewImage"
+                                     src="@Model.ImageUrl"
+                                     alt="Hayvan fotoğrafı">
+
+                                <div class="animal-photo-placeholder"
+                                     id="animalPhotoPlaceholder">
+
+                                    <i class="bi bi-image"></i>
+
+                                    <strong>
+                                        Fotoğraf Önizleme
+                                    </strong>
+
+                                    <span>
+                                        Fotoğraf URL'si girdiğinizde
+                                        burada görüntülenecektir.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="animal-photo-url">
+
+                                <label class="animal-photo-url-label">
+
+                                    <i class="bi bi-link-45deg"></i>
+
+                                    Fotoğraf URL'si
+
+                                </label>
+
+
+                                <input type="url"
+                                       class="animal-photo-url-input"
+                                       asp-for="ImageUrl" id="animalImageUrl"
+                                       placeholder="https://ornek.com/hayvan.jpg">
+
+
+                                <p class="animal-photo-help">
+
+                                    <i class="bi bi-info-circle"></i>
+
+                                    Bir görsel URL'si girin.
+                                    Fotoğraf kayıttan sonra hayvan kartında
+                                    kullanılacaktır.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="animal-create-fields">
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+
+                                    Hayvan Adı
+
+                                    <span class="animal-required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <div class="animal-input-wrap">
+
+                                    <i class="bi bi-paw-fill animal-input-icon"></i>
+
+                                    <input type="text" asp-for="Name"
+                                           class="animal-form-input"
+                                           placeholder="Örn. Mavi"
+                                           maxlength="100">
+
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+
+                                    Sahibi
+
+                                    <span class="animal-required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <div class="animal-input-wrap">
+
+                                    <i class="bi bi-person animal-input-icon"></i>
+                                    <input type="text" disabled value="@ViewBag.OwnerFullName"
+                                           class="animal-form-input"
+                                           maxlength="100">
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+
+                                    Tür
+
+                                    <span class="animal-required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <div class="animal-input-wrap">
+
+                                    <i class="bi bi-paw animal-input-icon"></i>
+
+                                    <select class="animal-form-select" asp-for="Species" id="animalSpeciesSelect">
+
+                                        <option value="@Model.Species">
+                                            @Model.Species
+                                        </option>
+
+                                        @foreach (var item in ViewBag.Species)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
+
+                                        <option value="Diğer">Diğer</option>
+
+                                    </select>
+
+                                    
+
+                                </div>
+                                <div class="animal-other-species"
+                                     id="otherSpeciesContainer"
+                                     style="display: none; margin-top: 10px;">
+
+                                    <label class="animal-form-label">
+                                        Diğer Tür
+                                    </label>
+
+                                    <input type="text"
+                                           class="animal-form-input"
+                                           id="otherSpeciesInput"
+                                           placeholder="Hayvanın türünü yazınız...">
+
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+                                    Irk
+                                </label>
+
+                                <div class="animal-input-wrap">
+
+                                    <i class="bi bi-tag animal-input-icon"></i>
+
+                                    <input type="text" asp-for="Breed"
+                                           class="animal-form-input"
+                                           placeholder="Örn. Golden Retriever"
+                                           maxlength="100">
+
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+
+                                    Yaş
+
+                                    <span class="animal-required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <div class="animal-input-wrap animal-input-with-unit">
+
+                                    <i class="bi bi-calendar3 animal-input-icon"></i>
+
+                                    <input type="number" asp-for="Age"
+                                           class="animal-form-input"
+                                           placeholder="Örn. 4"
+                                           min="0"
+                                           max="100">
+
+                                    <span class="animal-input-unit">
+                                        yaş
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+                                    Şehir
+                                </label>
+
+                                <div class="animal-input-wrap">
+
+                                    <i class="bi bi-geo-alt animal-input-icon"></i>
+
+                                    <input type="text" asp-for="City"
+                                           class="animal-form-input"
+                                           placeholder="Örn. İstanbul"
+                                           maxlength="100">
+
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+
+                                    Ağırlık
+
+                                    <span class="animal-required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <div class="animal-input-wrap animal-input-with-unit">
+
+                                    <i class="bi bi-speedometer2 animal-input-icon"></i>
+
+                                    <input type="number" asp-for="Weight"
+                                           class="animal-form-input"
+                                           placeholder="Örn. 18.5"
+                                           min="0"
+                                           step="0.1">
+
+                                    <span class="animal-input-unit">
+                                        kg
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="animal-form-group">
+
+                                <label class="animal-form-label">
+
+                                    Boy
+
+                                    <span class="animal-required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <div class="animal-input-wrap animal-input-with-unit">
+
+                                    <i class="bi bi-rulers animal-input-icon"></i>
+
+                                    <input type="number" asp-for="Height"
+                                           class="animal-form-input"
+                                           placeholder="Örn. 55"
+                                           min="0"
+                                           step="0.1">
+
+                                    <span class="animal-input-unit">
+                                        cm
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="animal-create-card">
+
+
+                <div class="animal-create-card-header">
+
+                    <div class="animal-create-card-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Sağlık Bilgileri
+                        </h2>
+
+                        <p>
+                            Hayvanın tıbbi geçmişini ve özel durumlarını girin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="animal-create-card-body">
+
+
+                    <div class="animal-health-grid">
+
+                        <div class="animal-form-group animal-health-full">
+
+                            <label class="animal-form-label">
+
+                                <i class="bi bi-file-medical"></i>
+
+                                Tıbbi Geçmiş
+
+                            </label>
+
+                            <textarea class="animal-form-textarea" asp-for="MedicalHistory"
+                                      id="medicalHistory"
+                                      maxlength="1000"
+                                      placeholder="Daha önce geçirilmiş hastalıklar, alerjiler, kronik rahatsızlıklar veya diğer önemli bilgileri buraya yazın."></textarea>
+
+                            <div class="animal-textarea-footer">
+
+                                <span id="medicalHistoryCount">
+                                    0 / 1000
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+        <aside class="animal-create-info">
+
+
+            <div class="animal-create-info-header">
+
+                <div class="animal-create-info-icon">
+
+                    <i class="bi bi-lightbulb"></i>
+
+                </div>
+
+                <h3>
+                    Bilmeniz Gerekenler
+                </h3>
+
+            </div>
+
+
+            <p>
+                Hayvan kaydı oluştururken mümkün olduğunca
+                doğru ve güncel bilgiler girmeniz, klinik
+                işlemlerinin daha sağlıklı yürütülmesini
+                sağlayacaktır.
+            </p>
+
+
+            <div class="animal-create-info-list">
+
+
+                <div class="animal-create-info-item">
+
+                    <div class="animal-create-info-check">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                    <span>
+                        Hayvanın sahibi sistemde kayıtlı bir
+                        müşteri olmalıdır.
+                    </span>
+
+                </div>
+
+
+                <div class="animal-create-info-item">
+
+                    <div class="animal-create-info-check">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                    <span>
+                        Fotoğraf URL'si isteğe bağlıdır.
+                    </span>
+
+                </div>
+
+
+                <div class="animal-create-info-item">
+
+                    <div class="animal-create-info-check">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                    <span>
+                        Yaş, ağırlık ve boy bilgileri takip
+                        süreçlerinde önemlidir.
+                    </span>
+
+                </div>
+
+
+                <div class="animal-create-info-item">
+
+                    <div class="animal-create-info-check">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                    <span>
+                        Tıbbi geçmiş ilerideki tedaviler için
+                        referans olacaktır.
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </aside>
+
+
+    </div>
+
+    <div class="animal-create-actions">
+
+        <a href="/Animal/Index"
+           class="animal-create-action animal-create-action-cancel">
+
+            <i class="bi bi-x-lg"></i>
+
+            Vazgeç
+
+        </a>
+
+
+        <button type="submit"
+                class="animal-create-action animal-create-action-save">
+
+            <i class="bi bi-floppy"></i>
+
+            Kaydet
+
+        </button>
+
+    </div>
+
+</form>

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using VeterinaryClinic.Business.Dtos.PaymentDtos;
 using VeterinaryClinic.Business.Services;
-using VeterinaryClinic.Entities;
 
 namespace VeterinaryClinic.API.Controllers
 {
